@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "View Customer Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+    string type = Convert.ToString(ViewBag.CustomerID);
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">View Customer Notifications</div>
+            <div class="buttons-wrap">
+               
+                <div class="left__buttons">
+                    @Html.ActionLink("Back To Pending Customer Listing", "ASIndex", null, new { @class = "btn btn-primary bg-orange" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblCustomernotification">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Send Copy To Initiating User</th>
+                                    <th>Dispatched</th>
+                                    <th>Loading</th>
+                                    <th>OnRoute</th>
+                                    <th>Unloading</th>
+                                    <th>InYard</th>
+                                    <th>Delivered</th>
+                                    <th>Completed</th>
+                                    @*<th>Actions</th>*@
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#tblCustomernotification').DataTable({
+                "ajax": {
+                    "url": "/Customer/ViewloadCustomerNotificationdata?customerid=" + @type,
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "Email", "autoWidth": true },
+                    { "data": "strSendCopyToInitiatingUser", "autoWidth": true },
+                    { "data": "strENDispatched", "autoWidth": true },
+                    { "data": "strENLoading", "autoWidth": true },
+                    { "data": "strENOnRoute", "autoWidth": true },
+                    { "data": "strENUnloading", "autoWidth": true },
+                    { "data": "strENInYard", "autoWidth": true },
+                    { "data": "strENDelivered", "autoWidth": true },
+                    { "data": "strENCompleted", "autoWidth": true },
+
+                    @*{
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+                          //  var linkEdit = '@Html.ActionLink("Edit", "AddCustomerNotifications", new { customerID= @type, id = -1 })';
+                            var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("AddCustomerNotifications", "Customer", new { customerID = @type, id = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                            linkEdit = linkEdit.replace("-1", row.CustomerNotificationID);
+                            var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["CustomerNotificationID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            return linkEdit + " " + linkDelete;
+                            }
+                    }*@
+
+                     // for edit icon = < i class= "mdi mdi-border-color" ></i >
+                    // for delete icon =  <i class="mdi mdi-delete"></i>
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [6], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    function DeleteFunction(id) {
+        debugger;
+        if (confirm('Are you sure you want to delete this Email Notification?')) {
+            $("#divLoader").show();
+            var data = {"CustomerNotificationID": id};
+            $.ajax({
+                type: 'POST',
+                url: 'DeleteCustomerNotifications',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    //debugger;
+                    if (s.data > 0) {
+                        $('#tblCustomernotification').DataTable().ajax.reload();
+                        $("#divLoader").hide();
+                        ShowSucess(s.msg);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            ShowError(s.msg); $("#divLoader").hide();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    } }
+            });
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

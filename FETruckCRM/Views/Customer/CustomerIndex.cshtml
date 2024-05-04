@@ -1,0 +1,111 @@
+﻿@{
+    Layout = null;
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+    string btnTitle = Convert.ToString(ViewBag.ButtonTitle);
+    string type = Convert.ToString(ViewBag.ShipperType);
+}
+<link href="@Url.Content("~/assets/css/font-awesome.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/dataTables.bootstrap.css")" rel="stylesheet" />
+
+<link href="@Url.Content("~/assets/css/perfect-scrollbar.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/theme.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap-datepicker.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/custom.css")" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery-ui.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery-ui.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-input-mask-phone-number.js")"></script>
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet">
+
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive table-responsive-data2" style="margin:100px auto; font-weight:bold;">
+                        Please Click [X] to close this window.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        var err = '@Err';
+        var success = '@success';
+        if (err != null && err != '') {
+
+            ShowError(err);
+        }
+        if (success != null && success != '') {
+
+            ShowSucess(success);
+        }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    });
+    window.setTimeout(CloseMe, 5000);
+    function CloseMe() {
+        self.close();
+    }
+</script>
+<script src="@Url.Content("~/assets/js/popper.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+<script src="@Url.Content("~/assets/js/perfect-scrollbar.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/assets/js/custom.js")"></script>
+@*<script src="@Url.Content("~/assets/js/jquery.dataTables.min.js")"></script>*@
+@*<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>*@
+
+@*<script src="@Url.Content("~/assets/js/dataTables.bootstrap.min.js")"></script>*@
+@*<script src="@Url.Content("~/assets/js/dataTables.responsive.min.js")"></script>*@
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+
+<script src="@Url.Content("~/assets/js/dataTables.buttons.min.js")"></script>
+<script src="@Url.Content("~/assets/js/jszip.min.js")"></script>
+<script src="@Url.Content("~/assets/js/pdfmake.min.js")"></script>
+<script src="@Url.Content("~/assets/js/vfs_fonts.js")"></script>
+<script src="@Url.Content("~/assets/js/buttons.html5.min.js")"></script>
+<script src="@Url.Content("~/assets/js/buttons.print.min.js")"></script>
+<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            format: "mm/dd/yyyy",
+            autoclose: true
+        });
+
+        $('.telephone').usPhoneFormat();
+
+        //setup ajax error handling
+        $.ajaxSetup({
+            error: function (x, status, error) {
+                if (x.status == 403) {
+                    alert("Sorry, your session has expired. Please login again to continue");
+                    window.location.href = "/Account/Login";
+                }
+                else {
+                    alert("An error occurred: " + status + "nError: " + error);
+                }
+            }
+        });
+    });
+</script>

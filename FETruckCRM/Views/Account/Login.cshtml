@@ -1,0 +1,325 @@
+﻿@model FETruckCRM.Models.LoginModel
+@{
+    Layout = null;
+    var Err = ViewBag.Error;
+    //  var success = ViewBag.Success;
+    var success = TempData["Success"];
+    var errormsg = TempData["errorMessage"];
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+
+    <style>
+        .inner_part {
+            width: 100%
+        }
+
+        .left_banner_part {
+            float: left;
+            width: 45%;
+        }
+
+        .right_banner_part {
+            float: right;
+            width: 45%;
+        }
+
+        .clr {
+            clear: both;
+        }
+
+        .form_container {
+            width: 100%;
+            margin-top: 30%;
+        }
+
+        .login_form {
+            width: 100%;
+        }
+
+            .login_form span {
+                width: 100%;
+                padding: 26px;
+            }
+
+                .login_form span .input {
+                    line-height: 2.15;
+                    margin-top: 10px;
+                    width: 300px;
+                    border: 0;
+                    border-bottom: 1px solid gray;
+                }
+
+        button.submit {
+            padding: 5px;
+            margin-left: 26px;
+            margin-top: 25px;
+            background-color: #FFCC33;
+            border: 0;
+            border-radius: 2px;
+            width: 100px;
+            height: 35px;
+        }
+
+        .field-validation-error {
+            color: red;
+        }
+
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            display: none;
+        }
+
+        #loading-image {
+            position: absolute;
+            top: 100px;
+            left: 280px;
+            z-index: 100;
+        }
+
+        .error {
+            color: red;
+            padding-left: 23px;
+        }
+
+        #OTP-error {
+            display: block;
+        }
+    </style>
+    <script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+    <link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+    <link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+</head>
+<body class="bg_class">
+    <div id="loading">
+        <img id="loading-image" src="~/assets/images/ajax-loader.gif" class="loadercrop" style="background-position: center center; background-repeat: no-repeat; background-size:100px;height: 100px;left: 50%;margin: -100px 0 0 -100px;position: absolute; top: 50%; width: 100px;" />
+    </div>
+    <div class="banner_class" style="background: url(../assets/Images/frame_bg.png); background-repeat: no-repeat; background-size: cover; width: 100%; height: 100%;">
+
+        <div class="inner_part">
+            <div class="left_banner_part" style="display:none;">
+                Dummy content
+            </div>
+            <div class="right_banner_part" style="background: url(../assets/Images/right_part.png); background-repeat: no-repeat; background-size: contain; width: 36%; height: 400px; margin-top: 10%;">
+                <div class="form_container">
+                    <!--<form class="login_form">
+                        <span><input type="text" placeholder="Username" class="input"></span><br>
+                        <span><input type="password" placeholder="Password" class="input"></span><br>
+                        <button type="submit" name="submit" class="submit">Login</button>
+                    </form>-->
+
+                    <div class="login_form">
+                        <form action="" method="post" id="frm_login" enctype="multipart/form-data">
+                            <div id="divUser">
+                                <span> <input type="text" id="Email" name="Email" maxlength="200" class="input required" placeholder="Email" /> </span><br />
+                                <span class="field-validation-valid error" data-valmsg-for="Email" data-valmsg-replace="true"></span><br />
+                                <span><input type="password" id="Password" name="Password" maxlength="20" class="input required" placeholder="Password" /></span><br />
+                                <span class="field-validation-valid error" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                <button class="submit" type="button" onclick="ValidateUser()">Get OTP</button> &nbsp;&nbsp;&nbsp;<a href="@Url.Action("CheckEmail", "Account" )">Forgot Password?</a>
+                            </div>
+                        </form>
+                        <form action="" method="post" id="frm_otp" enctype="multipart/form-data">
+                            <div id="divOTP" style="display:none;">
+                                <span> @Html.PasswordFor(a => a.OTP, new { @class = "input", @placeholder = "OTP" })</span><br />
+                                @Html.ValidationMessageFor(m => m.OTP)
+                                <button class="submit" type="button" onclick="loginWithOtp()">Log In</button>
+                            </div>
+                        </form>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="clr"></div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+        var err = '@Err';
+        var errmsg = '@errormsg';
+        var success = '@success';
+        if (err != null && err != '') {
+
+        ShowError(err);
+        }
+        if (errmsg != null && errmsg != '') {
+
+            ShowError(errmsg);
+        }
+        if (success != null && success != '') {
+
+        ShowSucess(success);
+        }
+        function ShowSucess(msg) {
+        $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+        $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+
+         function ValidateUser()
+        {
+        if($("#frm_login").valid())
+        {
+        var email=$("#Email").val();
+        var pwd=$("#Password").val();
+        if(email=='')
+        {
+        alert('Please enter email');
+        $("#Email").focus();
+        return;
+        }
+
+        else if(pwd=='')
+        {
+        alert('Please enter password');
+        $("#Password").focus();
+        return;
+        }
+
+
+        $.ajax({
+            url: "/Account/login",
+            type: "POST",
+            data:{"Email":email,"Password":pwd},
+            beforeSend: function() {
+                $("#loading").show();
+                },
+            success: function (data)
+            {
+
+                if (data.Result == 1) {
+                    ShowSucess('Otp is sent to your registered emailId');
+                    $("#divOTP").show();
+                    $("#divUser").hide();
+                }
+                if (data.Result == 99) {
+                    window.location.href = '/Dashboard/MyDashboard';
+                }
+                else if (data.Result == 0) {
+                    ShowError('Invalid User');
+                }
+                     $("#Password").val('');
+              },
+        complete: function() {
+        $("#loading").hide();
+            }
+        });
+        }
+        }
+
+        function loginWithOtp()
+        {
+
+         var email=$("#Email").val();
+        var otp=$("#OTP").val();
+        if($("#frm_otp").valid())
+        {
+        $.ajax({
+            url: "/Account/LoginWithOtp",
+            type: "POST",
+            data:{"Email":email,"OTP":otp},
+            beforeSend: function() {
+                $("#loading").show();
+                },
+            success: function (data)
+               {
+                if (data.Result == 1) {
+                   window.location.href='/Dashboard/MyDashboard'
+                }
+                else if (data.Result == 0) {
+                    ShowError('Wrong OTP!');
+                }
+               else if (data.Result ==-1) {
+                    ShowError('OTP is expired!');
+                }
+             else if (data.Result ==-2) {
+                    ShowError('OTP is already used!');
+                }
+               $("#Password").val('');
+              },
+        complete: function() {
+        $("#loading").hide();
+            }
+        });
+        }
+
+        }
+
+        $(document).ready(function(){
+        $("#frm_login").validate({
+            rules: {
+                Email:{
+        required: true,
+        email: true
+                },
+         Password:{
+                    required: true,
+                },
+            },
+            messages: {
+                Email: {
+                    required: "Email is required!",
+                    email:"Email is not valid!"
+                },
+
+         Password: {
+                    required: "Password is required!",
+                },
+            }
+        });
+
+        $("#frm_otp").validate({
+            rules: {
+                OTP:{
+                   required: true,
+                }
+
+            },
+            messages: {
+                OTP: {
+                    required: "OTP  is required!",
+                }
+            }
+        });
+
+   $('#Password').keypress(function (e) {
+            if (e.which == 13) {
+             ValidateUser();
+            }
+            });
+        $('#OTP').keypress(function (e) {
+            if (e.which == 13) {
+             loginWithOtp();
+            }
+            });
+
+
+        });
+    </script>
+</body>
+</html>
+
+

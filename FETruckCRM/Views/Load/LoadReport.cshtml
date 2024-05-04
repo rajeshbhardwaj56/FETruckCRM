@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "LoadReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content-bg">
+    <div class="top_heads">
+        <div class="p_title">Sales Reps. Dashboard</div>
+        <div class="buttons-wrap">
+            <div class="left__buttons">
+
+            </div>
+            <div class="right_filter">
+                @Html.DropDownListFor(a => a.strManagerID, new SelectList(Model.ManagerList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                @Html.DropDownListFor(a => a.strTeamLeadID, new SelectList(Model.TeamLeadList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                @Html.DropDownListFor(a => a.strEmployeeTypeID, new SelectList(Model.EmployeeTypeList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                @Html.DropDownListFor(a => a.strSiteID, new SelectList(Model.SiteList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                <div class="right__buttons">
+                    <button class="btn btn-primary bg-red" type="button" onclick="loadData();">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive table-responsive-data2" style="overflow-x:scroll;">
+                        <table class="table table-data2" id="tblLoad">
+                            <thead>
+                                <tr>
+                                    <th>Dispatcher Name</th>
+                                    <th># of Loads</th>
+                                    <th>Gross Revenue</th>
+                                    <th>Net Profit</th>
+                                    <th>Open Load</th>
+                                    <th>Delivered Load</th>
+                                    <th>Completed Load</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+</div>

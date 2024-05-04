@@ -1,0 +1,1658 @@
+﻿@model FETruckCRM.Models.CustomerModel
+
+@{
+    //ViewBag.Title = "Add Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+
+@*<div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="p_title">@ViewBag.Title</div>
+            </div>
+        </div>
+    </div>*@
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @*@using (Ajax.BeginForm("AddCustomer", "Customer", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp" }))
+                                {*@
+                            @using (Html.BeginForm("AddCustomer", "Customer", FormMethod.Post, new { id = "CustomerForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+
+
+                                <div class="row">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Load Number</label>
+                                                    <input type="text" id="txtLoadNum" disabled="disabled" class="form-control required" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Bill To</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtBillTo" maxlength="1000" class="form-control required" />
+                                                    <input type="hidden" id="hdn_txtBillTo" value="0" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Dispatcher</label><span style="color:red;">*</span>
+                                                    <select class="form-control" id="drpDispatcher"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Sales Rep</label>
+                                                    <select class="form-control" id="drpSalesResp"></select>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Status</label>
+                                                    <select class="form-control" id="drpStatus">
+                                                        <option value="1">Open</option>
+                                                        <option value="2">Close</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Wo</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtWo" maxlength="1000" class="form-control required" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Type</label>
+                                                    <input type="text" id="txtdrpType" maxlength="1000" class="form-control required" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Rate</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtRate" maxlength="6" class="form-control required" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">P/D s</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtPDS" maxlength="100" class="form-control required" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">F.S.C</label>
+                                                    <label for="chkrate">Rate %</label>
+                                                    <input type="checkbox" id="chkrate" />
+                                                    <input type="text" id="txtfscrate" maxlength="100" class="form-control required" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Other Charges</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtothercharges" maxlength="100" class="form-control required" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Rate</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtRateNw" maxlength="100" class="form-control required" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Carrier</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtCarrier" maxlength="100" class="form-control required" />
+                                                    <input type="hidden" id="hdntxtCarrier" value="0" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Equipment Type</label><span style="color:red;">*</span>
+                                                    <select class="form-control" id="drpEquipmentType"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Carrier Fee</label><span style="color:red;">*</span>
+                                                    <input type="text" id="txtCarrierFee" maxlength="100" class="form-control required" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Currency</label><span style="color:red;">*</span>
+                                                    <select class="form-control" id="drpCurrency"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+
+
+
+                                    <div class="col-md-12">
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                <a class="nav-item nav-link active" id="ship1" data-toggle="tab" href="#tab01">Shipper</a>
+                                                <a class="nav-item nav-link" id="ship2" style="display:none;" data-toggle="tab" href="#tab02">Shipper 2  <i class="fa fa-times" onclick="hideitems(false, 'tab02', 'ship2');" aria-hidden="true"></i></a>
+                                                <a class="nav-item nav-link" id="ship3" style="display:none;" data-toggle="tab" href="#tab03">Shipper 3  <i class="fa fa-times" onclick="hideitems(false, 'tab03', 'ship3');" aria-hidden="true"></i></a>
+                                                <a class="nav-item nav-link" id="ship4" style="display:none;" data-toggle="tab" href="#tab04">Shipper 4  <i class="fa fa-times" onclick="hideitems(false, 'tab04', 'ship4');" aria-hidden="true"></i></a>
+                                                <a class="nav-item nav-link" id="ship5" style="display:none;" data-toggle="tab" href="#tab05">Shipper 5  <i class="fa fa-times" onclick="hideitems(false, 'tab05', 'ship5');" aria-hidden="true"></i></a>
+                                                <a class="nav-item nav-link" id="addshipper" onclick="AddNewShipper();">  <i class="fa fa-plus" aria-hidden="true"></i></a>
+                                            </div>
+                                        </nav>
+
+                                        <div class="tab-content carrier_tabs pt-2" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="tab01">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipper</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipper" maxlength="100" class="form-control required txtShipper" />
+
+                                                            <input type="hidden" id="hdn_txtShipper" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperlocation" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtShipperDate" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktime" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpShipperTime" id="drpShipperTime"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperDescription" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperType" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperquantity" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperWeight" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperValue" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipping Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShippernotes" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperPO" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Custom Brokers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperCustomBrokers" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="tab-pane fade show " id="tab02">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipper</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipper2" maxlength="100" class="form-control required txtShipper" />
+                                                            <input type="hidden" id="hdn_txtShipper2" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperlocation2" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtShipperDate2" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktime2" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpShipperTime" id="drpShipperTime2"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperDescription2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperType2" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperquantity2" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperWeight2" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperValue2" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipping Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShippernotes2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperPO2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Custom Brokers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperCustomBrokers2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tab03">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipper</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipper3" maxlength="100" class="form-control required txtShipper" />
+                                                            <input type="hidden" id="hdn_txtShipper3" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperlocation3" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtShipperDate3" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktime3" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpShipperTime" id="drpShipperTime3"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperDescription3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperType3" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperquantity3" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperWeight3" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperValue3" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipping Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShippernotes3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperPO3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Custom Brokers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperCustomBrokers3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tab04">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipper</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipper4" maxlength="100" class="form-control required txtShipper" />
+                                                            <input type="hidden" id="hdn_txtShipper4" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperlocation4" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtShipperDate4" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktime4" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpShipperTime" id="drpShipperTime4"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperDescription4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperType4" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperquantity4" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperWeight4" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperValue4" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipping Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShippernotes4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperPO4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Custom Brokers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperCustomBrokers4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tab05">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipper</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipper5" maxlength="100" class="form-control required txtShipper" />
+                                                            <input type="hidden" id="hdn_txtShipper5" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperlocation5" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtShipperDate5" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktime5" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpShipperTime" id="drpShipperTime5"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperDescription5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperType5" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperquantity5" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperWeight5" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperValue5" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Shipping Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShippernotes5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperPO5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Custom Brokers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtShipperCustomBrokers5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+
+
+
+
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                <a class="nav-item nav-link active" id="con1" data-toggle="tab" href="#tabConsignee01">Consignee</a>
+                                                <a id="con2" class="nav-item nav-link" style="display:none;" data-toggle="tab" href="#tabConsignee02">Consignee 2  <i class="fa fa-times" onclick="hideitems(true, 'tabConsignee02', 'con2');" aria-hidden="true"></i></a>
+                                                <a id="con3" class="nav-item nav-link" style="display:none;" data-toggle="tab" href="#tabConsignee03">Consignee 3  <i class="fa fa-times" onclick="hideitems(true, 'tabConsignee03', 'con3');" aria-hidden="true"></i></a>
+                                                <a id="con4" class="nav-item nav-link" style="display:none;" data-toggle="tab" href="#tabConsignee04">Consignee 4  <i class="fa fa-times" onclick="hideitems(true, 'tabConsignee04', 'con4');" aria-hidden="true"></i></a>
+                                                <a id="con5" class="nav-item nav-link" style="display:none;" data-toggle="tab" href="#tabConsignee05">Consignee 5  <i class="fa fa-times" onclick="hideitems(true, 'tabConsignee05', 'con5');" aria-hidden="true"></i></a>
+                                                <a class="nav-item nav-link" id="addcons" onclick="AddNewConsignee();">  <i class="fa fa-plus" aria-hidden="true"></i></a>
+                                            </div>
+                                        </nav>
+
+                                        <div class="tab-content carrier_tabs pt-2" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="tabConsignee01">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Consignee</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsignee" maxlength="100" class="form-control required txtConsignee" />
+                                                            <input type="hidden" id="hdn_txtConsignee" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneelocation" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtConsigneeDate" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktimeConsignee" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpConsigneeTime" id="drpConsigneeTime"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeDescription" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeType" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneequantity" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeWeight" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeValue" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Delivery Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeNotes" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneePO" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Pro Miles</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeProMiles" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Empty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeEmpty" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="tab-pane fade show" id="tabConsignee02">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Consignee</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsignee2" maxlength="100" class="form-control required txtConsignee" />
+                                                            <input type="hidden" id="hdn_txtConsignee2" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneelocation2" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtConsigneeDate2" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktimeConsignee2" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpConsigneeTime" id="drpConsigneeTime2"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeDescription2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeType2" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneequantity2" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeWeight2" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeValue2" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Delivery Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeNotes2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneePO2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Pro Miles</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeProMiles2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Empty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeEmpty2" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tabConsignee03">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Consignee</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsignee3" maxlength="100" class="form-control required txtConsignee" />
+                                                            <input type="hidden" id="hdn_txtConsignee3" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneelocation3" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtConsigneeDate3" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktimeConsignee3" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpConsigneeTime" id="drpConsigneeTime3"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeDescription3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeType3" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneequantity3" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeWeight3" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeValue3" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Delivery Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeNotes3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneePO3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Pro Miles</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeProMiles3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Empty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeEmpty3" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tabConsignee04">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Consignee</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsignee4" maxlength="100" class="form-control required txtConsignee" />
+                                                            <input type="hidden" id="hdn_txtConsignee4" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneelocation4" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtConsigneeDate4" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktimeConsignee4" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpConsigneeTime" id="drpConsigneeTime4"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeDescription4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeType4" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneequantity4" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeWeight4" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeValue4" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Delivery Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeNotes4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneePO4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Pro Miles</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeProMiles4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Empty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeEmpty4" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade show " id="tabConsignee05">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Consignee</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsignee5" maxlength="100" class="form-control required txtConsignee" />
+                                                            <input type="hidden" id="hdn_txtConsignee5" value="0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Location</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneelocation5" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Date</label>
+                                                            <input type="text" id="txtConsigneeDate5" maxlength="100" class="form-control date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Show Time <input type="checkbox" id="chktimeConsignee5" /> </label><span style="color:red;">*</span>
+                                                            <select class="form-control drpConsigneeTime" id="drpConsigneeTime5"></select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Description</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeDescription5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Type (TL,LTL,Pallets,etc)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeType5" maxlength="100" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Qty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneequantity5" maxlength="7" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Weight(lbs)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeWeight5" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Value($)</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeValue5" maxlength="10" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Delivery Notes</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeNotes5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">P.O Numbers</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneePO5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Pro Miles</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeProMiles5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Empty</label><span style="color:red;">*</span>
+                                                            <input type="text" id="txtConsigneeEmpty5" maxlength="1000" class="form-control required" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="form_bbtns">
+
+                                            <button id="btnSubmit" type="button" class="btn btn-info commonBtn" onclick="saveData();">
+                                                Submit
+                                            </button>
+                                            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+@*<script src="~/Scripts/jquery.validate.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+<script>
+
+    function AddNewConsignee() {
+        if (!$('#con2').is(":visible")) {
+            $('#con2').show();
+        }
+        else if (!$('#con3').is(":visible")) {
+            $('#con3').show();
+        }
+        else if (!$('#con4').is(":visible")) {
+            $('#con4').show();
+        }
+        else if (!$('#con5').is(":visible")) {
+            $('#con5').show();
+        }
+    }
+
+    function AddNewShipper() {
+        if (!$('#ship2').is(":visible")) {
+            $('#ship2').show();
+        }
+        else if (!$('#ship3').is(":visible")) {
+            $('#ship3').show();
+        }
+        else if (!$('#ship4').is(":visible")) {
+            $('#ship4').show();
+        }
+        else if (!$('#ship5').is(":visible")) {
+            $('#ship5').show();
+        }
+    }
+    function hideitems(bol, val, ank) {
+        val = '#' + val;
+        $(val).removeClass('active').removeClass('show');
+        ank = '#' + ank;
+        $(ank).hide();
+        $(ank).removeClass('active').removeClass('show');
+        if (bol) {
+            setTimeout(function () { $('#con1').trigger('click') }, 1000);
+        }
+        else {
+            setTimeout(function () { $('#ship1').trigger('click') }, 1000);
+        }
+    }
+
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+        ShowSucess(success);
+    }
+    function ShowSucess(msge) {
+        $.notifyBar({ cssClass: "success", html: msg });
+    }
+    function ShowError(msg) {
+        $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    // <![CDATA[
+    $(document).ready(function () {
+        $.ajax({
+            url: '/NewLoad/BindDropDowns/',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                getload();
+
+
+                var res = JSON.parse(data);
+                if (res) {
+                    $("#drpDispatcher").html('');
+                    $("#drpDispatcher").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table, function () {
+                        $("#drpDispatcher").append($("<option/>").val(this.UserID).text(this.UName));
+                    });
+                    $("#drpSalesResp").html('');
+                    $("#drpSalesResp").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table1, function () {
+                        $("#drpSalesResp").append($("<option/>").val(this.UserID).text(this.UName));
+                    });
+
+                    //
+                    $("#drpEquipmentType").html('');
+                    $("#drpEquipmentType").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table2, function () {
+                        $("#drpEquipmentType").append($("<option/>").val(this.EquipmentTypeID).text(this.EquipmentTypeName));
+                    });
+                    $("#drpCurrency").html('');
+                    $("#drpCurrency").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table5, function () {
+                        $("#drpCurrency").append($("<option/>").val(this.CurrencyID).text(this.Currency));
+                    });
+
+                    $(".drpShipperTime").html('');
+                    $(".drpShipperTime").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table4, function () {
+                        $(".drpShipperTime").append($("<option/>").val(this.TimeID).text(this.Time));
+                    });
+                    $(".drpConsigneeTime").html('');
+                    $(".drpConsigneeTime").append($("<option/>").val("0").text('--Select --'));
+                    $.each(res.Table4, function () {
+                        $(".drpConsigneeTime").append($("<option/>").val(this.TimeID).text(this.Time));
+                    });
+                }
+            }
+        });
+
+        $("#txtBillTo").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/NewLoad/AutoCompleteCustomer/',
+                    data: "{'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    }
+                });
+            },
+            select: function (e, i) {
+                $("#hdn_txtBillTo").val(i.item.val);
+            },
+            minLength: 1
+        });
+
+        $(".txtShipper").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/NewLoad/AutoCompleteShipper/',
+                    data: "{'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        if (response.timeout == true) {
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            alert(response.responseText);
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                debugger
+                var ad = "#hdn_" + $(e.target).attr('id');
+                $(ad).val(i.item.val);
+            },
+            minLength: 1
+        });
+
+        $(".txtConsignee").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/NewLoad/AutoCompleteShipper/',
+                    data: "{'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        if (response.timeout == true) {
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            alert(response.responseText);
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+
+                var ad = "#hdn_" + $(e.target).attr('id');
+                $(ad).val(i.item.val);
+            },
+            minLength: 1
+        });
+
+
+        //txtCarrier
+        $("#txtCarrier").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/NewLoad/AutoCompleteCarrier/',
+                    data: "{'prefix': '" + request.term + "'}",
+                    dataType: "json",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        if (response.timeout == true) {
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            alert(response.responseText);
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                $("#hdntxtCarrier").val(i.item.val);
+            },
+            minLength: 1
+        });
+        $(".date").datepicker();
+
+
+    });
+
+    function getload() {
+        var ld = '@ViewBag.Load';
+        if (ld != '') {
+            $.ajax({
+                url: '/NewLoad/getload/',
+                data: "{'loadid': '" + ld + "'}",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    debugger;
+                    var res = JSON.parse(data);
+                    if (res) {
+                        $.each(res.Table, function () {
+                            $('#txtLoadNum').val(this.LoadNo);
+                            $('#hdn_txtBillTo').val(this.BillTo);
+                            $('#drpDispatcher').val(this.Dispatcher);
+                            $('#drpSalesResp').val(this.SaleRep1);
+                            $('#drpStatus').val(this.Status);
+                            $('#txtWo').val(this.WO);
+                            $('#txtdrpType').val(this.Type);
+                            $('#txtRate').val(this.Rate);
+                            $('#txtPDS').val(this.PDs);
+                            $('#txtfscrate').val(this.FSC);
+                            if (this.IsRatePercentage) {
+                                $('#chkrate').attr('checked', true);
+                            }
+
+                            $('#txtothercharges').val(this.OtherCharges);
+                            $('#txtRateNw').val(this.RatePercent);
+                            $('#hdntxtCarrier').val(this.CareerID);
+                            $('#drpEquipmentType').val(this.EquipmenttypeID);
+                            $('#txtCarrierFee').val(this.CareerFee);
+                            $('#drpCurrency').val(this.CurrencyID);
+                        });
+
+                        for (iv = 1; iv <= res.Table1.length; iv++) {
+                            $('#ship' + iv).trigger('click');
+
+                            var con = iv == 1 ? "" : iv;
+                            var i = iv - 1;
+                            $('#hdn_txtShipper' + con).val(res.Table1[i]["ShipperName"]);
+                            $('#txtShipperlocation' + con).val(res.Table1[i]["Location"]);
+                            $('#txtShipperDate' + con).val(res.Table1[i]["ShipperDate"]);
+
+                            if (res.Table1[i]["IsShowShipperTime"]) {
+                                $('#chktime' + con).attr('checked', true);
+                            }
+                            $('#drpShipperTime' + con).val(res.Table1[i]["ShipperTime"]);
+                            $('#txtShipperDescription' + con).val(res.Table1[i]["Description"]);
+                            $('#txtShipperType' + con).val(res.Table1[i]["Type"]);
+                            $('#txtShipperquantity' + con).val(res.Table1[i]["Quantity"]);
+                            $('#txtShipperWeight' + con).val(res.Table1[i]["Weight"]);
+                            $('#txtShipperValue' + con).val(res.Table1[i]["ShipperValues"]);
+                            $('#txtShippernotes' + con).val(res.Table1[i]["ShipperNotes"]);
+                            $('#txtShipperPO' + con).val(res.Table1[i]["PONumber"]);
+                            $('#txtShipperCustomBrokers' + con).val(res.Table1[i]["CustomBrokerID"]);
+
+                        }
+
+
+                        for (iv = 1; iv <= res.Table2.length; iv++) {
+                            $('#con' + iv).trigger('click');
+
+                            var con = iv == 1 ? "" : iv;
+                            var i = iv - 1;
+                            $('#hdn_txtConsignee' + con).val(res.Table2[i]["ConsigneeID"]);
+                            $('#txtConsigneelocation' + con).val(res.Table2[i]["ConsigneeLocation"]);
+                            $('#txtConsigneeDate' + con).val(res.Table2[i]["ConsigneeDate"]);
+                            if (res.Table1[i]["IsShowTime"]) {
+                                $('#chktimeConsignee' + con).attr('checked', true);
+                            }
+
+                            $('#drpConsigneeTime' + con).val(res.Table2[i]["ConsigneeTime"]);
+                            $('#txtConsigneeDescription' + con).val(res.Table2[i]["Description"]);
+                            $('#txtConsigneeType' + con).val(res.Table2[i]["Type"]);
+                            $('#txtConsigneequantity' + con).val(res.Table2[i]["Quantity"]);
+                            $('#txtConsigneeWeight' + con).val(res.Table2[i]["Weight"]);
+                            $('#txtConsigneeValue' + con).val(res.Table2[i]["Value"]);
+                            $('#txtConsigneeNotes' + con).val(res.Table2[i]["DeliveryNotes"]);
+                            $('#txtConsigneePO' + con).val(res.Table2[i]["PONumber"]);
+                            $('#txtConsigneeProMiles' + con).val(res.Table2[i]["ProMiles"]);
+                            $('#txtConsigneeEmpty' + con).val(res.Table2[i]["ProMilesEmpty"]);
+
+                        }
+
+                    }
+                }
+
+            });
+
+        }
+    }
+
+    function saveData() {
+
+        var objdt = new Object();
+        objdt.LoadID = '@ViewBag.Load';
+        objdt.billto = $('#hdn_txtBillTo').val();
+        objdt.drpDispatcher = $('#drpDispatcher').val();
+        objdt.drpSalesResp = $('#drpSalesResp').val();
+        objdt.drpStatus = $('#drpStatus').val();
+        objdt.txtWo = $('#txtWo').val();
+        objdt.txtdrpType = $('#txtdrpType').val();
+        objdt.txtRate = $('#txtRate').val();
+        objdt.txtPDS = $('#txtPDS').val();
+        objdt.txtfscrate = $('#txtfscrate').val();
+        objdt.chkrate = $('#chkrate').is(':checked');
+        objdt.txtothercharges = $('#txtothercharges').val();
+        objdt.txtRateNw = $('#txtRateNw').val();
+        objdt.hdntxtCarrier = $('#hdntxtCarrier').val();
+        objdt.drpEquipmentType = $('#drpEquipmentType').val();
+        objdt.txtCarrierFee = $('#txtCarrierFee').val();
+        objdt.drpCurrency = $('#drpCurrency').val();
+        var allshippers = [];
+        for (i = 1; i < 6; i++) {
+            var shp = new NewShipper();
+            if ($('#ship' + i).is(':visible')) {
+                var con = i == 1 ? "" : i;
+                shp.shippername = $('#hdn_txtShipper' + con).val();
+                shp.location = $('#txtShipperlocation' + con).val();
+                shp.date = $('#txtShipperDate' + con).val();
+                shp.isshowtime = $('#chktime' + con).is(":checked");
+                shp.time = $('#drpShipperTime' + con).val();
+                shp.description = $('#txtShipperDescription' + con).val();
+                shp.type = $('#txtShipperType' + con).val();
+                shp.qty = $('#txtShipperquantity' + con).val();
+                shp.weight = $('#txtShipperWeight' + con).val();
+                shp.value = $('#txtShipperValue' + con).val();
+                shp.notes = $('#txtShippernotes' + con).val();
+                shp.ponumbers = $('#txtShipperPO' + con).val();
+                shp.custombrokers = $('#txtShipperCustomBrokers' + con).val();
+                allshippers.push(shp);
+            }
+        }
+        var allconsignee = [];
+        for (i = 1; i < 6; i++) {
+            var shp = new NewConsignee();
+            if ($('#con' + i).is(':visible')) {
+                var con = i == 1 ? "" : i;
+                shp.ConsigneeName = $('#hdn_txtConsignee' + con).val();
+                shp.location = $('#txtConsigneelocation' + con).val();
+                shp.date = $('#txtConsigneeDate' + con).val();
+                shp.isshowtime = $('#chktimeConsignee' + con).is(":checked");
+                shp.time = $('#drpConsigneeTime' + con).val();
+                shp.description = $('#txtConsigneeDescription' + con).val();
+                shp.type = $('#txtConsigneeType' + con).val();
+                shp.qty = $('#txtConsigneequantity' + con).val();
+                shp.weight = $('#txtConsigneeWeight' + con).val();
+                shp.value = $('#txtConsigneeValue' + con).val();
+                shp.notes = $('#txtConsigneeNotes' + con).val();
+                shp.ponumbers = $('#txtConsigneePO' + con).val();
+                shp.promiles = $('#txtConsigneeProMiles' + con).val();
+                shp.empty = $('#txtConsigneeEmpty' + con).val();
+                allconsignee.push(shp);
+            }
+        }
+
+        var dttransfer = { 'load': objdt, 'shippers': allshippers, 'consignee': allconsignee };
+
+        $.ajax({
+            type: 'POST',
+            url: '/NewLoad/saveload',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(dttransfer),
+            dataType: 'json',
+            success: function (s) {
+                if (s.timeout == true) {
+                    $("#divLoader").hide();
+
+                    window.location.href = "/Account/Login";
+                }
+                
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                }
+                
+        });
+    }
+
+    function NewShipper() {
+        this.shippername = "";
+        this.location = "";
+        this.date = "";
+        this.isshowtime = "";
+        this.time = "";
+        this.description = "";
+        this.type = "";
+        this.qty = "";
+        this.weight = "";
+        this.value = "";
+        this.notes = "";
+        this.ponumbers = "";
+        this.custombrokers = "";
+    }
+
+    function NewConsignee() {
+        this.ConsigneeName = "";
+        this.location = "";
+        this.date = "";
+        this.isshowtime = "";
+        this.time = "";
+        this.description = "";
+        this.type = "";
+        this.qty = "";
+        this.weight = "";
+
+
+        this.value = "";
+        this.notes = "";
+        this.ponumbers = "";
+        this.promiles = "";
+        this.empty = "";
+    }
+
+    // ]]>
+</script>

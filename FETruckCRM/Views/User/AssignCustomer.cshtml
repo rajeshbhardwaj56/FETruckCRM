@@ -1,0 +1,103 @@
+﻿@model FETruckCRM.Models.UserCustomerModel
+@{
+    //ViewBag.Title = "Add Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Assign Customers";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">ASSIGN CUSTOMER</div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            @using (Html.BeginForm("AssignCustomer", "User", FormMethod.Post, new {  enctype = "multipart/form-data"}))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card commonForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Select User</label>
+                                            @Html.DropDownListFor(M => M.SelectedUserId, Model.UserList, new {@class= "form-control required", @onchange= "bindCustomerList()" })
+                                            @Html.ValidationMessageFor(m=>m.SelectedUserId)
+
+                                        </div>
+                                    </div>
+                                     <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Select Customer</label>
+                                       
+                                            @Html.DropDownListFor(M => M.SelectedCustomerId, Model.CustomerList, new { @class = "form-control required" })
+                                            @Html.ValidationMessageFor(m => m.SelectedCustomerId)
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="submit" value="Save" class = "btn btn-info commonBtn" />
+                                            <a class="btn btn-danger  text-white commonBtn rounded submit px-3" href="/user/AssignCustomer" style="">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+    </section>
+            </div>
+    <!-- END DATA TABLE-->
+
+<script language="javascript">
+     function ShowSucess(msg) {
+        $.notifyBar({ cssClass: "success", html: msg });
+    }
+    $(document).ready(function(){
+    debugger;
+    if('@TempData["Success"]'!='')
+    {
+    ShowSucess('@TempData["Success"]');
+    $("#SelectedUserId").val('0')
+    }
+})
+
+    function bindCustomerList() {
+        var userId = parseInt($('#SelectedUserId').val());
+        if (userId > 0) {
+            $.ajax({
+                type: "GET",
+                url: "/User/BindCustomerList?SelectedUserId=" + userId,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+                success: function (data) {
+                    $("#SelectedCustomerId").empty();
+                    var defaultOption = '<option value="' +
+                        0 + '">' + "Select Customer" + '</option>';
+                    $("#SelectedCustomerId").append(defaultOption);
+
+                    $.each(data, function (i) {
+                        var optionhtml = '<option value="' +
+                            data[i].Value + '">' + data[i].Text + '</option>';
+                        $("#SelectedCustomerId").append(optionhtml);
+                    });
+                }
+            });
+        }
+    }
+
+   
+</script>

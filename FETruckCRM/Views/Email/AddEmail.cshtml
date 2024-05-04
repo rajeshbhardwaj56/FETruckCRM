@@ -1,0 +1,140 @@
+﻿@model FETruckCRM.Models.EmailModel
+
+@{
+    //ViewBag.Title = "Add Equipment Type";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap-multiselect.css")" type="text/css">
+<script type="text/javascript" src="@Url.Content("~/assets/js/bootstrap-multiselect.js")"></script>
+<script src="@Url.Content("~/ckeditor/ckeditor.js")"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @using (Html.BeginForm("AddEmail", "Email", FormMethod.Post, new { id = "EquipmentTypeForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row">
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Email Type</label>
+                                                    @Html.DropDownListFor(a => a.strEmailTypeID, new SelectList(Model.EmailTypeList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strEmailTypeID)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Email Recipient</label>
+                                                    @Html.TextAreaFor(a => a.EmailAddress, new { @class = "form-control", @Placeholder = "Please enter comma separated emails", @Maxlength = "1000" })
+                                                    @Html.ValidationMessageFor(m => m.EmailAddress)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Subject</label>
+                                                    @Html.TextBoxFor(a => a.Subject, new { @class = "form-control", @Placeholder = "Subject", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.Subject)
+                                                </div>
+                                            </div>
+                                            @*<div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Status</label>
+                                                    @Html.DropDownListFor(a => a.strStatus, new SelectList(Model.StatusList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strStatus)
+                                                </div>
+                                            </div>*@
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Body</label>
+                                                    @Html.TextAreaFor(a => a.Body, new { @id = "EmailBody", @class = "form-control", @Placeholder = "Email body" })
+                                                    @Html.ValidationMessageFor(m => m.Body)
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                               
+                                @Html.HiddenFor(a => a.EmailID)
+                                <button type="submit" class="btn btn-info commonBtn">
+                                    Submit
+                                </button>
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                <div>
+
+                                </div>
+                                @*</form>*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace("EmailBody");
+       
+    });
+        function showpwd() {
+
+            $("#txtPwd").attr("type","password");
+            $("#txtPwd").show();
+            $("#ankChangePwd").hide();
+            $("#ankCancelPwd").show();
+        }
+        function hidpwd() {
+            $("#txtPwd").val('');
+            $("#txtPwd").attr("type", "text");
+            $("#txtPwd").hide();
+            $("#ankChangePwd").show();
+            $("#ankCancelPwd").hide();
+        }
+         var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+                       ShowError(err);
+        }
+        if (success != null && success != '') {
+
+                       ShowSucess(success);
+        }
+
+
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+</script>

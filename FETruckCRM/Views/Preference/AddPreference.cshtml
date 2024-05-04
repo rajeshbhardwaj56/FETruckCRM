@@ -1,0 +1,164 @@
+﻿@model FETruckCRM.Models.PreferencesModel
+
+@{
+    //ViewBag.Title = "Add FactoringCompany";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @using (Html.BeginForm("AddPreference", "Preference", FormMethod.Post, new { id = "PreferenceForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Standard Invoice Notes</label><span style="color:red">*</span>
+                                                    @Html.TextAreaFor(a => a.StandardInvoiceNotes, new { @id = "StandardInvoiceNotes", @class = "form-control", @Placeholder = "Standard Invoice Notes" })
+                                                    @Html.ValidationMessageFor(m => m.StandardInvoiceNotes)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Standard Load Sheet Notes</label><span style="color:red">*</span>
+                                                    @Html.TextAreaFor(a => a.StandardLoadSheetNotes, new { @id = "StandardLoadSheetNotes", @class = "form-control", @Placeholder = "Standard Load Sheet Notes" })
+                                                    @Html.ValidationMessageFor(m => m.StandardLoadSheetNotes)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Standard Customer Sheet Notes</label><span style="color:red">*</span>
+                                                    @Html.TextAreaFor(a => a.StandardCustomerSheetNotes, new { @id = "StandardCustomerSheetNotes", @class = "form-control phone", @Placeholder = "Standard Customer Sheet Notes" })
+                                                    @Html.ValidationMessageFor(m => m.StandardCustomerSheetNotes)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Standard Quote Notes</label>
+                                                    @Html.TextAreaFor(a => a.StandardQuoteNotes, new { @id = "StandardQuoteNotes", @class = "form-control", @Placeholder = "Standard Quote Notes" })
+                                                    @Html.ValidationMessageFor(m => m.StandardQuoteNotes)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Standard BOL Notes</label><span style="color:red">*</span>
+                                                    @Html.TextAreaFor(a => a.StandardBOLNotes, new { @id = "StandardBOLNotes", @class = "form-control phone", @Placeholder = "Standard BOL Notes" })
+                                                    @Html.ValidationMessageFor(m => m.StandardBOLNotes)
+                                                </div>
+                                            </div>
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(a => a.PreferenceID)
+                                <button type="submit" class="btn btn-info commonBtn">
+                                    Submit
+                                </button>
+                                @*@Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })*@
+
+                                <div>
+
+                                </div>
+                                @*</form>*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace("StandardInvoiceNotes");
+        CKEDITOR.replace("StandardLoadSheetNotes");
+        CKEDITOR.replace("StandardCustomerSheetNotes");
+        CKEDITOR.replace("StandardQuoteNotes");
+        CKEDITOR.replace("StandardBOLNotes");
+    });
+
+
+
+    var err = '@Err';
+    var success = '@success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+    function ShowSucess(msg) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/FactoringCompany/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+</script>

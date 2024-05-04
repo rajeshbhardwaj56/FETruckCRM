@@ -1,0 +1,196 @@
+﻿@model FETruckCRM.Models.LogInputModel
+@{
+    ViewBag.Title = "Customer LISTING";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<div class="page-content-bg">
+            <div class="top_heads">
+                <div class="p_title">Logger</div>
+                <div class="buttons-wrap">
+                    <div class="left__buttons">
+                        <div class="right_filter">
+                      <span class="filter_text">User</span>  @Html.DropDownListFor(a => a.SelectedUserId,Model.UserList, new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" }) &nbsp;&nbsp;
+                        <span class="filter_text">From</span>
+                        <input id="FromDate" type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="@Model.FromDate" />&nbsp;&nbsp;
+                        <span class="filter_text">To</span>
+                        <input id="ToDate" type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="@Model.ToDate" />
+                        <div class="right__buttons">
+                            <button class="btn btn-primary bg-red" type="button" onclick="loadData();">Go</button>
+                        </div>
+                    </div>
+                    </div>
+                    
+
+                   
+                </div>
+            </div>
+
+
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblLog">
+                            <thead>
+                                <tr>
+                                    <th>Log Date</th>
+                                    <th>User</th>
+                                    <th>Module</th>
+                                    <th>Edit Mode</th>
+                                    <th>Field Name</th>
+                                    <th>Old Value</th>
+                                    <th>New Value</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            loadData();
+        });
+
+
+    function loadData() {
+        //debugger;
+       var fdate= $("#FromDate").val();
+        var ldate = $("#ToDate").val();
+        if (fdate != "" && ldate != "") {
+        var userId = $("#SelectedUserId").val();
+        $("#divLoader").show();
+        $('#tblLog').DataTable().destroy();
+          $('#tblLog').DataTable({
+             "bServerSide": true,
+             "bProcessing": true,
+             "bSearchable": true,
+             "sAjaxSource": "/log/loadLogdata", 
+              "sServerMethod": "POST",
+                "dom": 'Bfrtip',
+             "fnServerParams": function (data) {
+                 data.push({  
+                  "name": "userId",  
+                 "value": userId  }); 
+
+                 data.push({  
+                  "name": "frmDate",  
+                 "value": fdate  }); 
+
+                data.push({  
+                  "name": "toDate",  
+                 "value": ldate  }); 
+        },
+            "order": [[0, "desc"]],
+            "buttons": [
+                         {
+                              'extend': 'excel',
+                                'text': 'Excel',
+                                'filename': getfilename(),
+                                'exportOptions': {
+                                    'modifier': {
+                                        'page': 'all',
+                                        'search': 'none' 
+                                    }
+                                },
+                                action: function (e, dt, button, config)
+                                    {  
+                                  exportToExcel();
+                                 }
+                            }
+                        ],
+         "aoColumns": [
+                    { "data": "LogDate", "autoWidth": true },
+                    { "data": "User", "autoWidth": true },
+                    { "data": "ModuleName", "autoWidth": true },
+                    { "data": "EditMode", "autoWidth": true },
+                    { "data": "ColumnName", "autoWidth": true },
+                    { "data": "OldValue", "autoWidth": true },
+                    { "data": "NewValue", "autoWidth": true }
+                ],
+          "columnDefs":[
+                            {
+                                "targets": [3,4,5,6], 
+                                "orderable": false,
+                                "defaultContent": " "
+                            }
+                        ],
+                         "responsive": true
+                  });
+                 $("#divLoader").hide();
+        }
+        else {
+            ShowError("From and To Dates are required.");
+            return false;
+        }
+    }
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+    function getfilename() {
+
+        var fdate = $("#FromDate").val();
+        var ldate = $("#ToDate").val(); 
+        var filterUserId = $("#SelectedUserId").children("option").filter(":selected").text();
+        return 'LogReport_By_' + filterUserId + '_' + fdate.replace("/", "-") + '_' + ldate.replace("/", "-")+".xls";
+
+    }
+
+    function exportToExcel()
+    {
+    var fdate= $("#FromDate").val();
+    var ldate = $("#ToDate").val();
+    var userId = $("#SelectedUserId").val();
+    $.ajax({
+    type: "GET",
+    data:{"userId":userId,"frmDate":fdate,"toDate":ldate},
+    contentType: "application/json; charset=utf-8", url: '@Url.Action("ExportToExcel", "Log")',
+    beforeSend: function () {
+   $("#loading").show();
+    },
+    success: function (response) {
+    var blob = new Blob([response], { type: 'application/ms-excel' });
+    var downloadUrl = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = getfilename();
+    document.body.appendChild(a);
+    a.click();
+    },
+    complete: function () {
+   $("#loading").hide();
+    }
+    });
+    return false;
+    }
+      
+</script>
+
+

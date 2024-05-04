@@ -1,0 +1,173 @@
+﻿
+@{
+    ViewBag.Title = "MC check LISTING";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">MC Check LISTING</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+                    @Html.ActionLink("Add MC", "AddMCCheck", new { id = 0 }, new { @class = "btn btn-primary bg-orange" })
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblMCCheck">
+                            <thead>
+                                <tr>
+                                    <th>MC Number</th>
+                                    <th>Carrier Name</th>
+                                    <th>Commodity Value</th>
+                                    <th>Commodity Type</th>
+                                    <th>Equipment Type</th>
+                                    <th>Approval Status</th>
+                                    <th>Date Added</th>
+                                      <th>Added By User</th>
+                                    <th>Team Lead</th>
+        <th>Team Manager</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#tblMCCheck').DataTable({
+                "bServerSide": true,
+                "bProcessing": true,
+                "bSearchable": true,
+                "sAjaxSource": "/Career/loadMCCheckdata/",
+                "sServerMethod": "POST",
+                "order": [[0, "desc"]],
+                "aoColumns": [
+                    { "data": "MCNumber", "autoWidth": true },
+                    { "data": "CarrierName", "autoWidth": true },
+                    { "data": "CommodityValue", "autoWidth": true },
+                    { "data": "CommodityType", "autoWidth": true },
+                    { "data": "EquipmentType", "autoWidth": true },
+                    { "data": "strApprovalStatus", "autoWidth": true },
+                    { "data": "strCreatedDate", "autoWidth": true },
+                    { "data": "AddedByUser", "autoWidth": true },
+                    { "data": "TeamLead", "autoWidth": true },
+                    { "data": "TeamManager", "autoWidth": true },
+
+                    {
+                       //this is Actions Column
+                        mRender: function (data, type, row) {
+                          debugger;
+                       
+                          var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("AddMCCheck", "Career", new { MCCheckID = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                          linkEdit = linkEdit.replace("-1", row.MCCheckID);
+                          return linkEdit;
+                          }
+                    }
+
+                     // for edit icon = < i class= "mdi mdi-border-color" ></i >
+                    // for delete icon =  <i class="mdi mdi-delete"></i>
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [2], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                    {
+                        "targets": [0], //first and last not sortable
+                        "visible": false,
+                    },
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    function DeleteFunction(CareerID) {
+        debugger;
+        if (confirm('Are you sure you want to delete this Carrier?')) {
+            $("#divLoader").show();
+            var data = { "CareerID": CareerID };
+            $.ajax({
+                type: 'POST',
+                url: 'Delete',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    debugger;
+                    if (s.data > 0) {
+                        $('#tblMCCheck').DataTable().ajax.reload();
+                        $("#divLoader").hide();
+                        ShowSucess(s.msg);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            ShowError(s.msg); $("#divLoader").hide();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    debugger;
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    } }
+            });
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+

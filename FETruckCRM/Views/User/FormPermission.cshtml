@@ -1,0 +1,197 @@
+﻿@model FETruckCRM.Models.GroupFormPermission
+
+@{
+    //ViewBag.Title = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("FormPermission", "User", FormMethod.Post, new { id = "FormPermission", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">User Group</label>
+
+                                            @Html.DropDownListFor(a => a.strRoleID, new SelectList(Model.RoleList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strRoleID)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Form Permission</label>
+                                            @Html.ListBoxFor(m => m.strFormid, Model.FormList, new { @class = "form-control shadow-none col-12", width = "100px", @style="height:300px;" })
+                                            @Html.ValidationMessageFor(m => m.strFormid)
+                                            @Html.HiddenFor(a => a.strFormids)
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info commonBtn">
+                                    @ViewBag.Submit
+                                </button>
+                                @Html.ActionLink("Cancel", "FormPermission", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+                                <div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        $('#strFormids').multiselect({
+            enableHTML: true
+        });
+    });
+
+    $("#strReportingManager").change(function () {
+        debugger;
+        var UserID = $("#strReportingManager").val();
+        var data = { "UserID": UserID };
+        $.ajax({
+            type: 'POST',
+            url: '/User/getTeamManager',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    $("#lblTeamManager").text(s.data);
+                    $("#TeamManager").val(s.data);
+
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+    $("#strRoleID").change(function () {
+        debugger;
+        var RoleID = $("#strRoleID").val();
+        if (RoleID == "") {
+
+            var tss = [];
+            $("#strFormid").val(tss);
+            return;
+
+        }
+        var data = { "RoleID": RoleID };
+        $.ajax({
+            type: 'POST',
+            url: '/User/loadForms',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    var selectedOptions = s.data.split(",");
+                    $("#strFormid").val(selectedOptions);
+                    $("#strFormids").val($("#strFormid").val());
+                    //var v = "";
+                    //$.each(s.data, function (i, v1) {
+                    //    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    //});
+                    //$("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        var selectedOptions = [];
+                        $("#strFormid").val(selectedOptions);
+                        $("#strFormids").val($("#strFormid").val());
+                    }
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+    $("#strFormid").change(function () {
+
+        $("#strFormids").val($("#strFormid").val());
+    });
+        function showpwd() {
+
+            $("#txtPwd").attr("type","password");
+            $("#txtPwd").show();
+            $("#ankChangePwd").hide();
+            $("#ankCancelPwd").show();
+        }
+        function hidpwd() {
+            $("#txtPwd").val('');
+            $("#txtPwd").attr("type", "text");
+            $("#txtPwd").hide();
+            $("#ankChangePwd").show();
+            $("#ankCancelPwd").hide();
+        }
+         @*var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';*@
+     var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+                       ShowError(err);
+        }
+        if (success != null && success != '') {
+
+                       ShowSucess(success);
+        }
+
+
+        function ShowSucess(msg) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+</script>

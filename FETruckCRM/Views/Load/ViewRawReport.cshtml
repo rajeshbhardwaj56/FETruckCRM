@@ -1,0 +1,84 @@
+﻿@model FETruckCRM.Models.RawReportModel
+@{
+    ViewBag.Title = "ViewRawReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="right_col">
+    <div class="page-content-bg">
+        <div class="top_heads">
+            <div class="p_title">Raw Report</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+
+                </div>
+                <div class="right_filter">
+                    <b style="padding:10px 10px;">Manager: </b> @Html.DropDownListFor(a => a.strManagerID, new SelectList(Model.ManagerList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                    <b style="padding:10px 10px;">Team Lead: </b> @Html.DropDownListFor(a => a.strTeamLeadID, new SelectList(Model.TeamLeadList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                    <b style="padding:10px 10px;">Employee Type: </b> @Html.DropDownListFor(a => a.strEmployeeTypeID, new SelectList(Model.EmployeeTypeList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "200px" })
+                    <b style="padding:10px 10px;">Site: </b> @Html.DropDownListFor(a => a.strSiteID, new SelectList(Model.SiteList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "200px" })
+                    <div class="right__buttons">
+                        <button class="btn btn-primary bg-red" type="button" onclick="loadData();">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+    </div>
+</div>
+<script type="text/javascript">
+    $("#strManagerID").change(function () {
+        debugger;
+        var ManagerID = $("#strManagerID").val();
+       
+        var data = { "ManagerID": ManagerID };
+        $.ajax({
+            type: 'POST',
+            url: '/Load/loadTeamLeadsdata',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                if (s.length > 0) {
+                    debugger;
+                    $("#strTeamLeadID").empty();
+                    let v = "";
+                    $.each(s, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strTeamLeadID").html(v);
+                }
+                else {
+
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        $("#strTeamLeadID").empty();
+                      let  v = "<option value=''>Please Select</option>";
+                        $("#strTeamLeadID").html(v);
+                    }
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                }
+            }
+        });
+    });
+
+    function loadData() {
+
+        let MID = $("#strManagerID").val();
+        let TID = $("#strTeamLeadID").val();
+        let EID = $("#strEmployeeTypeID").val();
+        let SID = $("#strSiteID").val();
+
+        window.location.assign("/Load/LoadRawReport?MID=" + MID + "&TID=" + TID + "&EID=" + EID + "&SID=" + SID);
+    }
+</script>

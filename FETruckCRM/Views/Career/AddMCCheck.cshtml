@@ -1,0 +1,215 @@
+﻿@model FETruckCRM.Models.MCCheckModel
+@using System.ComponentModel.DataAnnotations;
+@{
+    //ViewBag.Title = "Add Shipper";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+    bool DocCount = Model.MCCheckDocsList != null && Model.MCCheckDocsList.Count > 0?true:false;
+    
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @using (Html.BeginForm("AddMCCheck", "Career", FormMethod.Post, new { id = "MCCheckForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">MC Number</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.MCNumber, new { @Value = (@Model.MCNumber == 0) ? "" : @Model.MCNumber.ToString(), @class = "form-control required", @Placeholder = "MC Number", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.MCNumber)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Carrier Name</label>
+                                                    @Html.TextBoxFor(a => a.CarrierName, new { @class = "form-control required", @Placeholder = "Carrier Name", @Maxlength = "200" })
+                                                    @Html.ValidationMessageFor(m => m.CarrierName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Commodity Type</label>
+                                                    @Html.TextBoxFor(a => a.CommodityType, new { @class = "form-control required", @Placeholder = "Commodity Type", @Maxlength = "200" })
+                                                    @Html.ValidationMessageFor(m => m.CommodityType)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Commodity Value</label>
+                                                    @Html.TextBoxFor(a => a.CommodityValue, new { @Value = (@Model.CommodityValue == 0) ? "" : @Model.CommodityValue.ToString(), @class = "form-control required", @Placeholder = "Commodity Value", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.CommodityValue)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Equipment Type</label>
+                                                    @Html.DropDownListFor(a => a.EquipmentType, new SelectList(Model.EquipmentTypeListing, "Value", "Text"), new { @class = "form-control shadow-none col-12 required", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.EquipmentType)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Commodity Value Proof</label>
+                                                    @Html.TextBoxFor(m => m.files, "", new { @type = "file", @multiple = "multiple", name = "files" })
+                                                   
+                                                    @Html.ValidationMessageFor(m => m.files, "", new { @class = "text-danger" })
+                                                   
+                                                    @if (Model.MCCheckDocsList != null && Model.MCCheckDocsList.Count > 0)
+                                                    {
+                                                        <ul>
+                                                            @foreach (var Item in Model.MCCheckDocsList)
+                                                            {
+                                                                <li> <a href="@Url.Content(Item.MCCheckDocURL)" target="_blank">@Item.MCCheckDocName</a> </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(a => a.MCCheckID)
+                                <button type="submit" class="btn btn-info commonBtn">Submit</button>
+                                @Html.ActionLink("Cancel", "MCCheckIndex", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+                                <div>
+                                </div>
+                                @*</form>*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    debugger;
+    let dCount ='@DocCount'=== 'True';
+    if (dCount == false) {
+    $('#MCCheckForm').validate({
+        rules: {
+            "files": {
+                required: true,
+                extension: "jpg|jpeg|png|pdf|doc|docx|xls|xlsx|txt|",
+                filesize: 20971520,
+            }
+        }
+    });
+    }
+
+    //$(document).ready(function () {
+    //    document.getElementsByClassName('phone').addEventListener('input', function (e) {
+    //        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+    //        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    //    });
+    //});
+    var showLoader = function (form) {
+        $("#divLoader").show();
+        setTimeout(function () {
+            $("#divLoader").hide();
+        }, 1000);
+    }
+    $("input:file").change(function () {
+        debugger;
+        if ($(this).val() !== "") {
+            var file = $('#files')[0].files[0];
+            if ($('#files')[0].files.length > 10) {
+
+                alert("More than 10 files are not allowed.");
+                $("#files").val(null);
+                return false;
+            }
+            for (i = 0; i < files.length; i++) {
+                if (files[i].size > 4194304) {
+                    alert("Maximum file size should not exceed 4 mb.");
+                    $("#files").val(null);
+                    return false;
+                }
+            }
+        }
+    });
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    //$("#strCountryID").change(function () {
+    //    debugger;
+    //    var CountryID = $("#strCountryID").val();
+    //    var data = { "CountryID": CountryID };
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: '/Shipper/loadStates',
+    //        contentType: 'application/json; charset=utf-8',
+    //        data: JSON.stringify(data),
+    //        dataType: 'json',
+    //        success: function (s) {
+    //            //debugger;
+    //            if (s.data.length > 0) {
+    //                debugger;
+    //                $("#strStateID").empty();
+    //                var v = "";
+    //                $.each(s.data, function (i, v1) {
+    //                    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+    //                });
+    //                $("#strStateID").html(v);
+    //            }
+    //            else {
+    //                if (s.timeout == true) {
+    //                    $("#divLoader").hide();
+
+    //                    window.location.href = "/Account/Login";
+    //                }
+
+
+    //            }
+
+    //        },
+    //        error: function (s) {
+    //            if (s.timeout == true) {
+
+    //                window.location.href = "/Account/Login";
+    //            } }
+    //    });
+
+    //});
+
+</script>
+

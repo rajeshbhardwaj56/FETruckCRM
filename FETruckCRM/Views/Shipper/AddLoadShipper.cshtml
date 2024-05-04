@@ -1,0 +1,366 @@
+﻿@model FETruckCRM.Models.ShipperModel
+@{
+    Layout = null;
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+<link href="@Url.Content("~/assets/css/font-awesome.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/dataTables.bootstrap.css")" rel="stylesheet" />
+<link href="@Url.Content("~/assets/css/perfect-scrollbar.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/theme.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap-datepicker.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/custom.css")" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery-ui.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery-ui.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-input-mask-phone-number.js")"></script>
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
+<style>
+
+    .error {
+        color: red;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @using (Html.BeginForm("AddLoadShipper", "Shipper", FormMethod.Post, new { id = "ShipperForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Name</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.ShipperName, new { @class = "form-control", @Placeholder = "Name", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.ShipperName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Address</label>
+                                                    @Html.TextBoxFor(a => a.AddressL1, new { @class = "form-control", @Placeholder = "Address", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.AddressL1)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Address Line 2</label>
+                                                    @Html.TextBoxFor(a => a.AddressL2, new { @class = "form-control", @Placeholder = "Address Line 2", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.AddressL2)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Address Line 3</label>
+                                                    @Html.TextBoxFor(a => a.AddressL3, new { @class = "form-control", @Placeholder = "Address Line 3", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.AddressL3)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Country</label><span style="color:red">*</span>
+                                                    @Html.DropDownListFor(a => a.strCountryID, new SelectList(Model.CountryList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strCountryID)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">State</label><span style="color:red">*</span>
+                                                    @Html.DropDownListFor(a => a.strStateID, new SelectList(Model.StateList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strStateID)
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">City</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.City, new { @class = "form-control", @Placeholder = "City", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.AddressL2)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Zip</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.ZipCode, new { @class = "form-control", @Placeholder = "Zip", @Maxlength = "10" })
+                                                    @Html.ValidationMessageFor(m => m.AddressL3)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Contact Name</label>
+                                                    @Html.TextBoxFor(a => a.ContactName, new { @class = "form-control", @Placeholder = "Contact Name", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.ContactName)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Contact Email</label>@*<span style="color:red">*</span>*@
+                                                    @Html.TextBoxFor(a => a.ContactEmail, new { @class = "form-control", @Placeholder = "Contact Email", @Maxlength = "200" })
+                                                    @Html.ValidationMessageFor(m => m.ContactEmail)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Telephone</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.Telephone, new { @class = "form-control phone telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.Telephone)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Ext</label>
+                                                    @Html.TextBoxFor(a => a.TelephoneExt, new { @class = "form-control", @Placeholder = "Ext.", @Maxlength = "5", @type = "number" })
+                                                    @Html.ValidationMessageFor(m => m.TelephoneExt)
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Toll Free</label>
+                                                    @Html.TextBoxFor(a => a.TollFree, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.TollFree)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Fax</label>
+                                                    @Html.TextBoxFor(a => a.Fax, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.Fax)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Shipping Hours</label>
+                                                    @Html.TextBoxFor(a => a.strShippingHours, new { @class = "form-control", @Placeholder = "Shipping Hours", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.strShippingHours)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Appointments</label>
+                                                    @Html.DropDownListFor(a => a.strAppointments, new SelectList(Model.AppointmentsList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strAppointments)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Major Intersections/Directions</label>
+                                                    @Html.TextBoxFor(a => a.MajorInspectionDirections, new { @class = "form-control", @Placeholder = "Major Intersections/Directions", @Maxlength = "200" })
+                                                    @Html.ValidationMessageFor(m => m.MajorInspectionDirections)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @if (Model.ShipperType == 1)
+                                                    {
+                                                        <label class="control-label mb-1">Add As Consignee</label>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="control-label mb-1">Add As Shipper</label>
+
+                                                    }
+                                                    @Html.CheckBoxFor(a => a.DuplicateInfo, new { @class = "form-control", @Placeholder = "Appointments", @Maxlength = "20" })
+                                                    @*@Html.ValidationMessageFor(m => m.DuplicateInfo)*@
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Status</label><span style="color:red">*</span>
+                                                    @Html.DropDownListFor(a => a.strStatusInd, new SelectList(Model.StatusList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strStatusInd)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Shipping Note</label>
+                                                    @Html.TextAreaFor(a => a.Notes, new { @class = "form-control shadow-none col-12", @rows = "5" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Internal Note</label>
+                                                    @Html.TextAreaFor(a => a.InternalNotes, new { @class = "form-control shadow-none col-12", @rows = "5" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(a => a.ShipperID)
+                                @Html.HiddenFor(a => a.ShipperType)
+                                @Html.HiddenFor(a => a.CustomerID)
+                                <button type="submit" class="btn btn-info commonBtn">
+                                    Submit
+                                </button>
+                                @Html.ActionLink("Cancel", "Index", new { type = Model.ShipperType }, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                <div>
+
+                                </div>
+                                @*</form>*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        document.getElementsByClassName('phone').addEventListener('input', function (e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+    });
+
+
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Shipper/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+
+
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+</script>
+<script src="@Url.Content("~/assets/js/popper.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+<script src="@Url.Content("~/assets/js/perfect-scrollbar.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/assets/js/custom.js")"></script>
+@*<script src="@Url.Content("~/assets/js/jquery.dataTables.min.js")"></script>*@
+@*<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>*@
+
+@*<script src="@Url.Content("~/assets/js/dataTables.bootstrap.min.js")"></script>*@
+@*<script src="@Url.Content("~/assets/js/dataTables.responsive.min.js")"></script>*@
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+
+<script src="@Url.Content("~/assets/js/dataTables.buttons.min.js")"></script>
+<script src="@Url.Content("~/assets/js/jszip.min.js")"></script>
+<script src="@Url.Content("~/assets/js/pdfmake.min.js")"></script>
+<script src="@Url.Content("~/assets/js/vfs_fonts.js")"></script>
+<script src="@Url.Content("~/assets/js/buttons.html5.min.js")"></script>
+<script src="@Url.Content("~/assets/js/buttons.print.min.js")"></script>
+<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            format: "mm/dd/yyyy",
+            autoclose: true
+        });
+
+        $('.telephone').usPhoneFormat();
+
+        //setup ajax error handling
+        $.ajaxSetup({
+            error: function (x, status, error) {
+                if (x.status == 403) {
+                    alert("Sorry, your session has expired. Please login again to continue");
+                    window.location.href = "/Account/Login";
+                }
+                else {
+                    alert("An error occurred: " + status + "nError: " + error);
+                }
+            }
+        });
+    });
+</script>

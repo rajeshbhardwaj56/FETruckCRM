@@ -1,0 +1,251 @@
+﻿@model FETruckCRM.Models.RateConModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice_@Model.Loaddata.InvoiceNo</title>
+    <link href="~/assets/css/Invoicepdfstyle.css" rel="stylesheet" />
+    <script>
+        setTimeout("window.close()", 5000)
+    </script>
+</head>
+<body>
+    <div class="page-header" style="text-align: center">
+        <table style="width:100%;">
+            <tr>
+                <td style="text-align:center; font-weight:bold;">
+                    Invoice
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="page-footer" style="text-align:center;"><img src="~/assets/images/ellogo.png" style="border:none;" /></div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position header-->
+                    <div class="page-header-space"></div>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <!--*** CONTENT GOES HERE ***-->
+
+                    <div class="page">
+                        <table style="width:100%;" cellpadding="10" cellspacing="5">
+                            <tr>
+                                <td style="width:100%;">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:40%;text-align:left;" valign="top">
+                                                <img src="~/assets/images/ellogo.png" style="border:none;" /><br />
+                                                <b> Payable To:</b><br />
+                                                <b> FLEETEXPERTS LOGISTICS LLC</b><br />
+                                                221 River ST STE 9 Hoboken, <br />
+                                                NJ 07030-5990<br />
+                                            </td>
+
+                                            <td style="width:60%;text-align:left;" valign="top">
+                                                <table style="border: 1px #DFDFDF solid;width:100%;" cellpadding="3" cellspacing="0">
+                                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Invoice #</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.InvoiceNo</td></tr>
+                                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Invoice Date</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.InvoiceDate</td></tr>
+                                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Terms:</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.PaymentTerm</td></tr>
+                                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">W/O:</td><td style="border: 1px #DFDFDF solid; text-align: left;" colspan="3">@Model.Loaddata.WO</td></tr>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <b>Bill To:</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Model.Loaddata.CustomerName <br />@Model.Loaddata.BillAddress
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>LOAD DETAILS:</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    LOAD#:@Model.Loaddata.LoadNo
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    @foreach (var item in Model.LoadShipperdata)
+                                    {
+                                        <table style="border:1px #DFDFDF solid;width:100%;margin-top:10px;" cellpadding="3" cellspacing="0">
+
+
+                                            <tr>
+                                                <td valign="top" style="text-align: left; padding: 10px;width:40%;">
+                                                    <b>Shipper :</b><br>
+                                                    @item.ShipperName<br>
+                                                    @item.Location<br>
+
+                                                </td>
+                                                <td style="width:60%;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Date</td>
+                                                            <td> @item.ShipperDate.ToShortDateString() @item.ShipperTime </td>
+                                                            <td style="font-weight:bold;">Purchased Order #</td>
+                                                            <td> @item.PONumber</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Type</td>
+                                                            <td> @item.Type </td>
+                                                            <td style="font-weight:bold;">Quantity</td>
+                                                            <td> @item.Quantity </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Weight</td>
+                                                            <td colspan="3"> @item.Weight </td>
+
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="font-weight:bold;">Description</td>
+                                                            <td colspan="3"> @item.Description</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @foreach (var item in Model.LoadConsigneedata)
+                                    {
+                                        <table style="border:1px #DFDFDF solid;width:100%;margin-top:10px;" cellpadding="3" cellspacing="0">
+                                            <tr>
+                                                <td valign="top" style="text-align:left;padding:10px;width:40%;">
+                                                    <b>Consignee:</b><br>
+                                                    @item.ConsigneeName<br>
+                                                    @item.ConsigneeLocation<br>
+
+                                                </td>
+                                                <td style="width:60%;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Date</td>
+                                                            <td>@item.ConsigneeDate.ToShortDateString()  @item.ConsigneeTime</td>
+                                                            <td style="font-weight:bold;">Purchased Order #</td>
+                                                            <td>@item.PONumber</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Type</td>
+                                                            <td>@item.Type</td>
+                                                            <td style="font-weight:bold;">Quantity</td>
+                                                            <td>@item.Quantity </td>
+                                                        </tr>
+                                                        @*<tr>
+                                                                <td style="font-weight:bold;">Quantity</td>
+                                                                <td>@item.Quantity </td>
+                                                                <td style="font-weight:bold;">Receiving Hours:</td>
+                                                                <td>@item.ShippingHours</td>
+                                                            </tr>*@
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Weight</td>
+                                                            <td colspan="3">@item.Weight </td>
+
+                                                        </tr>
+                                                        @*<tr>
+                                                                <td style="font-weight:bold;">Notes</td>
+                                                                <td colspan="3">@item.DeliveryNotes </td>
+
+                                                            </tr>*@
+                                                        <tr>
+
+                                                            <td style="font-weight:bold;">Description</td>
+                                                            <td colspan="3">@item.Description</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left; font-weight:bold;font-size:12px;">
+                                    RATES AND CHARGES:
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:left;width:100%;">
+                                    <table style="width:100%">
+                                        <tr><td style="text-align:left;"> @Model.Loaddata.Type:</td><td style="text-align:right;">@Model.Loaddata.Rate.ToString("C")</td></tr>
+                                        <tr><td style="text-align:left;">F.S.C @(Model.Loaddata.IsRatePercentage==true? @Model.Loaddata.FSC.ToString():"")</td><td style="text-align:right;">@(Model.Loaddata.IsRatePercentage==true?(Model.Loaddata.Rate*((Model.Loaddata.FSC)/Convert.ToDecimal(100))).ToString("C") : @Model.Loaddata.FSC.ToString("C"))</td></tr>
+                                        @foreach (var item in Model.LoadOthCharges)
+                                        {
+                                            <tr><td style="text-align:left;"> @item.OtherchargesDescription:</td><td style="text-align:right;">@item.Amount</td></tr>
+
+                                        }
+
+                                        <tr><td colspan="2" style="font-size: 14px; text-align: left;"><hr /></td></tr>
+                                        <tr><td style="text-align: left; font-weight: bold; font-size: 12px; text-align: left;"> <b>TOTAL</b></td><td style="text-align:right; font-weight:bold;font-size:12px;">@((Convert.ToDecimal(Model.Loaddata.RatePercent)).ToString("C").Replace(".00", ""))</td></tr>
+                                        @if (@Model.Loaddata.AdvancePayment > 0)
+                                        {
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <b>Advance Payment</b>
+                                                </td>
+                                                <td style="text-align:right;">
+                                                    - @Model.Loaddata.AdvancePayment.ToString("C").Replace(".00", "")
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr><td colspan="2" style="font-size: 14px; text-align: left;"><hr /></td></tr>
+                                        <tr><td style="text-align: left; font-weight: bold; font-size: 12px; text-align: left;"> <b>TOTAL AMOUNT DUE</b></td><td style="text-align:right; font-weight:bold;font-size:12px;">@((Convert.ToDecimal(Model.Loaddata.RatePercent) - Convert.ToDecimal(Model.Loaddata.AdvancePayment)).ToString("C").Replace(".00", ""))</td></tr>
+
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">
+                                    <b>Notes:</b><br />
+                                    @Html.Raw(Model.LoadPreferencedata.StandardInvoiceNotes.TrimEnd())
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position footer-->
+                    <div class="page-footer-space"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

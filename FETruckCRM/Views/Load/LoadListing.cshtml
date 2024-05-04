@@ -1,0 +1,283 @@
+﻿@{
+    ViewBag.Title = "Eternetic Logistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+
+<!-- PAGE CONTENT-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">Dashboard</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+                    <a href="@Url.Action("index", "Load",new { LoadType=2})" class="btn btn-primary bg-orange">New Active Load</a>
+                    <a href="@Url.Action("index", "Load",new { LoadType=1})" class="btn btn-primary bg-orange">New Pending Load</a>
+
+                    @*<button class="btn btn-primary bg-orange" type="button">New Active Load</button>
+                        <button class="btn btn-primary bg-orange" type="button">New Pending Load</button>*@
+                </div>
+                <div class="right_filter" style="display:none;">
+                    <input type="text" class="form-control m-l-10 m-r-10 width-140 bg-dark-blue" value="" placeholder="Keyword.." />
+                    <select class="form-control-sm form-control width-140 bg-dark-blue">
+                        <option value="0">Search For</option>
+                        <option value="1">Shipper Rate</option>
+                        <option value="2">Carrier Pay</option>
+                        <option value="3">Load Margin</option>
+                        <option value="4">Margin %</option>
+                    </select>
+                    <span class="filter_text">From</span>
+                    <input type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="" />
+                    <span class="filter_text">To</span>
+                    <input type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="" />
+                    <div class="right__buttons">
+                        <button class="btn btn-primary bg-red" type="button">Go</button>
+                        <button class="btn btn-primary" type="button">Show All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table_btn_links">
+                        <div class="table_status" style="display:none;">
+                            <ul>
+                                <li><span class="table_statusClr clr-pending"></span> Pending</li>
+                                <li><span class="table_statusClr clr-open"></span> Open</li>
+                                <li><span class="table_statusClr clr-refused"></span> Refused</li>
+                                <li><span class="table_statusClr clr-covered"></span> Covered</li>
+                                <li><span class="table_statusClr clr-dispatched"></span> Dispatced</li>
+                                <li><span class="table_statusClr clr-onRoute"></span> On Route</li>
+                                <li><span class="table_statusClr clr-unLoading"></span> (Un)Loading</li>
+                                <li><span class="table_statusClr clr-inYard"></span> In Yard</li>
+                            </ul>
+
+                        </div>
+                        <div class="table_links">
+                            <ul style="display:none;">
+                                <li>
+                                    <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Offices</label> </a>
+                                </li>
+                                <li>
+                                    <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Time</label> </a>
+                                </li>
+                                <li>
+                                    <a href="#">Open Load</a>
+                                </li>
+                                <li>
+                                    <a href="#">Delivered/Completed Load</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="table-responsive table-responsive-data2" style="overflow-x:scroll;">
+                        <table class="table table-data2" id="tblLoad">
+                            <thead>
+                                <tr>
+                                    <th>Load #</th>
+                                    <th>W/O #</th>
+                                    <th>Driver/Carrier</th>
+                                    <th>Ship Date</th>
+                                    <th>Load Date</th>
+                                    <th>Del Date</th>
+                                    <th>Customer</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Shipper Rate</th>
+                                    <th>Career Fee</th>
+                                    <th>Margin</th>
+                                    <th>Margin %</th>
+                                    <th>Load Status</th>
+                                    <th>Date Added</th>
+                                    <th>Load Type</th>
+                                    <th>Team Member</th>
+                                    <th>Team Lead</th>
+                                    <th>Team Manager</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+
+
+<script type="text/javascript">
+    // this is just used to make sure values pushed into the array are not already there
+    //Array.prototype.contains = function (v) {
+    //    for (var i = 0; i < this.length; i++) {
+    //        if (this[i] === v) return true;
+    //    }
+    //    return false;
+    //};
+    //var LoadStatus = null;
+
+    $(document).ready(function () {
+
+        //$.ajax({
+        //    url: "/Load/BindDropDowns",
+        //    type: "POST",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (data) {
+        //        // getload();
+        //        var res = JSON.parse(data);
+        //        if (res) {
+        //            //
+        //            //$("#drpStatus").html('');
+        //            //$("#drpStatus").append($("<option/>").val("0").text('--Select --'));
+        //            //$.each(res.Table3, function () {
+        //            //    $("#drpStatus").append($("<option/>").val(this.LoadStatusID).text(this.Status));
+        //            //});
+
+        //            LoadStatus = new Array();
+        //            $.each(res.Table3, function (i, item) {
+        //                if (!LoadStatus.contains(item)) {
+        //                    LoadStatus.push(item);
+        //                }
+        //            });
+        //            //
+        //        }
+        //    }
+        //});
+        $('#tblLoad').DataTable({
+                "ajax": {
+                "url": "/Load/getloaddata_test/",
+                "type": "POST",
+                "datatype": "json"
+                },
+                "columns": [
+                    { "data": "LoadNo", "autoWidth": true },
+                    { "data": "WO", "autoWidth": true },
+                    { "data": "CareerName", "autoWidth": true },
+                    { "data": "strShipperDate", "autoWidth": true },
+                    { "data": "strLoadDate", "autoWidth": true },
+                    { "data": "strDeliveredDate", "autoWidth": true },
+                    { "data": "CustomerName", "autoWidth": true },
+                    { "data": "Location", "autoWidth": true },
+                    { "data": "ConsigneeLocation", "autoWidth": true },
+                    { "data": "strRate", "autoWidth": true },
+                    { "data": "strCareerFee", "autoWidth": true },
+                    { "data": "strMargin", "autoWidth": true },
+                    { "data": "strMarginPercent", "autoWidth": true },
+                    { "data": "Status", "autoWidth": true },
+                    {
+                        "data": "CreatedDate", "autoWidth": true,
+                        "render": function (data) {
+                            var pattern = /Date\(([^)]+)\)/;
+                            var results = pattern.exec(data);
+                            var date = new Date(parseFloat(results[1]))
+                            var month = date.getMonth() + 1;
+                            return date.getDate() + "/" + (month.toString().length > 1 ? month : "0" + month) + "/" + date.getFullYear();
+                        }
+                    },
+                    { "data": "LoadTypeName", "autoWidth": true },
+                    { "data": "AddedByUser", "autoWidth": true },
+                    { "data": "TeamLead", "autoWidth": true },
+                    { "data": "TeamManager", "autoWidth": true },
+                                        {
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+                          //  var linkEdit = '@Html.ActionLink("Edit", "AddCustomBroker", new {id= -1 })';
+                            var lt = row.LoadID;
+                            var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("index", "load", new { LoadType=-2, loadid = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                            linkEdit = linkEdit.replace("-1", row.LoadID).replace("-2", row.LoadType);
+                            //var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["LoadID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            return linkEdit;
+                            }
+                    },
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [2], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                    //{
+                    //    targets: [13], render:
+                    //        function (data, type, row) { return createSelect(data,row["LoadID"]); }
+                    //},
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+
+
+    //function createSelect(selItem,loadID) {
+
+    //    var sel = "<select id='LS_" + loadID+"' onchange='changeStatus(this.id," + loadID+");'><option>Select Status</option>";
+    //    for (var i = 0; i < LoadStatus.length; ++i) {
+    //        if (LoadStatus[i].LoadStatusID == selItem) {
+    //            sel += "<option selected value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+    //        }
+    //        else {
+    //            sel += "<option  value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+    //        }
+    //    }
+    //    sel += "</select>";
+    //    return sel;
+    //}
+
+    //function changeStatus(e, loadID) {
+    //    $("#divLoader").show();
+    //    var data = { "LoadID": loadID, "LoadStatusID": $("#" + e).val() };
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: 'ChangeStatus',
+    //        contentType: 'application/json; charset=utf-8',
+    //        data: JSON.stringify(data),
+    //        dataType: 'json',
+    //        success: function (s) {
+    //            //debugger;
+    //            if (s.data > 0) {
+    //                $('#tblCustomBroker').DataTable().ajax.reload();
+    //                $("#divLoader").hide();
+    //                ShowSucess(s.msg);
+    //            }
+    //            else {
+    //                ShowError(s.msg); $("#divLoader").hide();
+    //            }
+
+    //        },
+    //        error: function (s) { ShowError(); }
+    //    });
+    //    return true;
+    //}
+</script>

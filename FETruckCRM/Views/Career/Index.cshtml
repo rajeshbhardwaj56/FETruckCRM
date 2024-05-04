@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "Career LISTING";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">CARRIER LISTING</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+                    @Html.ActionLink("Add Carrier", "AddCareer", new { id = 0 }, new { @class = "btn btn-primary bg-orange" })
+                    <a href="@Url.Action("ExportToExcelCarrier", "Career")">
+                        <img src="~/assets/images/xlsx.ico" width="40px" title="Export To Excel" />
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblCareer">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Carrier Name</th>
+                                    <th>MC/FF No</th>
+                                    <th>Load Type</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip</th>
+                                    <th>Telephone</th>
+                                    <th>Status</th>
+                                    <th>Approval Status</th>
+                                    <th>Date Added</th>
+                                    <th>Added By User</th>
+                                    <th>Team Lead</th>
+                                    <th>Team Manager</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#tblCareer').DataTable({
+                "bServerSide": true,
+                "bProcessing": true,
+                "bSearchable": true,
+                "sAjaxSource": "/Career/loaddataByPaging/",
+                "sServerMethod": "POST",
+                "order": [[0, "desc"]],
+                "aoColumns": [
+                    { "data": "CareerID", "autoWidth": true },
+                    { "data": "CareerName", "autoWidth": true },
+                    { "data": "MCFFNo", "autoWidth": true },
+                    { "data": "LoadType", "autoWidth": true },
+                    { "data": "Address", "autoWidth": true },
+                    { "data": "City", "autoWidth": true },
+                    { "data": "StateName", "autoWidth": true },
+                    { "data": "ZipCode", "autoWidth": true },
+                    { "data": "Telephone", "autoWidth": true },
+                    { "data": "strStatusInd", "autoWidth": true },
+                    { "data": "strApprovalStatus", "autoWidth": true },
+                    { "data": "strCreatedDate", "autoWidth": true },
+                    { "data": "AddedByUser", "autoWidth": true },
+                    { "data": "TeamLead", "autoWidth": true },
+                    { "data": "TeamManager", "autoWidth": true },
+                    {
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+                          //  var linkEdit = '@Html.ActionLink("Edit", "AddCareer", new {id= -1 })';
+                            var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("AddCareer", "Career", new { id = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                            linkEdit = linkEdit.replace("-1", row.CareerID);
+                            var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["CareerID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            return linkEdit + " " + linkDelete;
+                            }
+                    }
+                     // for edit icon = < i class= "mdi mdi-border-color" ></i >
+                    // for delete icon =  <i class="mdi mdi-delete"></i>
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [15], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                    {
+                        "targets": [0], //first and last not sortable
+                        "visible": false,
+                    },
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    function DeleteFunction(CareerID) {
+        debugger;
+        if (confirm('Are you sure you want to delete this Carrier?')) {
+            $("#divLoader").show();
+            var data = { "CareerID": CareerID };
+            $.ajax({
+                type: 'POST',
+                url: 'Delete',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    //debugger;
+                    if (s.data > 0) {
+                        $('#tblCareer').DataTable().ajax.reload();
+                        $("#divLoader").hide();
+                        ShowSucess(s.msg);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            ShowError(s.msg); $("#divLoader").hide();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    } }
+            });
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

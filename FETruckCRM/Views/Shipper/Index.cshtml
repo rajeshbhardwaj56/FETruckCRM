@@ -1,0 +1,183 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+    string btnTitle = Convert.ToString(ViewBag.ButtonTitle);
+    string type = Convert.ToString(ViewBag.ShipperType);
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title LISTING</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+                    @Html.ActionLink(@btnTitle, "AddShipper", new {type= @type,id = 0 }, new { @class = "btn btn-primary bg-orange" })
+                </div>
+                  
+                </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                   
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblShipper">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Contact No.</th>
+                                    <th>Status</th>
+                                    <th>Date Added</th>
+                                    <th>Added By User</th>
+                                    <th>Team Lead</th>
+                                    <th>Team Manager</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        var sdata = { "id": '@ViewBag.ShipperType' };
+            $('#tblShipper').DataTable({
+                @*"ajax": {
+                    "url": "/Shipper/loaddata?type="+'@type',
+                    "type": "GET",
+                   "datatype": "json"
+                },*@
+                "bServerSide": true,
+                "bProcessing": true,
+                "bSearchable": true,
+                "sAjaxSource": "/Shipper/loaddataByPaging?type="+'@type',
+                "sServerMethod": "POST",
+                "order": [[0, "desc"]],
+                "aoColumns": [
+                    { "data": "ShipperName", "autoWidth": true },
+                    { "data": "Address", "autoWidth": true },
+                    { "data": "Telephone", "autoWidth": true },
+
+                    { "data": "strStatusInd", "autoWidth": true },
+                    { "data": "strCreatedDate", "autoWidth": true },
+                    //{
+                    //    "data": "CreatedDate", "autoWidth": true,
+                    //    "render": function (data) {
+                    //        //debugger;
+                    //        var pattern = /Date\(([^)]+)\)/;
+                    //        var results = pattern.exec(data);
+                    //        var date = new Date(parseFloat(results[1]))
+                    //        var month = date.getMonth() + 1;
+                    //        return date.getDate() + "/" + (month.toString().length > 1 ? month : "0" + month) + "/" + date.getFullYear();
+                    //    }
+                    //},
+                    { "data": "AddedByUser", "autoWidth": true },
+                    { "data": "TeamLead", "autoWidth": true },
+                    { "data": "TeamManager", "autoWidth": true },
+
+                    {
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+                          //  var linkEdit = '@Html.ActionLink("Edit", "AddShipper", new {id= -1 })';
+                            var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("AddShipper", "Shipper", new {type= @type, id = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                            linkEdit = linkEdit.replace("-1", row.ShipperID);
+                            var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["ShipperID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            return linkEdit + " " + linkDelete;
+                            }
+                    }
+
+                     // for edit icon = < i class= "mdi mdi-border-color" ></i >
+                    // for delete icon =  <i class="mdi mdi-delete"></i>
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [8], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    function DeleteFunction(ShipperID) {
+        debugger;
+        if (confirm('Are you sure you want to delete this ' + (@type==1?"Shipper":"Consignee")+' ?')) {
+            $("#divLoader").show();
+            var data = { "ShipperID": ShipperID };
+            $.ajax({
+                type: 'POST',
+                url: 'Delete',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    //debugger;
+                    if (s.data > 0) {
+                        $('#tblShipper').DataTable().ajax.reload();
+                        $("#divLoader").hide();
+                        ShowSucess(s.msg);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            ShowError(s.msg); $("#divLoader").hide();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    } }
+            });
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

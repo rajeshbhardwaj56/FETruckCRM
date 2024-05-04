@@ -1,0 +1,527 @@
+﻿@model FETruckCRM.Models.CustomerNotificationsModel
+
+@{
+    //ViewBag.Title = "Add Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+
+@*<div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="p_title">@ViewBag.Title</div>
+            </div>
+        </div>
+    </div>*@
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @*@using (Ajax.BeginForm("AddCustomer", "Customer", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp" }))
+                                {*@
+                            @using (Html.BeginForm("AddCustomerNotifications", "Customer", FormMethod.Post, new { id = "CustomernotificationForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+
+                                <div class="row">
+
+
+
+
+                                    <div class="col-md-12">
+                                       
+                                                <div class="row">
+                                                    
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Email </label><span style="color:red;">*</span>
+                                                            @Html.TextBoxFor(a => a.Email, new { @class = "form-control required", @Placeholder = "test@test.com", @Maxlength = "200" })
+                                                            @Html.ValidationMessageFor(m => m.Email)
+                                                        </div>
+                                                    </div>
+                                                    
+                                                   
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Send a copy to the initiating user</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.SendCopyToInitiatingUser, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Dispatched</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENDispatched, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Loading</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENLoading, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">On Route</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENOnRoute, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Unloading</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENUnloading, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">In Yard</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENInYard, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Delivered</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENDelivered, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1 el_min100">Completed</label>
+                                                            <div class="form-check-inline form-check">
+                                                                <label class="form-check-label">
+                                                                    @Html.CheckBoxFor(a => a.ENCompleted, new { @class = "form-check-input", @text = "This is Broker" })
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                        <div class="form_bbtns">
+                                            @Html.HiddenFor(a => a.CustomerID)
+                                            <button id="btnSubmit" type="submit" class="btn btn-info commonBtn">
+                                                Submit
+                                            </button>
+                                            @Html.ActionLink("Cancel", "CustomerNotifications", new { customerID=Model.CustomerID}, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                        </div>
+                                        @*</form>*@
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+@*<script src="~/Scripts/jquery.validate.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+<script>
+
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                   
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+    $("#strBillingCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strBillingCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strBillingStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strBillingStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+    function ddlChange(stateID) {
+
+        var CountryID = $("#strBillingCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strBillingStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        if (v1.Value == stateID) {
+                            v += "<option value=" + v1.Value + " selected='true'>" + v1.Text + "</option>";
+
+                        }
+                        else {
+                            v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                        }
+                    });
+                    $("#strBillingStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                   
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+    }
+
+    //$(".qty").change(function () {
+
+    //    var inputs = $(".qty");
+    //    var total = 0;
+    //    for (var i = 0; i < inputs.length; i++) {
+    //        total+=parseInt( $(inputs[i]).val());
+    //    }
+    //    $("#SizeOfFleet").val(total);
+
+    //});
+    //$("#btnSubmit").click(function (e) {
+    //    debugger;
+    //    $('form').validate();
+    //    if ($('form').valid()) {
+    //        var $form = $("#CustomerForm");
+    //        var valdata = getFormData($form);
+    //        var tbl = $('#tbEquipmenttype tr:has(td)').map(function (i, v) {
+    //            debugger;
+    //            var $td = $('td', this);
+    //            return {
+    //                EquipmentTypeID: $td.eq(0).find('input')[0].id.split('_')[1],
+    //                IsChecked: $td.eq(0).find('input')[0].checked,
+    //                Quantity: document.getElementById($td.eq(1).find('input')[0].id).value,
+    //                EquipmentTypeName: $td.eq(2).text()
+    //            }
+    //        }).get();
+    //        valdata.EquipmentList = tbl;
+    //        delete valdata.IsBlackListed;
+    //        valdata.ISBillingAddSameAsMailing = $("#ISBillingAddSameAsMailing").prop("checked") == true;
+    //        valdata.ISBlackListed = $("#ISBlackListed").prop("checked") == true;
+    //        valdata.ISBroker = $("#ISBroker").prop("checked") == true;
+    //        valdata.NumberonInvoice = $("#NumberonInvoice").prop("checked") == true;
+    //        valdata.AddAsShipper = $("#AddAsShipper").prop("checked") == true;
+    //        valdata.AddAsConsignee = $("#AddAsConsignee").prop("checked") == true;
+    //        valdata.ShowMilesOnQuote = $("#ShowMilesOnQuote").prop("checked") == true;
+            
+            
+            
+            
+
+    //        //to get alert popup
+    //        //alert(valdata);
+    //        $.ajax({
+    //            url: "/Customer/AddCustomer",
+    //            type: "POST",
+    //            dataType: 'json',
+    //            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    //            data: valdata,
+    //            success: function (res) {
+
+    //                debugger;
+    //                if (res.IsSuccess == true) {
+
+    //                    window.location.href = "/Customer/index";
+    //                }
+    //                else {
+    //                    ShowError(res.msg);
+    //                }
+    //            },
+    //            error: function () {
+    //                alert('The worst error happened!');
+    //            }
+    //        });
+    //    }
+    //});
+
+
+    //$("#ISBillingAddSameAsMailing").change(function(){
+    //    if ($("#ISBillingAddSameAsMailing").prop("checked") == true) {
+    //        $("#BillAddress").val($("#Address").val()).attr("disabled", "disabled");;
+    //        $("#Billingaddress2").val($("#Address2").val()).attr("disabled", "disabled");;
+    //        $("#BillingAddress3").val($("#Address3").val()).attr("disabled", "disabled");;
+    //        $("#strBillingCountryID").val($("#strCountryID").val()).attr("disabled", "disabled");;
+    //        ddlChange($("#strStateID").val());
+    //        debugger;
+    //        $("#BillingCity").val($("#City").val()).attr("disabled", "disabled");;
+    //        $("#BillingZip").val($("#Zip").val()).attr("disabled", "disabled");;
+    //        $("#strBillingStateID").val($("#strStateID").val()).attr("disabled", "disabled");
+    //    }
+    //    else {
+
+    //        $("#BillAddress").val('').removeAttr("disabled");
+    //        $("#Billingaddress2").val('').removeAttr("disabled");
+    //        $("#BillingAddress3").val('').removeAttr("disabled");
+    //        $("#strBillingCountryID").val('').removeAttr("disabled");
+    //        ddlChange('');
+    //        $("#strBillingStateID").val('').removeAttr("disabled");
+    //        $("#BillingCity").val('').removeAttr("disabled");
+    //        $("#BillingZip").val('').removeAttr("disabled");
+    //    }
+    //});
+
+   
+
+
+
+    function getFormData($form) {
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function (n, i) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+
+
+</script>
+
+<script type="text/javascript">
+    // <![CDATA[
+    $().ready(function () {
+        $("#CustomerForm").validate({
+            rules: {
+                CustomerName: {
+                    required: true,
+                    maxlength: 100,
+                    minlength: 0
+                },
+                Address: {
+                    required: true,
+                    maxlength: 100,
+                    minlength: 0
+                },
+                Country: {
+                    required: true,
+                   
+                },
+                State: {
+                    required: true,
+
+                },
+                City: {
+                    required: true,
+
+                },
+                BillingZip: {
+                    required: true,
+
+                },
+                Zip: {
+                    required: true,
+
+                },
+                BillingAddress: {
+                    required: true,
+                    maxlength: 100,
+                    minlength: 0
+                },
+                BillingCountry: {
+                    required: true,
+
+                },
+                BillingState: {
+                    required: true,
+
+                },
+                BillingCity: {
+                    required: true,
+
+                },
+                Telephone: {
+                    required: true,
+
+                },
+                FactoringCompany: {
+                    required: true,
+
+                },
+
+
+            },
+            messages: {
+                CustomerName: {
+                    required: "Customer Name is required",
+                },
+                Address: {
+                    required: "Address is required",
+                },
+                Country: {
+                    required: "Country is required",
+                },
+                State: {
+                    required: "State is required",
+                },
+                City: {
+                    required: "City is required",
+                },
+                BillingAddress: {
+                    required: "Billing Address is required",
+                },
+                BillingCountry: {
+                    required: "Billing Country is required",
+                },
+                BillingState: {
+                    required: "Billing State is required",
+                },
+                BillingCity: {
+                    required: "Billing City is required",
+                },
+                BillingZip: {
+                    required: "Billing zip is required",
+                },
+                Zip: {
+                    required: "zip is required",
+                },
+                Telephone: {
+                    required: "Telephone is required",
+                },
+                FactoringCompany: {
+                    required: "Factoring company is required",
+                },
+
+            }
+        });
+    });
+// ]]>
+</script>

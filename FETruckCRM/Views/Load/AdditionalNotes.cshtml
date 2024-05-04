@@ -1,0 +1,713 @@
+﻿@model FETruckCRM.Models.AdditionalNotesModel
+@{
+    Layout = null;
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+<link href="@Url.Content("~/assets/css/font-awesome.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/perfect-scrollbar.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/theme.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap-datepicker.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/custom.css")" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery-ui.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery-ui.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-input-mask-phone-number.js")"></script>
+<style>
+
+    .error {
+        color: red;
+    }
+</style>
+
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @using (Html.BeginForm("AdditionalNotes", "Load", FormMethod.Post, new { id = "AdditionalNotesForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                <a class="nav-item nav-link active" id="tab01-tab" data-toggle="tab" href="#tab01">Notes</a>
+                                                <a class="nav-item nav-link" data-toggle="tab" href="#tab02">Receivables</a>
+                                                <a class="nav-item nav-link" data-toggle="tab" href="#tab03">Internal Notes</a>
+                                                <a class="nav-item nav-link" data-toggle="tab" href="#tab04">Contacts</a>
+                                            </div>
+                                        </nav>
+                                        <div class="tab-content carrier_tabs pt-2" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="tab01">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Load Number</label>
+                                                            @Html.TextBoxFor(a => a.LoadNo, new { @class = "form-control required", @Placeholder = "Load Number", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.LoadNo)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Driver Pay Notes</label>
+                                                            @Html.TextAreaFor(a => a.DriverPayNotes, new { @class = "form-control required", @Placeholder = "Driver Pay Notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.DriverPayNotes)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Drivar Pay Notes (Appear On Report)</label>
+                                                            @Html.TextAreaFor(a => a.DPNAppearOnReport, new { @class = "form-control required", @Placeholder = "Driver Pay notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.DPNAppearOnReport)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Invoice Notes</label>
+                                                            @Html.TextAreaFor(a => a.InvoiceNotes, new { @class = "form-control", @Placeholder = "Invoice Notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.InvoiceNotes)
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Invoice Notes(Appear on Invoice)</label>
+                                                            @Html.TextAreaFor(a => a.INAppearOnInvoice, new { @class = "form-control", @Placeholder = "Invoice Notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.INAppearOnInvoice)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Invoice Description(In Quickbooks)</label>
+                                                            @Html.TextAreaFor(a => a.InvoiceDescription, new { @class = "form-control", @Placeholder = "Invoice Description", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.InvoiceDescription)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Deleted/Refusal Notes</label>
+                                                            @Html.TextAreaFor(a => a.DeletedRefusalNotes, new { @class = "form-control", @Placeholder = "Deleted/Refusal Notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.DeletedRefusalNotes)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="tab-pane fade" id="tab02">
+                                                @*<h4 class="el_form_headding">Liability Company</h4>*@
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Load Number</label>
+                                                            @Html.TextBoxFor(a => a.LoadNo, new { @class = "form-control required", @Placeholder = "Load Number", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.LoadNo)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Invoice No </label>
+                                                            @Html.TextBoxFor(a => a.RecInvoiceNo, new { @class = "form-control", @Placeholder = "Invoice No", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.RecInvoiceNo)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Invoice Date</label>
+                                                            @Html.TextBoxFor(a => a.RecInvoiceDate, new { @class = "form-control", @Placeholder = "Invoice Date", @Maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.RecInvoiceDate)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Amount</label>
+                                                            @Html.TextBoxFor(a => a.RecAmount, new { @class = "form-control", @Placeholder = "Amount", @Maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.RecAmount)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Customer</label>
+                                                            @Html.TextBoxFor(a => a.RecCustomer, new { @class = "form-control", @Placeholder = "Customer", @Maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.RecCustomer)
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Contact</label>
+                                                            @Html.TextBoxFor(a => a.RecContact, new { @class = "form-control", @Placeholder = "Contact", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.RecContact)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Telephone</label>
+                                                            @Html.TextBoxFor(a => a.RecTelephone, new { @class = "form-control telephone", @Placeholder = "xxx-xxx-xxxx", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.RecTelephone)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Ext.</label>
+                                                            @Html.TextBoxFor(a => a.RecTelephoneExt, new { @class = "form-control", @Placeholder = "XXXXX", @Maxlength = "5" })
+                                                            @Html.ValidationMessageFor(m => m.RecTelephoneExt)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Fax</label>
+                                                            @Html.TextBoxFor(a => a.RecFax, new { @class = "form-control telephone", @Placeholder = "xxx-xxx-xxxx", @Maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.RecFax)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Toll Free</label>
+                                                            @Html.TextBoxFor(a => a.RecTollFree, new { @class = "form-control telephone", @Placeholder = "xxx-xxx-xxxx", @Maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.RecTollFree)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1"> Notes</label>
+                                                            @Html.TextAreaFor(a => a.RecNotes, new { @class = "form-control el_textarea100", @Placeholder = "Notes", @Maxlength = "1000" })
+                                                            @Html.ValidationMessageFor(m => m.RecNotes)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="tab-pane fade" id="tab03">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Load Number</label>
+                                                            @Html.TextBoxFor(a => a.LoadNo, new { @class = "form-control required", @Placeholder = "Load Number", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.LoadNo)
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-9">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Internal Notes</label>
+                                                            @Html.TextAreaFor(a => a.InternalNotes, new { @class = "form-control el_textarea100", @Placeholder = "Notes", @Maxlength = "1000" })
+                                                            @Html.ValidationMessageFor(m => m.InternalNotes)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="tab-pane fade" id="tab04">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Load Number</label>
+                                                            @Html.TextBoxFor(a => a.LoadNo, new { @class = "form-control required", @Placeholder = "Load Number", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.LoadNo)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Dispatcher Name</label>
+                                                            @Html.TextBoxFor(a => a.ConDispatcherName, new { @class = "form-control required", @Placeholder = "Dispatcher Name", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConDispatcherName)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Dispatcher Phone</label>
+                                                            @Html.TextBoxFor(a => a.ConDispatcherPhone, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConDispatcherPhone)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Dispatcher Email</label>
+                                                            @Html.TextBoxFor(a => a.conDispatcherEmail, new { @class = "form-control ", @Placeholder = "test@test.com", @Maxlength = "200" })
+                                                            @Html.ValidationMessageFor(m => m.ConDispatcherPhone)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Dispatcher Phone</label>
+                                                            @Html.TextBoxFor(a => a.ConDispatcherPhone, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConDispatcherPhone)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Driver Name</label>
+                                                            @Html.TextBoxFor(a => a.conDriverName, new { @class = "form-control required", @Placeholder = "Dispatcher Name", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.conDriverName)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Driver Phone</label>
+                                                            @Html.TextBoxFor(a => a.ConDriverPhone, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConDriverPhone)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Driver Email</label>
+                                                            @Html.TextBoxFor(a => a.conDriverEmail, new { @class = "form-control ", @Placeholder = "test@test.com", @Maxlength = "200" })
+                                                            @Html.ValidationMessageFor(m => m.conDriverEmail)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Truck</label>
+                                                            @Html.TextBoxFor(a => a.ConTruck, new { @class = "form-control required", @Placeholder = "Truck", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConTruck)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Trailer</label>
+                                                            @Html.TextBoxFor(a => a.ConTrailer, new { @class = "form-control required", @Placeholder = "Trailer", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConTrailer)
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="control-label mb-1">Notes</label>
+                                                            @Html.TextAreaFor(a => a.ConNotes, new { @class = "form-control", @Placeholder = "Notes", @Maxlength = "100" })
+                                                            @Html.ValidationMessageFor(m => m.ConNotes)
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form_bbtns">
+                                            @Html.HiddenFor(a => a.LoadAdditionalNotesID)
+                                            @Html.HiddenFor(a => a.LoadID)
+                                            <input type="submit" class="btn btn-info commonBtn" value="Submit" />
+                                            @*@Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })*@
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+@*<script src="~/Scripts/jquery.validate.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+
+<script src="@Url.Content("~/assets/js/popper.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+<script src="@Url.Content("~/assets/js/perfect-scrollbar.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/assets/js/custom.js")"></script>
+<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            format: "mm/dd/yyyy",
+            autoclose: true
+        });
+
+        $('.telephone').usPhoneFormat();
+    });
+</script>
+
+
+<script>
+
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+    $("#strBillingCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strBillingCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strBillingStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strBillingStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+    function ddlChange(stateID) {
+
+        var CountryID = $("#strBillingCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strBillingStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        if (v1.Value == stateID) {
+                            v += "<option value=" + v1.Value + " selected='true'>" + v1.Text + "</option>";
+
+                        }
+                        else {
+                            v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                        }
+                    });
+                    $("#strBillingStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                   
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+    }
+
+    $(".qty").change(function () {
+
+        var inputs = $(".qty");
+        var total = 0;
+        for (var i = 0; i < inputs.length; i++) {
+            total+=parseInt( $(inputs[i]).val());
+        }
+        $("#SizeOfFleet").val(total);
+
+    });
+    //$("#btnSubmit").click(function (e) {
+    //    debugger;
+    //    $('form').validate();
+    //    if ($('form').valid()) {
+    //        var $form = $("#CustomerForm");
+    //        var valdata = getFormData($form);
+    //        var tbl = $('#tbEquipmenttype tr:has(td)').map(function (i, v) {
+    //            debugger;
+    //            var $td = $('td', this);
+    //            return {
+    //                EquipmentTypeID: $td.eq(0).find('input')[0].id.split('_')[1],
+    //                IsChecked: $td.eq(0).find('input')[0].checked,
+    //                Quantity: document.getElementById($td.eq(1).find('input')[0].id).value,
+    //                EquipmentTypeName: $td.eq(2).text()
+    //            }
+    //        }).get();
+    //        valdata.EquipmentList = tbl;
+    //        delete valdata.IsBlackListed;
+    //        valdata.ISBillingAddSameAsMailing = $("#ISBillingAddSameAsMailing").prop("checked") == true;
+    //        valdata.ISBlackListed = $("#ISBlackListed").prop("checked") == true;
+    //        valdata.ISBroker = $("#ISBroker").prop("checked") == true;
+    //        valdata.NumberonInvoice = $("#NumberonInvoice").prop("checked") == true;
+    //        valdata.AddAsShipper = $("#AddAsShipper").prop("checked") == true;
+    //        valdata.AddAsConsignee = $("#AddAsConsignee").prop("checked") == true;
+    //        valdata.ShowMilesOnQuote = $("#ShowMilesOnQuote").prop("checked") == true;
+
+
+
+
+
+    //        //to get alert popup
+    //        //alert(valdata);
+    //        $.ajax({
+    //            url: "/Customer/AddCustomer",
+    //            type: "POST",
+    //            dataType: 'json',
+    //            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    //            data: valdata,
+    //            success: function (res) {
+
+    //                debugger;
+    //                if (res.IsSuccess == true) {
+
+    //                    window.location.href = "/Customer/index";
+    //                }
+    //                else {
+    //                    ShowError(res.msg);
+    //                }
+    //            },
+    //            error: function () {
+    //                alert('The worst error happened!');
+    //            }
+    //        });
+    //    }
+    //});
+
+
+    $("#ISBillingAddSameAsMailing").change(function(){
+        if ($("#ISBillingAddSameAsMailing").prop("checked") == true) {
+            $("#BillAddress").val($("#Address").val());
+            $("#Billingaddress2").val($("#Address2").val());
+            $("#BillingAddress3").val($("#Address3").val());
+            $("#strBillingCountryID").val($("#strCountryID").val());
+            ddlChange($("#strStateID").val());
+            debugger;
+            $("#BillingCity").val($("#City").val());
+            $("#BillingZip").val($("#Zip").val());
+            $("#strBillingStateID").val($("#strStateID").val());
+        }
+        else {
+
+            $("#BillAddress").val('').removeAttr("disabled");
+            $("#Billingaddress2").val('').removeAttr("disabled");
+            $("#BillingAddress3").val('').removeAttr("disabled");
+            $("#strBillingCountryID").val('').removeAttr("disabled");
+            ddlChange('');
+            $("#strBillingStateID").val('').removeAttr("disabled");
+            $("#BillingCity").val('').removeAttr("disabled");
+            $("#BillingZip").val('').removeAttr("disabled");
+        }
+    });
+
+
+
+
+
+    //function getFormData($form) {
+    //    var unindexed_array = $form.serializeArray();
+    //    var indexed_array = {};
+
+    //    $.map(unindexed_array, function (n, i) {
+    //        indexed_array[n['name']] = n['value'];
+    //    });
+
+    //    return indexed_array;
+    //}
+
+
+
+</script>
+
+@*<script type="text/javascript">
+        // <![CDATA[
+        $().ready(function () {
+            $("#CustomerForm").validate({
+                rules: {
+                    CustomerName: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 0
+                    },
+                    Address: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 0
+                    },
+                    Country: {
+                        required: true,
+
+                    },
+                    State: {
+                        required: true,
+
+                    },
+                    City: {
+                        required: true,
+
+                    },
+                    BillingZip: {
+                        required: true,
+
+                    },
+                    Zip: {
+                        required: true,
+
+                    },
+                    BillingAddress: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 0
+                    },
+                    BillingCountry: {
+                        required: true,
+
+                    },
+                    BillingState: {
+                        required: true,
+
+                    },
+                    BillingCity: {
+                        required: true,
+
+                    },
+                    //Telephone: {
+                    //    required: true,
+
+                    //},
+                    FactoringCompany: {
+                        required: true,
+
+                    },
+
+
+                },
+                messages: {
+                    CustomerName: {
+                        required: "Customer Name is required",
+                    },
+                    Address: {
+                        required: "Address is required",
+                    },
+                    Country: {
+                        required: "Country is required",
+                    },
+                    State: {
+                        required: "State is required",
+                    },
+                    City: {
+                        required: "City is required",
+                    },
+                    BillingAddress: {
+                        required: "Billing Address is required",
+                    },
+                    BillingCountry: {
+                        required: "Billing Country is required",
+                    },
+                    BillingState: {
+                        required: "Billing State is required",
+                    },
+                    BillingCity: {
+                        required: "Billing City is required",
+                    },
+                    BillingZip: {
+                        required: "Billing zip is required",
+                    },
+                    Zip: {
+                        required: "zip is required",
+                    },
+                    //Telephone: {
+                    //    required: "Telephone is required",
+                    //},
+                    FactoringCompany: {
+                        required: "Factoring company is required",
+                    },
+
+                }
+            });
+        });
+    // ]]>
+    </script>*@

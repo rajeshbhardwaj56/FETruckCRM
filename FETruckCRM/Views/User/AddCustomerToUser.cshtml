@@ -1,0 +1,53 @@
+﻿@model FETruckCRM.Models.UserCustomerModel
+@{
+    //ViewBag.Title = "Add Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Titla = "Associate Custpmer with User";
+}
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            @using (Html.BeginForm("AssignCustomerToUser", "User", FormMethod.Post, new {  enctype = "multipart/form-data"}))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card commonForm">
+                            <div class="card-header hideMobile">@ViewBag.Title</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Select User</label>
+                                            @Html.DropDownListFor(M => M.SelectedUserId, Model.UserList, new {@class= "form-control required" })
+                                            @Html.ValidationMessageFor(m=>m.SelectedUserId)
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Select Customer</label>
+                                            @Html.DropDownListFor(M => M.SelectedCustomerId, Model.CustomerList, new { @class = "form-control required" })
+                                            @Html.ValidationMessageFor(m => m.SelectedCustomerId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="submit" value="Save" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+    </section>
+            </div>
+    <!-- END DATA TABLE-->

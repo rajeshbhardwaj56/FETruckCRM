@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@{
+//var message = TempData["Success"] != null ? TempData["Success"].ToString() : "";
+//var error_message = TempData["Error"] != null ? TempData["Error"].ToString() : "";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title></title>
+    <link href="@Url.Content("~/assets/css/font-awesome.min.css")" rel="stylesheet" media="all">
+    <link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" media="all">
+    <link href="@Url.Content("~/assets/css/dataTables.bootstrap.css")" rel="stylesheet" />
+    @*<link href="@Url.Content("~/Content/toastr/build/toastr.min.css")" rel="stylesheet" />*@
+    <link href="@Url.Content("~/assets/css/perfect-scrollbar.css")" rel="stylesheet" media="all">
+    <link href="@Url.Content("~/assets/css/theme.css")" rel="stylesheet" media="all">
+    <link href="@Url.Content("~/assets/css/bootstrap-datepicker.min.css")" rel="stylesheet" media="all">
+    <link href="@Url.Content("~/assets/css/custom.css")" rel="stylesheet" media="all">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+    <link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+    <link href="@Url.Content("~/assets/css/jquery-ui.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/assets/js/jquery-ui.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-input-mask-phone-number.js")"></script>
+    <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet">
+    <style>
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            display: none;
+        }
+
+        #loading-image {
+            position: absolute;
+            top: 100px;
+            left: 280px;
+            z-index: 100;
+        }
+
+        .error {
+            color: red;
+        }
+
+        #loading {
+            position: fixed;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            display: none;
+        }
+
+        #loading-image {
+            position: absolute;
+            top: 100px;
+            left: 280px;
+            z-index: 100;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body class="animsition inner_page">
+    <div id="loading">
+        <img id="loading-image" src="~/assets/images/ajax-loader.gif" class="loadercrop" style="background-position: center center; background-repeat: no-repeat; background-size:100px;height: 100px;left: 50%;margin: -100px 0 0 -100px;position: absolute; top: 50%; width: 100px;" />
+    </div>
+    <div class="page-top-wrapper">
+        <header class="header-desktop header_bg">
+            <div class="section__content">
+                <div class="header3-wrap section__content--p30">
+                    <div class="header__logo">
+                        <a href="#">
+                            <img src="@Url.Content("~/assets/images/FleetexpertsLogo.png")" alt="Logo" />
+
+                        </a>
+                    </div>
+                    <div class="header__right">
+                        <a class="home-icon" href="@Url.Action("MyDashboard", "Dashboard")">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                        </a>
+                        <div class="user_info">
+
+                            <div class="user_icon">
+                                <i class="fa fa-user" aria-hidden="true"></i> <span class="wel_user">@HttpContext.Current.Session["UserName"].ToString()</span>
+                            </div>
+
+
+                            <div class="setting__btn js-sidebar-btn">
+                                <i class="fa fa-gear" aria-hidden="true"></i>
+                            </div>
+                            <div class="setting-menu js-right-sidebar">
+                                <div class="menu-sidebar2__content js-scrollbar1">
+                                    <nav class="navbar-sidebar2">
+                                        <ul class="list-unstyled navbar__list">
+                                          
+                                            <li>
+                                                <a href="@Url.Action("ChangePassword", "Account")">Change Password</a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("Logout", "Account")">Log out</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="account-dropdown__footer">
+                                    <a href="@Url.Action("Logout", "Account")">
+                                        <i class="zmdi zmdi-power"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                @{ Html.RenderAction("_Menu", "User");}
+            </div>
+        </header>
+        <!-- END HEADER DESKTOP-->
+
+    </div>
+    <div id="toasts"></div>
+    <div class="container_wrapper">
+        @RenderBody()
+    </div>
+    <!-- COPYRIGHT-->
+    <section class="p-t-60 p-b-20">
+        <div class="container">
+            <div class="row ml-0 mr-0">
+                <div class="col-md-12">
+                    <div class="copyright">
+                        <p>©Copyright @DateTime.Now.Year.ToString() Fleet Experts. All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END COPYRIGHT-->
+    <script src="@Url.Content("~/assets/js/popper.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/perfect-scrollbar.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/custom.js")"></script>
+    <script src="@Url.Content("~/assets/js/datatables.js")"></script>
+    <script src="@Url.Content("~/Scripts/toastr.js")"></script>
+    <script src="@Url.Content("~/assets/js/dataTables.buttons.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/jszip.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/pdfmake.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/vfs_fonts.js")"></script>
+    <script src="@Url.Content("~/assets/js/buttons.html5.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/buttons.print.min.js")"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                format: "mm/dd/yyyy",
+                autoclose: true
+            });
+
+            $('.telephone').usPhoneFormat();
+
+            //setup ajax error handling
+            $.ajaxSetup({
+                error: function (x, status, error) {
+                    if (x.status == 403) {
+                        alert("Sorry, your session has expired. Please login again to continue");
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        alert("An error occurred: " + status + "nError: " + error);
+                    }
+                }
+            });
+        });
+
+          @*jQuery(document).ready(function() {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "7000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            setTimeout(function() {
+                jQuery("#errorMessage").hide(500);
+                jQuery("#successMessage").hide(500);
+            }, 5000);
+
+            if ('@message' != '') {
+                toastr.success('@message');
+            }
+            if ('@error_message' != '') {
+                toastr.error('@error_message');
+            }
+        });*@
+    </script>
+</body>
+</html>

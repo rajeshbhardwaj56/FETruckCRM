@@ -1,0 +1,286 @@
+﻿@model FETruckCRM.Models.RateConModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CustomerRateAndLoadConfirmation_LoadNo_@Model.Loaddata.LoadNo</title>
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <script>
+        setTimeout("window.close()", 5000)
+    </script>
+</head>
+
+<body>
+    <div class="page-header" style="text-align: center;padding-bottom:20px;">
+
+
+        <table style="width:100%;">
+            <tr>
+                <td style="text-align:center; font-weight:bold;">
+                   CUSTOMER RATE & LOAD CONFIRMATION
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:40%;text-align:left;padding:10px;" valign="top">
+
+                                <img src="~/assets/images/ellogo.png" style="width:100px;border:none" /><br />
+                                <b> Fleet Experts</b><br />
+                                308 W 10th St<br />
+                                Deer Park, NY, USA 11729<br />
+                                Phone: 929-429-7237<br />
+                                Fax: 551-400-0786<br />
+
+                            </td>
+
+                            <td style="width:60%">
+                                <table style="border: 1px #DFDFDF solid;width:100%;" cellpadding="3" cellspacing="0">
+                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Dispatcher</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.Alias</td><td style="font-weight:bold; border: 1px #DFDFDF solid; text-align: left;">Load #</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.LoadNo</td></tr>
+                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Phone #</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.Telephone</td><td style="font-weight:bold; border: 1px #DFDFDF solid; text-align: left;">Ship Date</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.LoadShipperdata.FirstOrDefault().strShipperDate</td></tr>
+                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Fax:</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.Fax</td><td style="font-weight:bold; border: 1px #DFDFDF solid; text-align: left;">Today's Date</td><td style="border: 1px #DFDFDF solid; text-align: left;">@Model.Loaddata.CreatedDate.ToShortDateString()</td></tr>
+                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">Terms:</td><td style="border: 1px #DFDFDF solid; text-align: left;" colspan="3">@Model.Loaddata.PaymentTerm</td></tr>
+                                    <tr><td style="font-weight:bold;border:1px #DFDFDF solid;text-align:left;">W/O:</td><td style="border: 1px #DFDFDF solid; text-align: left;" colspan="3">@Model.Loaddata.WO</td></tr>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr style="height:30px;"><td>&nbsp;</td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+        </table>
+
+    </div>
+
+    <div class="page-footer" style="text-align:center;"><img src="~/assets/images/ellogo.png" style="width:80px" /></div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position header-->
+                    <div class="page-header-space"></div>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <!--*** CONTENT GOES HERE ***-->
+
+                    <div class="page">
+                        <table style="width:100%;" cellpadding="10" cellspacing="5">
+
+                            <tr>
+                                <td>
+                                    <table style="border:1px #DFDFDF solid;width:100%" cellpadding="3" cellspacing="0">
+                                        <thead>
+                                        <th style="border: 1px #DFDFDF solid;text-align:center;width:20%;">Customer</th>
+                                        <th style="border: 1px #DFDFDF solid;text-align:center;width:20%;">Contact</th>
+                                        <th style="border: 1px #DFDFDF solid;text-align:center;width:20%;">Phone #</th>
+                                        <th style="border: 1px #DFDFDF solid;text-align:center;width:20%;">Fax #</th>
+                                        <th style="border: 1px #DFDFDF solid;text-align:center;width:20%;">Agreed Rate</th>
+                                        </thead>
+                                        <tr>
+                                            <td style="border: 1px #DFDFDF solid;text-align:center;">@Model.Loaddata.CustomerName</td>
+                                            <td style="border: 1px #DFDFDF solid;text-align:center;">@Model.Loaddata.PrimaryContact</td>
+                                            <td style="border: 1px #DFDFDF solid;text-align:center;">@Model.Loaddata.BillingTelephone</td>
+                                            <td style="border: 1px #DFDFDF solid;text-align:center;">@Model.Loaddata.BillingFax</td>
+                                            <td style="border: 1px #DFDFDF solid;text-align:center;">@Model.Loaddata.RatePercent</td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    @foreach (var item in Model.LoadShipperdata)
+                                    {
+                                        <table style="border:1px #DFDFDF solid;width:100%;margin-top:10px;" cellpadding="3" cellspacing="0">
+                                            <tr>
+                                                <td valign="top" style="text-align: left; padding: 10px;width:40%;">
+                                                    <b>Shipper :</b><br>
+                                                    @item.ShipperName<br>
+                                                    @item.Location<br><br>
+                                                    <b>Contact: </b>@item.Contact<br>
+
+                                                </td>
+                                                <td style="width:60%;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Date</td>
+                                                            <td> @item.strShipperDate @item.ShipperTime </td>
+                                                            <td style="font-weight:bold;">Purchased Order #</td>
+                                                            <td> @item.PONumber</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Type</td>
+                                                            <td> @item.Type </td>
+                                                            <td style="font-weight:bold;">Major Intersection</td>
+                                                            <td> @item.MajorInspectionDirection</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Quantity</td>
+                                                            <td> @item.Quantity </td>
+                                                            <td style="font-weight:bold;">Shipping Hours</td>
+                                                            <td> @item.ShippingHours</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Weight</td>
+                                                            <td> @item.Weight </td>
+                                                            <td style="font-weight:bold;">Appointment</td>
+                                                            <td> @item.Appointments</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Notes</td>
+                                                            <td colspan="3"> @item.ShipperNotes </td>
+
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="font-weight:bold;">Description</td>
+                                                            <td colspan="3"> @item.Description</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    @foreach (var item in Model.LoadConsigneedata)
+                                    {
+                                        <table style="border:1px #DFDFDF solid;width:100%;margin-top:10px;" cellpadding="3" cellspacing="0">
+                                            <tr>
+                                                <td valign="top" style="text-align:left;padding:10px;width:40%;">
+                                                    <b>Consignee:</b><br>
+                                                    @item.ConsigneeName<br>
+                                                    @item.ConsigneeLocation<br /> <br />
+                                                    <b>Contact: </b> @item.Contact<br>
+
+                                                </td>
+                                                <td style="width:60%;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Date</td>
+                                                            <td>@item.strConsigneeDate  @item.ConsigneeTime</td>
+                                                            <td style="font-weight:bold;">Purchased Order #</td>
+                                                            <td>@item.PONumber</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Type</td>
+                                                            <td>@item.Type</td>
+                                                            <td style="font-weight:bold;">Major Intersection</td>
+                                                            <td>@item.MajorInspectionDirection</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Quantity</td>
+                                                            <td>@item.Quantity </td>
+                                                            <td style="font-weight:bold;">Receiving Hours</td>
+                                                            <td>@item.ShippingHours</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Weight</td>
+                                                            <td>@item.Weight </td>
+                                                            <td style="font-weight:bold;">Appointment</td>
+                                                            <td>@item.Appointments</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight:bold;">Notes</td>
+                                                            <td colspan="3">@item.DeliveryNotes </td>
+
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="font-weight:bold;">Description</td>
+                                                            <td colspan="3">@item.Description</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+
+
+                                </td>
+                            </tr>
+
+
+
+                            <tr>
+                                <td style="text-align:left;">
+
+                                    <b>Rate Breakdown:</b><br /> @Model.Loaddata.Type:@Model.Loaddata.Rate.ToString("C"),P/D:@Model.Loaddata.PDs.ToString("C") FSC Rate:@Model.Loaddata.FSC.ToString("C") ,@Model.Loaddata.OtherCharges , <b>TOTAL:@Model.Loaddata.RatePercent @Model.Loaddata.Currency</b>
+                                </td>
+
+                            </tr>
+                            @if (@Model.Loaddata.AdvancePayment > 0)
+                            {
+                                <tr>
+                                    <td style="text-align:left;">
+                                        <b>Advance Payment:</b> @Model.Loaddata.AdvancePayment.ToString("C").Replace(".00", "")<b> TOTAL AMOUNT DUE:@((Convert.ToDecimal(Model.Loaddata.RatePercent) - Convert.ToDecimal(Model.Loaddata.AdvancePayment)).ToString("C").Replace(".00", "")) @Model.Loaddata.Currency</b>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+
+                                    <table cellpadding="5" cellspacing="0">
+
+                                        <tr>
+                                            <td style="text-align:left; font-weight:bold;">
+                                                Approved By: _______________
+                                            </td>
+                                            <td style="text-align:left; font-weight:bold;">
+                                                Date: _______________
+                                            </td>
+                                            <td style="text-align:left; font-weight:bold;" colspan="2">
+                                                Signature: _______________
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align:left; font-weight:bold;" colspan="4">
+                                                <b>Please sign and fax back at your earliest convenience to the attention of the Dispatcher noted above.</b>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+
+                </td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position footer-->
+                    <div class="page-footer-space"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

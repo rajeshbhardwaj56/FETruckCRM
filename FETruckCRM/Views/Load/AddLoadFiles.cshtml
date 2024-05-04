@@ -1,0 +1,237 @@
+﻿@model FETruckCRM.Models.LoadFilesModel
+@{
+    Layout = null;
+    var success = TempData["aSuccess"];
+    var Err = TempData["Error"];
+    string btnTitle = Convert.ToString(ViewBag.ButtonTitle);
+    string type = Convert.ToString(Model.LoadID);
+    var isPendingLoad = Convert.ToInt32(ViewBag.IspendingLoad);
+}
+<link href="@Url.Content("~/assets/css/font-awesome.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/perfect-scrollbar.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/theme.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/bootstrap-datepicker.min.css")" rel="stylesheet" media="all">
+<link href="@Url.Content("~/assets/css/custom.css")" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="@Url.Content("~/assets/js/jquery-3.2.1.min.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery.notifyBar.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery.notifyBar.js")"></script>
+<link href="@Url.Content("~/assets/css/jquery-ui.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery-ui.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-input-mask-phone-number.js")"></script>
+<div class="container" style="width:800px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title LISTING</div>
+            <div class="buttons-wrap">
+                @using (Html.BeginForm("AddLoadFiles", "Load",new {  PendingLoad = @isPendingLoad }, FormMethod.Post, new { id = "LoadForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                {
+                <div class="left__buttons">
+                    <input type="file" name="ImgUp" id="ImgUp" onchange="Filevalidation();" class="form-control" />
+                    @Html.HiddenFor(m => m.LoadID)
+                    <input type="submit" class="btn btn-info commonBtn" value="Upload File" /><br />
+                    <span class="field-validation-error" data-valmsg-for="file" data-valmsg-replace="true"><span id="file-error" class=""></span></span>
+                    @if (isPendingLoad == 1)
+                    {
+                        <a class="btn btn-secondary" href="/Load/PendingLoads">Back To Pending Load Creation Page</a><br />
+
+                    }
+                    else
+                    {
+
+                        <a class="btn btn-secondary" href="/Dashboard/Index">Back To Load Creation Page</a><br />
+                    }
+
+                </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id="tblLoadFiles">
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>FileSize</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script src="@Url.Content("~/assets/js/popper.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+<script src="@Url.Content("~/assets/js/perfect-scrollbar.min.js")"></script>
+<script src="@Url.Content("~/assets/js/bootstrap-datepicker.min.js")"></script>
+<script src="@Url.Content("~/assets/js/custom.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $('#tblLoadFiles').DataTable({
+                "ajax": {
+                "url": "/Load/loadfilesdata?LoadID=@type",
+                    "type": "GET",
+                   "datatype": "json"
+                },
+                "columns": [
+                    { "data": "FileName", "autoWidth": true },
+                    { "data": "FileSize", "autoWidth": true },
+                    {
+                        "data": "CreatedDate", "autoWidth": true,
+                        "render": function (data) {
+                            //debugger;
+                            var pattern = /Date\(([^)]+)\)/;
+                            var results = pattern.exec(data);
+                            var date = new Date(parseFloat(results[1]))
+                            var month = date.getMonth() + 1;
+                            return date.getDate() + "/" + (month.toString().length > 1 ? month : "0" + month) + "/" + date.getFullYear();
+                        }
+                    },
+
+                    {
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+                            var url = row["FileURL"]
+                            var linkDownload = '<a data-toggle="tooltip" data-placement="top" href="' + row["FileURL"].toString().replace("~", "../") + '" download="' + row["FileName"].toString().replace("~", "../")+'" class="item" style="margin-left:5px;"   title="download"  data-original-title="Download">Download</a></div>';
+                            var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["LoadFilesID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            return linkDownload+' '+linkDelete;
+                            }
+                    }
+
+                     // for edit icon = < i class= "mdi mdi-border-color" ></i >
+                    // for delete icon =  <i class="mdi mdi-delete"></i>
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [3], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " "
+                    },
+                ]
+                , "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+
+    function Filevalidation() {
+        //debugger;
+        var isValid = false;
+        const fi = document.getElementById('ImgUp');
+        var filePath = fi.value;
+        // Allowing file type
+        var allowedExtensions =
+            /(\.jpg|\.jpeg|\.png|\.pdf|\.doc|\.docx|\.xls|\.xlsx)$/i;
+
+        if (!allowedExtensions.exec(filePath)) {
+            $("#file-error").text('Invalid file type');
+            fi.value = '';
+            isValid = false;
+        } else {
+            $("#file-error").text('');
+            isValid = true;
+        }
+        if (isValid == true) {
+            // Check if any file is selected.
+            if (fi.files.length > 0) {
+
+                for (var i = 0; i <= fi.files.length - 1; i++) {
+
+                    const fsize = fi.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 1048576) {
+                        isValid = false;
+                        $("#file-error").text('File too Big, please select a file less than 10mb');
+                    } else {
+                        isValid = true;
+                        $("#file-error").text('');
+                    }
+                }
+            }
+        }
+        return isValid;
+    }
+    function DeleteFunction(LoadFilesID) {
+        debugger;
+        if (confirm('Are you sure you want to delete this file?')) {
+            $("#divLoader").show();
+            var data = { "LoadFilesID": LoadFilesID };
+            $.ajax({
+                type: 'POST',
+                url: 'DeleteLoadFiles',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    //debugger;
+                    if (s.data > 0) {
+                        $('#tblLoadFiles').DataTable().ajax.reload();
+                        $("#divLoader").hide();
+                        ShowSucess(s.msg);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            ShowError(s.msg); $("#divLoader").hide();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    } }
+            });
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

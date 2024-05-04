@@ -1,0 +1,478 @@
+﻿@model FETruckCRM.Models.DispatcherDashboardModel
+@{
+    ViewBag.Title = "Eternetic Logistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+<!-- PAGE CONTENT-->
+
+<div id="main_outer" class="active">
+ 
+
+    @{ Html.RenderPartial("_SidebarMenu");}
+    <div class="right_col">
+        <div class="page-content-bg">
+            <div class="top_heads">
+                <div class="p_title">Dispatcher Dashboard</div>
+                <div class="buttons-wrap">
+                    <div class="left__buttons">
+
+                    </div>
+                    <div class="right_filter">
+                        @*<input type="text" class="form-control m-l-10 m-r-10 width-140 bg-dark-blue" value="" placeholder="Keyword.." />*@
+                        @Html.DropDownListFor(a => a.strDispatcherID, new SelectList(Model.DispatcherList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                        @Html.DropDownListFor(a => a.strFiltertypeID, new SelectList(Model.FilterType, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "100px" })&nbsp;
+                        @Html.DropDownListFor(a => a.strDateFilterID, new SelectList(Model.DateFilter, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", width = "200px" })
+
+                        @*<select class="form-control-sm form-control width-140 bg-dark-blue">
+                                <option value="0">Search For</option>
+                                <option value="1">Shipper Rate</option>
+                                <option value="2">Carrier Pay</option>
+                                <option value="3">Load Margin</option>
+                                <option value="4">Margin %</option>
+                            </select>*@
+                        <span class="filter_text">From</span>
+                        <input id="fromdate" type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="@Model.FromDate" />
+                        <span class="filter_text">To</span>
+                        <input id="todate" type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="@Model.ToDate" />
+                        <div class="right__buttons">
+                            <button class="btn btn-primary bg-red" type="button" onclick="loadData();">Go</button>
+                            @*<button class="btn btn-primary" type="button">Show All</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- DATA TABLE-->
+            <section class="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table_btn_links">
+                                <div class="table_status" style="display:none;">
+                                    <ul>
+                                        <li><span class="table_statusClr clr-pending"></span> Pending</li>
+                                        <li><span class="table_statusClr clr-open"></span> Open</li>
+                                        <li><span class="table_statusClr clr-refused"></span> Refused</li>
+                                        <li><span class="table_statusClr clr-covered"></span> Covered</li>
+                                        <li><span class="table_statusClr clr-dispatched"></span> Dispatced</li>
+                                        <li><span class="table_statusClr clr-onRoute"></span> On Route</li>
+                                        <li><span class="table_statusClr clr-unLoading"></span> (Un)Loading</li>
+                                        <li><span class="table_statusClr clr-inYard"></span> In Yard</li>
+                                    </ul>
+
+                                </div>
+                                <div class="table_links">
+                                    <ul style="display:none;">
+                                        <li>
+                                            <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Offices</label> </a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Time</label> </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Open Load</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Delivered/Completed Load</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="table-responsive table-responsive-data2" style="overflow-x:scroll;">
+                                <table class="table table-data2" id="tblLoad">
+                                    <thead>
+                                        <tr>
+                                            <th>Dispatcher Name</th>
+                                            <th># of Loads</th>
+                                            <th>Gross Revenue</th>
+                                            <th>NetProfit</th>
+                                            <th>Open Load</th>
+                                            <th>Delivered Load</th>
+                                            <th>Completed Load</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END DATA TABLE-->
+
+        </div>
+    </div>
+</div>
+<!-- <div class="page-content-bg">
+
+<section class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table_btn_links">
+                    <div class="table_status" style="display:none;">
+                        <ul>
+                            <li><span class="table_statusClr clr-pending"></span> Pending</li>
+                            <li><span class="table_statusClr clr-open"></span> Open</li>
+                            <li><span class="table_statusClr clr-refused"></span> Refused</li>
+                            <li><span class="table_statusClr clr-covered"></span> Covered</li>
+                            <li><span class="table_statusClr clr-dispatched"></span> Dispatced</li>
+                            <li><span class="table_statusClr clr-onRoute"></span> On Route</li>
+                            <li><span class="table_statusClr clr-unLoading"></span> (Un)Loading</li>
+                            <li><span class="table_statusClr clr-inYard"></span> In Yard</li>
+                        </ul>
+
+                    </div>
+                    <div class="table_links">
+                        <ul style="display:none;">
+                            <li>
+                                <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Offices</label> </a>
+                            </li>
+                            <li>
+                                <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Time</label> </a>
+                            </li>
+                            <li>
+                                <a href="#">Open Load</a>
+                            </li>
+                            <li>
+                                <a href="#">Delivered/Completed Load</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="table-responsive table-responsive-data2" style="overflow-x:scroll;">
+                    <table class="table table-data2" id="tblLoad">
+                        <thead>
+                            <tr>
+                                <th>Carrier Name</th>
+                                <th># of Loads</th>
+                                <th>Gross Revenue</th>
+                                <th>Carrier Pay</th>
+                                <th>Miles</th>
+                                <th>Revenue/Mile</th>
+                                <th>Pay/ Mile</th>
+                                <th>Expiries</th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END DATA TABLE
+</div>-->
+@*<script src="@Url.Content("~/assets/js/datatables.js")"></script>*@
+
+
+<script type="text/javascript">
+    // this is just used to make sure values pushed into the array are not already there
+    Array.prototype.contains = function (v) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] === v) return true;
+        }
+        return false;
+    };
+    var LoadStatus = null;
+
+    $(document).ready(function () {
+      if($("#strDateFilterID").val()==8)
+    {
+    setThisMonthToTodayDate();
+    }
+     loadData();
+
+    });
+
+    function loadData() {
+        //debugger;
+       var fdate= $("#fromdate").val();
+        var ldate = $("#todate").val();
+        if (fdate != "" && ldate != "") {
+        var dispatcherId = $("#strDispatcherID").val();
+        var filtertypeid = $("#strFiltertypeID").val();
+        $("#divLoader").show();
+        $('#tblLoad').DataTable().destroy();
+          $('#tblLoad').DataTable({
+             "bServerSide": true,
+             "bProcessing": true,
+             "bSearchable": true,
+             "sAjaxSource": "/Dashboard/loadDispatcherdata", 
+              "sServerMethod": "POST",
+               "dom": 'Bfrtip',
+             "fnServerParams": function (data) {
+                 data.push({  
+                  "name": "DispatcherID",  
+                 "value": dispatcherId  }); 
+
+                 data.push({  
+                  "name": "FilterTypeID",  
+                 "value": filtertypeid  }); 
+
+                data.push({  
+                  "name": "FromDate",  
+                 "value": fdate  }); 
+
+                data.push({  
+                  "name": "ToDate",  
+                 "value": ldate  }); 
+        },
+            "order": [[0, "desc"]],
+            "buttons": [
+                         {
+                              'extend': 'excel',
+                                'text': 'Excel',
+                                'filename': getfilename(),
+                                'exportOptions': {
+                                    'modifier': {
+                                        'page': 'all',
+                                         'search': 'none' 
+                                    }
+                                },
+                                 action: function (e, dt, button, config)
+                                    {  
+                                  exportToExcel();
+                                 }
+                            }
+                        ],
+         "aoColumns": [
+                           { "data": "DispatcherName", "autoWidth": true },
+                            { "data": "TotalLoads", "autoWidth": true },
+                            { "data": "GrossRevenue", "autoWidth": true },
+                            { "data": "NetProfit", "autoWidth": true },
+                            { "data": "OpenLoad", "autoWidth": true },
+                            { "data": "DeliveredLoad", "autoWidth": true },
+                            { "data": "CompletedLoad", "autoWidth": true },
+                        ],
+          "columnDefs":[
+                            {
+                                "targets": [4,5,6], //first and last not sortable
+                                "orderable": false,
+                                "defaultContent": " "
+                            }
+                        ],
+                         "responsive": true
+                  });
+                 $("#divLoader").hide();
+        }
+        else {
+            ShowError("From and To Dates are required.");
+            return false;
+        }
+    }
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strDateFilterID").change(function () {
+        debugger;
+        var datefilterid = $("#strDateFilterID").val();
+        var curr = new Date(); // get current date
+        //var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+        //var last = first + 6; // last day is the first day + 6
+
+        //var firstday = new Date(curr.setDate(first)).toUTCString();
+        //var lastday = new Date(curr.setDate(last)).toUTCString();
+        if (datefilterid == 1) {
+            $("#fromdate").val('');
+            $("#todate").val('');
+
+        }
+        if (datefilterid == 2) {
+            var year = curr.getFullYear() - 1;
+            var fromdate = new Date("01 / 01 /" + year);
+            var Todate = new Date("12 / 31 /" + year);
+            fromdate = getdateformat(fromdate);
+            Todate = getdateformat(Todate);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+
+        } if (datefilterid == 3) {
+            var toMonth = curr.getMonth()+1 ;
+            var toYear = curr.getFullYear();
+            var currDay=curr.getDate();
+            if (currDay<20) 
+             {
+                toMonth=toMonth-1;
+                if(toMonth<=0)
+                 { 
+                 toMonth = 12;
+                 toYear=toYear-1;
+                }
+             }
+              var frmMonth = toMonth-1 ;
+              var frmYear = toYear;
+               if(frmMonth<=0)
+                 { 
+                 frmMonth = 12;
+                 frmYear=frmYear-1;
+                }
+            var toDate = new Date(toMonth + "/20/" + toYear)
+            var frmDate = new Date(frmMonth + "/21/" + frmYear)
+
+            fromdate = getdateformat(frmDate);
+            Todate = getdateformat(toDate);
+
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+        } 
+        if (datefilterid == 4) {
+            var beforeOneWeek = new Date(new Date().getTime() - 60 * 60 * 24 * 7 * 1000);
+            var beforeOneWeek2 = new Date(beforeOneWeek);
+            day = beforeOneWeek.getDay();
+              var diffToMonday = beforeOneWeek.getDate() - day + (day === 0 ? -6 : 1);
+              var lastMonday = new Date(beforeOneWeek.setDate(diffToMonday));
+              var lastSunday = new Date(beforeOneWeek2.setDate(diffToMonday + 6));
+
+
+           var fromdate = getdateformat(lastMonday);
+           var Todate = getdateformat(lastSunday);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+
+        } if (datefilterid == 5) {
+
+            const today = new Date();
+            const yesterday = new Date(today);
+
+            yesterday.setDate(yesterday.getDate() - 1);
+            Todate = getdateformat(yesterday);
+            $("#fromdate").val(Todate);
+            $("#todate").val(Todate);
+        } if (datefilterid == 6) {
+
+            var fromdate = new Date();
+            var Todate = new Date();
+            fromdate = getdateformat(fromdate);
+            Todate = getdateformat(Todate);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+
+        } if (datefilterid == 7) {
+            var curr = new Date(); // get current date
+            var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+            var last = first + 6; // last day is the first day + 6
+
+            var firstday = new Date(curr.setDate(first)).toUTCString();
+            var lastday = new Date(curr.setDate(last)).toUTCString();
+            var fromdate = new Date();
+            var Todate = new Date();
+            fromdate = getdateformat(firstday);
+            Todate = getdateformat(Todate);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+        }
+        if (datefilterid == 8) {
+           setThisMonthToTodayDate();
+        }
+        if (datefilterid == 9) {
+
+            var fromdate = new Date();
+            var Todate = new Date();
+            var firstday = "01/01/" + fromdate.getFullYear();
+            fromdate = getdateformat(firstday);
+            Todate = getdateformat(Todate);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+        }
+
+    });
+     function setThisMonthToTodayDate()
+    {
+    var curr=new Date();
+     var Todate = new Date();
+            var frmMonth = curr.getMonth()+1 ;
+            var frmYear = curr.getFullYear();
+            var currDay=curr.getDate();
+            if (currDay<20) 
+             {
+                frmMonth=frmMonth-1;
+                 if(frmMonth<=0)
+                 { 
+                 frmMonth = 12;
+                 frmYear=frmYear-1;
+                }
+            }
+            var frmDate = new Date(frmMonth + "/21/" + frmYear)
+            fromdate = getdateformat(frmDate);
+            Todate = getdateformat(Todate);
+            $("#fromdate").val(fromdate);
+            $("#todate").val(Todate);
+    }
+    
+    function getfilename() {
+
+        var fdate = $("#fromdate").val();
+        var ldate = $("#todate").val(); 
+        var filtertypeid = $("#strFiltertypeID").children("option").filter(":selected").text();
+        return 'DispatcherReport_By_' + filtertypeid.replace(" ", "_") + '_' + fdate.replace("/", "-") + '_' + ldate.replace("/", "-")+".xls";
+
+    }
+
+
+    function getdateformat(dt) {
+
+        var today = new Date(dt);
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = mm + '/' + dd + '/' + yyyy;
+        return today;
+    }
+     function exportToExcel()
+    {
+    var dispatcherId = $("#strDispatcherID").val();
+    var filtertypeid = $("#strFiltertypeID").val();
+    var fdate = $("#fromdate").val();
+    var ldate = $("#todate").val(); 
+    $.ajax({
+    type: "GET",
+    data:{"DispatcherID":dispatcherId,"FilterTypeID":filtertypeid,"FromDate":fdate,"ToDate":ldate},
+    contentType: "application/json; charset=utf-8", url: '@Url.Action("ExportToExcelDispatcher", "Dashboard")',
+    beforeSend: function () {
+   $("#loading").show();
+    },
+    success: function (response) {
+    var blob = new Blob([response], { type: 'application/ms-excel' });
+    var downloadUrl = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = getfilename();
+    document.body.appendChild(a);
+    a.click();
+    },
+    complete: function () {
+   $("#loading").hide();
+    }
+    });
+    return false;
+    }
+
+</script>
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#main_outer").toggleClass("active");
+    });
+</script>

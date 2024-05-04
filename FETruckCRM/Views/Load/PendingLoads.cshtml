@@ -1,0 +1,412 @@
+﻿@{
+    ViewBag.Title = "Eternetic Logistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+<!-- PAGE CONTENT-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">Pending Loads</div>
+            <div class="buttons-wrap">
+                <div class="left__buttons">
+                </div>
+                <div class="right_filter" style="display:none;">
+                    <input type="text" class="form-control m-l-10 m-r-10 width-140 bg-dark-blue" value="" placeholder="Keyword.." />
+                    <select class="form-control-sm form-control width-140 bg-dark-blue">
+                        <option value="0">Search For</option>
+                        <option value="1">Shipper Rate</option>
+                        <option value="2">Carrier Pay</option>
+                        <option value="3">Load Margin</option>
+                        <option value="4">Margin %</option>
+                    </select>
+                    <span class="filter_text">From</span>
+                    <input type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="" />
+                    <span class="filter_text">To</span>
+                    <input type="text" class="form-control width-140 bg-dark-blue dt_picker" placeholder="MM/DD/YY" value="" />
+                    <div class="right__buttons">
+                        <button class="btn btn-primary bg-red" type="button">Go</button>
+                        <button class="btn btn-primary" type="button">Show All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table_btn_links">
+                        <div class="table_status" style="display:none;">
+                        </div>
+                        <div class="table_links">
+                            <ul style="display:none;">
+                                <li>
+                                    <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Offices</label> </a>
+                                </li>
+                                <li>
+                                    <a href="#"><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span> Show Time</label> </a>
+                                </li>
+                                <li>
+                                    <a href="#">Open Load</a>
+                                </li>
+                                <li>
+                                    <a href="#">Delivered/Completed Load</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="table-responsive table-responsive-data2" style="overflow-x:scroll;">
+                        <table class="table table-data2" id="tblLoad">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Load #</th>
+                                    <th>Invoice #</th>
+                                    <th>Payment Type</th>
+                                    <th>W/O #</th>
+                                    <th>Driver/Carrier</th>
+                                    <th>Ship Date</th>
+                                    <th>Load Creation Date</th>
+                                    <th>Del Date</th>
+                                    <th>Customer</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Shipper Rate</th>
+                                    <th>Career Fee</th>
+                                    <th>Load Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+
+</div>
+<script src="@Url.Content("~/assets/js/datatables.js")"></script>
+<script type="text/javascript">
+    // this is just used to make sure values pushed into the array are not already there
+    Array.prototype.contains = function (v) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] === v) return true;
+        }
+        return false;
+    };
+    var LoadStatus = null;
+    function loadddl()
+    {
+
+        $.ajax({
+            url: "/Load/BindDropDowns",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                // getload();
+                var res = JSON.parse(data);
+                if (res) {
+                                       LoadStatus = new Array();
+                    $.each(res.Table3, function (i, item) {
+                        if (!LoadStatus.contains(item)) {
+                            LoadStatus.push(item);
+                        }
+                    });
+                    //
+                }
+            }
+        });
+    }
+    function openNewWindow(id) {
+
+        var newWindow = window.open('/Load/ratecon?Loadid=' + id,"rateconpdf.pdf",true);
+        newWindow.focus();
+
+        newWindow.print();
+    }
+
+    function openNewWindow1(id) {
+
+        var newWindow = window.open('/Load/loadinv?Loadid=' + id, "invoicepdf.pdf", true);
+        newWindow.focus();
+
+        newWindow.print();
+
+        // newWindow.close();
+    }
+    function openNewWindow2(id) {
+
+        var newWindow = window.open('/Load/shipperratecon?Loadid=' + id, "invoicepdf.pdf", true);
+        newWindow.focus();
+
+        newWindow.print();
+
+        // newWindow.close();
+    }
+
+
+    $(document).ready(function () {
+        loadddl();
+       
+        $('#tblLoad').DataTable({
+            "bServerSide": true,
+            "bProcessing": true,
+            "bSearchable": true,
+            "sAjaxSource": "/Load/getPendingloaddata/",
+            "sServerMethod": "POST",
+            "order": [[0, "desc"]],
+            "aoColumns": [
+                { "data": "LoadID", "autoWidth": true, "searchable": true},
+                { "data": "LoadNo", "autoWidth": true, "searchable": true},
+                { "data": "InvoiceNo", "autoWidth": true, "searchable": true},
+                { "data": "PaymentType", "autoWidth": true, "searchable": true},
+                { "data": "WO", "autoWidth": true, "searchable": true},
+                { "data": "CareerName", "autoWidth": true, "searchable": true},
+                { "data": "strShipperDate", "autoWidth": true, "searchable": true},
+                { "data": "CreatedDate", "autoWidth": true, "searchable": true},
+                { "data": "strDeliveredDate", "autoWidth": true, "searchable": true},
+                { "data": "CustomerName", "autoWidth": true, "searchable": true},
+                { "data": "Location", "autoWidth": true, "searchable": true},
+                { "data": "ConsigneeLocation", "autoWidth": true, "searchable": true},
+                { "data": "strRate", "autoWidth": true, "searchable": true},
+                { "data": "strCareerFee", "autoWidth": true, "searchable": true},
+                { "data": "Status", "autoWidth": true, "searchable": true},
+                    {
+                        // this is Actions Column
+                        mRender: function (data, type, row) {
+                            debugger;
+
+                            var lt = row.LoadID;
+                            var linkpdf = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top" onclick="openNewWindow(' + row.LoadID +')"  class="item"   title="Rate confirmation PDF"  data-original-title="Rate Confirmation PDF"><img src ="../assets/images/pdf.png" /></a>';
+                            linkpdf = linkpdf.replace("-1", row.LoadID);
+
+                                                        var linkinvoicepdf1 = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item" onclick="openNewWindow1('+row.LoadID+')"   title="Invoice PDF"  data-original-title="Invoice PDF"><img src ="../assets/images/pdf.png" /></a>';
+                            linkinvoicepdf1 = linkinvoicepdf1.replace("-1", row.LoadID);
+
+                            var linkEdit = '<div class="table-data-feature"><a data-toggle="tooltip" data-placement="top"  class="item"  href="@Url.Action("PendingLoadIndex", "load", new { LoadType=-2, loadid = -1 })" title=""  data-original-title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                            linkEdit = linkEdit.replace("-1", row.LoadID).replace("-2", row.LoadType);
+
+                            var linkDelete = '<a data-toggle="tooltip" data-placement="top" class="item" style="margin-left:5px;"  onclick="DeleteFunction(' + row["LoadID"] + ')" title=""  data-original-title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></a></div>';
+                            if ((row.Role == "Accounting" || row.Role == "SuperAdmin") &&   row.Status >= 9) {
+                                return linkEdit + linkpdf +  linkinvoicepdf1;
+
+                            }
+                            else if (row.IsShipperInvoiceSent == true && ('@ViewBag.RoleName' == "Sale Representative" || '@ViewBag.RoleName' == "Dispatcher"))
+                            {
+                                return "";
+                            }
+                            else {
+
+                                return linkEdit  ;
+                            }
+                            }
+                    }
+                ],
+                "columnDefs": [
+                    //{
+                    //    "targets": [14,15], //first and last not sortable
+                    //    "orderable": false,
+                    //    "defaultContent": " ",
+
+                       
+                    //},
+                    //{
+                    //    targets: [13], render:
+                    //        function (data, type, row) { return createSelect(data, row["LoadID"], row["IsShipperInvoiceSent"]); }
+                    //},
+                   
+                    {
+                        "targets": [0,13], //first and last not sortable
+
+                        "visible": false
+                      
+                    },
+
+            ],
+                "responsive": true
+
+            });
+
+
+        });
+
+    var err = '@Err';
+        var success = '@success';
+    if (err != null && err != '') {
+
+        ShowError(err);
+    }
+    if (success != null && success != '') {
+
+        ShowSucess(success);
+    }
+        function ShowSucess(msg) {
+            $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+
+
+    function createSelect(selItem, loadID, IsShipperInvoiceSent) {
+
+        var sel = "<select id='LS_" + loadID + "' onchange='changeStatus(this.id," + loadID + ");'><option>Select Status</option>";
+        if (IsShipperInvoiceSent == true && ('@ViewBag.RoleName' == "Sale Representative" || '@ViewBag.RoleName' == "Dispatcher")) {
+            sel = "<select id='LS_" + loadID + "' onchange='changeStatus(this.id," + loadID + ");' disabled='true'><option>Select Status</option>";
+
+        }
+        if (LoadStatus == null || LoadStatus==undefined)
+        {
+        loadddl();
+        }
+        for (var i = 0; i < LoadStatus.length; ++i) {
+            if (IsShipperInvoiceSent == false && ('@ViewBag.RoleName' == "Sale Representative" || '@ViewBag.RoleName' == "Dispatcher")) {
+
+                if (LoadStatus[i].LoadStatusID != 10 && LoadStatus[i].LoadStatusID != 11) {
+                    if (LoadStatus[i].LoadStatusID == selItem) {
+                        sel += "<option selected value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+                    }
+                    else {
+                        sel += "<option  value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+                    }
+                }
+            }
+            else {
+                if (LoadStatus[i].LoadStatusID == selItem) {
+                    sel += "<option selected value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+                }
+                else {
+                    sel += "<option  value = '" + LoadStatus[i].LoadStatusID + "' >" + LoadStatus[i].Status + "</option>";
+                }
+            }
+
+
+        }
+        sel += "</select>";
+        return sel;
+    }
+
+    function changeStatus(e, loadID) {
+
+        debugger;
+        $("#divLoader").show();
+        var flag = false;
+        var data = { "LoadID": loadID, "LoadStatusID": $("#" + e).val() };
+
+        $.ajax({
+            type: 'POST',
+            url: 'CheckStatus',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'ChangeStatus',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        success: function (s) {
+                            //debugger;
+                            if (s.data > 0) {
+                                $('#tblCustomBroker').DataTable().ajax.reload();
+                                $("#divLoader").hide();
+                                ShowSucess(s.msg);
+                            }
+                            else {
+                                if (s.timeout == true) {
+                                    $("#divLoader").hide();
+
+                                    window.location.href = "/Account/Login";
+                                }
+                                else {
+                                    ShowError(s.msg); $("#divLoader").hide();
+                                }
+                            }
+
+                        },
+                        error: function (s) {
+                            if (s.timeout == true) {
+
+                                window.location.href = "/Account/Login";
+                            }
+                            //ShowError();
+                        }
+                    });
+                }
+                else {
+
+                        var result = confirm("The selected load status is already exists! Are you sure to change the status?");
+                        if (result) {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'ChangeStatus',
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify(data),
+                                dataType: 'json',
+                                success: function (s) {
+                                    //debugger;
+                                    if (s.data > 0) {
+                                        $('#tblCustomBroker').DataTable().ajax.reload();
+                                        $("#divLoader").hide();
+                                        ShowSucess(s.msg);
+                                    }
+                                    else {
+                                        if (s.timeout == true) {
+                                            $("#divLoader").hide();
+
+                                            window.location.href = "/Account/Login";
+                                        }
+                                        else {
+                                            ShowError(s.msg); $("#divLoader").hide();
+                                        }
+                                    }
+
+                                },
+                                error: function (s) {
+                                    if (s.timeout == true) {
+
+                                        window.location.href = "/Account/Login";
+                                    }
+                                    //ShowError();
+                                }
+                            });
+                        }
+
+
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        ShowError(s.msg); $("#divLoader").hide();
+                    }
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                }
+                //ShowError();
+            }
+        });
+
+        return true;
+    }
+
+   
+
+</script>

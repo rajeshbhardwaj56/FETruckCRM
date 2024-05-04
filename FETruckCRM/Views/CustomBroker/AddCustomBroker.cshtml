@@ -1,0 +1,178 @@
+﻿@model FETruckCRM.Models.CustomBrokerModel
+
+@{
+    //ViewBag.Title = "Add FactoringCompany";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            @*<form action="index.html" method="post" novalidate="novalidate">*@
+                            @using (Html.BeginForm("AddCustomBroker", "CustomBroker", FormMethod.Post, new { id = "CustomBrokerForm", enctype = "multipart/form-data", @onsubmit = "showLoader(this);" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Broker Name</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.BrokerName, new { @class = "form-control", @Placeholder = "Broker Name", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.BrokerName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Crossing</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.Crossing, new { @class = "form-control", @Placeholder = "Crossing", @Maxlength = "100" })
+                                                    @Html.ValidationMessageFor(m => m.Crossing)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Telephone</label><span style="color:red">*</span>
+                                                    @Html.TextBoxFor(a => a.Telephone, new { @class = "form-control phone telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.Telephone)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Ext</label>
+                                                    @Html.TextBoxFor(a => a.TelephoneExt, new { @class = "form-control", @Placeholder = "Ext.", @Maxlength = "5", @type = "number" })
+                                                    @Html.ValidationMessageFor(m => m.TelephoneExt)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Toll Free</label>
+                                                    @Html.TextBoxFor(a => a.TollFree, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.TollFree)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Fax</label>
+                                                    @Html.TextBoxFor(a => a.Fax, new { @class = "form-control telephone", @Placeholder = "XXX-XXX-XXXX", @Maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.Fax)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Status</label>
+                                                    @Html.DropDownListFor(a => a.strStatusInd, new SelectList(Model.StatusList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                                    @Html.ValidationMessageFor(m => m.strStatusInd)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(a => a.CustomBrokerID)
+                                <button type="submit" class="btn btn-info commonBtn">
+                                    Submit
+                                </button>
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                <div>
+
+                                </div>
+                                @*</form>*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        document.getElementsByClassName('phone').addEventListener('input', function (e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+    });
+    
+
+
+    var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+              ShowError(err);
+        }
+        if (success != null && success != '') {
+              ShowSucess(success);
+        }
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+           $.notifyBar({ cssClass: "error", html: msg });
+    }
+
+    $("#strCountryID").change(function () {
+        debugger;
+        var CountryID = $("#strCountryID").val();
+        var data = { "CountryID": CountryID };
+        $.ajax({
+            type: 'POST',
+            url: '/FactoringCompany/loadStates',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    $("#strStateID").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strStateID").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    
+                    
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+
+</script>

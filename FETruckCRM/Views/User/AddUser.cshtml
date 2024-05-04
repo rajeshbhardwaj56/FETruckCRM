@@ -1,0 +1,695 @@
+﻿@model FETruckCRM.Models.UserModel
+@{
+    //ViewBag.Title = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var success = TempData["Success"];
+    var Err = TempData["Error"];
+}
+<style>
+    .check-container {
+        float: left;
+        width: 50%;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p_title">@ViewBag.Title</div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg">
+    <!-- DATA TABLE-->
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card commonForm">
+                        <div class="card-header hideMobile">@ViewBag.Title</div>
+                        <div class="card-body">
+                            <form id="UserForm" enctype="multipart/form-data" name="UserForm">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Role</label><span style="color:red;">*</span>
+                                            @Html.DropDownListFor(a => a.strGroupID, new SelectList(Model.GroupList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strGroupID)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Site</label><span style="color:red;">*</span>
+
+                                            @Html.DropDownListFor(a => a.SiteID, new SelectList(Model.SiteList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px", @Style = Model.strGroupID != "4" ? "display:block;" : "display:none;" })
+
+                                            @Html.ListBoxFor(a => a.SelectedSiteIds, new SelectList(Model.SiteList, "Value", "Text"), new
+                                       {
+                                           @class = "form-control shadow-none col-12",
+                                           width = "100px",
+                                                @Style = Model.strGroupID == "4" ? "display:block;" : "display:none;"
+                                       })
+
+                                            @Html.ValidationMessageFor(m => m.SiteID)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Employee Type</label><span style="color:red;">*</span>
+                                            @Html.DropDownListFor(a => a.EmployeeType, new SelectList(Model.EmployeeTypeList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.EmployeeType)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Employee Code</label>
+                                            @Html.TextBoxFor(a => a.EmployeeCode, new { @class = "form-control", @Placeholder = "Employee Code", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.EmployeeCode)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">First Name</label><span style="color:red;">*</span>
+                                            @Html.TextBoxFor(a => a.FirstName, new { @class = "form-control", @Placeholder = "First Name", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.FirstName)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Last Name</label><span style="color:red;">*</span>
+                                            @Html.TextBoxFor(a => a.LastName, new { @class = "form-control", @Placeholder = "Last Name", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.LastName)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Alias</label><span style="color:red;">*</span>
+                                            @Html.TextBoxFor(a => a.Alias, new { @class = "form-control", @Placeholder = "First Name", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.Alias)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Phone</label><span style="color:red;">*</span>
+                                            @Html.TextBoxFor(a => a.Phone, new { @class = "form-control telephone", @Placeholder = "xxx-xxx-xxxx", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.Phone)
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Fax</label>
+                                            @Html.TextBoxFor(a => a.Fax, new { @class = "form-control telephone", @Placeholder = "xxx-xxx-xxxx", @Maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.Fax)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Email</label><span style="color:red;">*</span>
+                                            @Html.TextBoxFor(a => a.EmailId, new { @class = "form-control", @Placeholder = "test@test.com", @Maxlength = "200" })
+                                            @Html.ValidationMessageFor(m => m.EmailId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Password</label><span style="color:red;">*</span>
+                                            @if (Model.UserID > 0)
+                                            {
+                                                @Html.TextBoxFor(a => a.NewPassword, new { @id = "txtPwd", @class = "form-control", @Placeholder = "Password", @style = "display:none;", @Maxlength = "20" })
+                                                <a id="ankChangePwd" onclick="showpwd();" style="color: #007bff; text-decoration:underline;">Change Password</a>
+                                                <a id="ankCancelPwd" onclick="hidpwd();" style="color: #007bff; text-decoration: underline; display: none;">Cancel</a>
+                                                @Html.HiddenFor(m => m.Password)
+                                            }
+                                            else
+                                            {
+                                                @Html.PasswordFor(a => a.Password, new { @id = "txtPwd", @class = "form-control", @Placeholder = "Password", @Maxlength = "15" })
+                                            }<br>
+                                            @Html.ValidationMessageFor(m => m.Password)
+                                            @Html.ValidationMessageFor(m => m.oldPassword)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Status</label><span style="color:red;">*</span>
+                                            @Html.DropDownListFor(a => a.strStatus, new SelectList(Model.StatusList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strStatus)
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">User Group</label><span style="color:red;">*</span>
+
+                                            @Html.DropDownListFor(a => a.strRoleID, new SelectList(Model.RoleList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strRoleID)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div> <label class="control-label mb-1">Form Permission</label><span style="color:red;">*</span></div>
+
+                                            @{
+                                                for (int i = 0; i < Model.FormList.Count(); i++)
+                                                {
+                                                    string isChecked = "";
+                                                    if (Model.strFormid != null && Model.strFormid.Contains(Convert.ToInt32(Model.FormList[i].Value)))
+                                                    {
+                                                        isChecked = "checked";
+                                                    }
+
+                                                    var checkBoxId = "strFormid[" + i + "]";
+                                                    <div class="check-container">
+                                                        <input type="checkbox" id="@checkBoxId" name="strFormid" @isChecked class="chkboxes" value="@Model.FormList[i].Value" /> &nbsp;
+                                                        @Model.FormList[i].Text
+                                                    </div>
+                                                }
+
+                                            }
+
+
+                                            @Html.HiddenFor(a => a.strFormids)
+                                            @Html.HiddenFor(a => a.hdnSelectedSiteIds)
+                                            @Html.HiddenFor(a => a.hdnSelectedOpsManagers)
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+
+
+
+                                    <div class="col-md-3" id="divTeamManager" style="@if(Model.GroupID >= 2 && Model.GroupID < 4){<text>display: block;</text> }else {<text> display: none;</text> }">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Team Manager</label><span style="color:red;">*</span>
+                                            @Html.DropDownListFor(a => a.strTeamManager, new SelectList(Model.TeamManagerList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strTeamManager)
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" id="divTeamLead" style="@if(Model.GroupID >= 3 && Model.GroupID < 4){<text>display: block;</text> }else {<text> display: none;</text> }">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Team Lead</label><span style="color:red;">*</span>
+                                            @Html.DropDownListFor(a => a.strTeamLead, new SelectList(Model.TeamLeadList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.strTeamLead)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" id="divopsManager" style="@if(Model.GroupID == 4){<text>display: block;</text> }else {<text> display: none;</text> }">
+                                        <div class="form-group">
+                                            <label class="control-label mb-1">Team Manager</label><span style="color:red;">*</span>
+                                            @Html.ListBoxFor(a => a.SelectedOpsManagers, new SelectList(Model.TeamManagerList, "Value", "Text"), new { @class = "form-control shadow-none col-12", width = "100px" })
+                                            @Html.ValidationMessageFor(m => m.SelectedOpsManagers)
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @Html.HiddenFor(a => a.UserID)
+                                @Html.HiddenFor(a => a.TeamManager)
+                                <button type="button" onclick="saveData()" class="btn btn-info commonBtn" id="btn_submit">
+                                    @ViewBag.Submit
+                                </button>
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger  text-white commonBtn rounded submit px-3", @style = "" })
+
+                                <div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END DATA TABLE-->
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+
+     $("#UserForm").validate({
+            rules: {
+     EmployeeCode: {
+                    required: true,
+                },
+      FirstName: {
+                    required: true,
+                },
+     LastName: {
+                    required: true,
+                },
+      Alias: {
+                    required: true,
+                },
+      Phone: {
+                    required: true,
+                },
+      Fax: {
+                    required: true,
+                },
+      EmailId: {
+                    required: true,
+                },
+      Password: {
+                    required: true,
+                },
+      strStatus: {
+                    required: true,
+                },
+      EmployeeType: {
+                    required: true,
+                },
+      strRoleID: {
+                    required: true,
+                },
+      strGroupID: {
+                    required: true,
+                },
+      SiteID: {
+                    required: true,
+                },
+    strTeamLead: {
+                    required: true,
+                },
+    strTeamManager: {
+                    required: true,
+                },
+    'strFormid[]': {
+                    required: true,
+                },
+    }
+    });
+
+
+     $("#strReportingManager").change(function () {
+        debugger;
+        var UserID = $("#strReportingManager").val();
+        var data = { "UserID": UserID };
+        $.ajax({
+            type: 'POST',
+            url: '/User/getTeamManager',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                debugger;
+                if (s.data.length > 0) {
+                    $("#lblTeamManager").text(s.data);
+                    $("#TeamManager").val(s.data);
+
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+
+
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                } }
+        });
+
+    });
+    $("#EmployeeType").change(function(){
+   var empType= $("#EmployeeType").val();
+    if(empType=="1")
+    {
+    $('#EmployeeCode').rules('add','required');
+    }
+    else if(empType=="2")
+    {
+    $('#EmployeeCode').rules('remove','required');
+    }
+    });
+
+    $("#strGroupID").change(function () {
+        var GroupID = $("#strGroupID").val();
+        if (GroupID == "1") {
+
+            $("#divTeamLead").hide();
+            $("#divTeamManager").hide();
+
+            $("#divTeamManager").val('');
+            $('#strTeamLead').rules('remove','required');
+           $('#strTeamManager').rules('remove','required');
+          $('#strTeamLead').rules('add','required');
+
+        }
+        else if (GroupID == "2") {
+
+
+            $("#divTeamLead").hide();
+            $("#divTeamManager").show();
+
+            $("#strTeamLead").val('');
+             $('#strTeamManager').rules('add','required');
+            $('#strTeamLead').rules('remove','required');
+        }
+        else if (GroupID == "3") {
+        $("#divTeamLead").show();
+        $("#divTeamManager").show();
+
+            $("#strTeamLead").val('');
+             $("#strTeamManager").val('');
+            $('#strTeamLead').rules('add','required');
+           $('#strTeamManager').rules('add','required');
+
+        }
+
+        if (GroupID == "4") {
+            $("#SiteID").hide();
+            $("#SelectedSiteIds").show();
+            $("#divTeamLead").hide();
+            $("#divTeamManager").hide();
+            $("#divopsManager").show();
+
+
+        }
+
+        else {
+            $("#SiteID").show();
+            $("#SelectedSiteIds").hide();
+        }
+
+    });
+
+        $("#SelectedSiteIds").change(function () {
+
+            $("#hdnSelectedSiteIds").val($("#SelectedSiteIds").val());
+        });
+
+        $("#SelectedOpsManagers").change(function () {
+
+            $("#hdnSelectedOpsManagers").val($("#SelectedOpsManagers").val());
+        });
+
+    $("#strRoleID").change(function () {
+        debugger;
+        var RoleID = $("#strRoleID").val();
+        if (RoleID == "") {
+
+            var tss = [];
+            $("#strFormid").val(tss);
+            return;
+
+        }
+        var data = { "RoleID": RoleID };
+        $.ajax({
+            type: 'POST',
+            url: '/User/loadFormsdata',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data.length > 0) {
+                    debugger;
+                    //var selectedOptions = s.data.split(",");
+                    //$("#strFormid").val(selectedOptions);
+                    //$("#strFormids").val($("#strFormid").val());
+                    $("#strFormid").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strFormid").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        $("#strFormid").empty();
+                    }
+                //    var selectedOptions = [];
+                //    $("#strFormid").val(selectedOptions);
+                //    $("#strFormids").val($("#strFormid").val());
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                }}
+        });
+    });
+
+
+
+    $("#strFormid").change(function () {
+
+        $("#strFormids").val($("#strFormid").val());
+    });
+
+ });
+        function showpwd() {
+
+            $("#txtPwd").attr("type","password");
+            $("#txtPwd").show();
+            $("#ankChangePwd").hide();
+            $("#ankCancelPwd").show();
+        }
+        function hidpwd() {
+            $("#txtPwd").val('');
+            $("#txtPwd").attr("type", "text");
+            $("#txtPwd").hide();
+            $("#ankChangePwd").show();
+            $("#ankCancelPwd").hide();
+        }
+         var err = '@ViewBag.Error';
+    var success = '@ViewBag.Success';
+    if (err != null && err != '') {
+                       ShowError(err);
+        }
+        if (success != null && success != '') {
+
+                       ShowSucess(success);
+        }
+
+
+        function ShowSucess(msge) {
+           $.notifyBar({ cssClass: "success", html: msg });
+        }
+        function ShowError(msg) {
+            $.notifyBar({ cssClass: "error", html: msg });
+        }
+
+    function saveData() {
+    $("#UserForm").validate();
+    if( $("#UserForm").valid())
+    {
+        debugger;
+        if ($("#strGroupID").val() == "4") {
+            if ($("#SelectedSiteIds").val() == "") {
+                alert('Please select at least one Site!');
+                return;
+            }
+
+        }
+        else {
+
+            if ($("#SiteID").val() == "") {
+                alert('Site is required!');
+                return;
+            }
+        }
+
+             var formIds = [];
+             $("input:checkbox[name=strFormid]:checked").each(function() {
+                formIds.push($(this).val());
+             });
+         if(formIds.length<=0)
+              {
+                 alert('Please select at least one Form Permission!')
+                 return ;
+              }
+            $("#loading").show();
+            var objdt =new Object();
+            objdt.UserID=$("#UserID").val();
+            var password=objdt.UserID>0 ? $('#Password').val() : $('#txtPwd').val();
+            objdt.EmployeeCode = $('#EmployeeCode').val();
+            objdt.FirstName = $('#FirstName').val();
+            objdt.LastName = $('#LastName').val();
+            objdt.Alias = $('#Alias').val();
+            objdt.Phone = $('#Phone').val();
+            objdt.Fax = $('#Fax').val();
+            objdt.EmailId = $('#EmailId').val();
+            objdt.Password =password
+            objdt.strStatus = $('#strStatus').val();
+            objdt.EmployeeType = $('#EmployeeType').val();
+            objdt.strRoleID = $('#strRoleID').val();
+            objdt.strGroupID = $('#strGroupID').val();
+            objdt.strFormid = $('#strFormid').val();
+            objdt.SiteID = $('#SiteID').val();
+            objdt.strTeamLead = $('#strTeamLead').val();
+            objdt.strTeamManager = $('#strTeamManager').val();
+            objdt.strFormid=formIds;
+            objdt.strFormids=formIds.join(',');
+        objdt.hdnSelectedSiteIds = $("#SelectedSiteIds").val().join(',');
+        objdt.hdnSelectedOpsManagers = $("#SelectedOpsManagers").val().join(',');
+            objdt.NewPassword=$("#txtPwd").val();
+
+              $.ajax({
+                type: 'POST',
+                url: '/User/AddUser',
+                data:JSON.stringify,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(objdt),
+                success: function (res) {
+                    if (res.IsSuccess == true) {
+                        window.location.href = '/User/Index';
+                    }
+                    else {
+                        ShowError(res.msg);
+                    }
+                 $('#loading').hide();
+
+                },
+                 complete: function () {
+                         $("#loading").hide();
+                        }
+            });
+
+
+
+    }
+    }
+
+
+    $("#SiteID").change(function () { LoadManager(); });
+    $("#SelectedSiteIds").change(function () { LoadManager(); });
+
+    
+
+    $("#EmployeeType").change(function () { LoadManager(); });
+
+    function LoadManager() {
+        var SID = "";
+
+        if ($("#strGroupID").val() == "4") {
+           var  arrSID = $("#SelectedSiteIds").val();
+
+            SID= arrSID.join(',');
+        }
+        else {
+            SID = $("#SiteID").val();
+        }
+        var ETID = $("#EmployeeType").val();
+
+
+        var data = { "SID": SID, "ETID": ETID};
+            $.ajax({
+                type: 'POST',
+                url: '/User/loadManager',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (s) {
+                    //debugger;
+                    if (s.data.length > 0) {
+                        debugger;
+                        $("#strTeamManager").empty();
+                        $("#SelectedOpsManagers").empty();
+                        
+                        var v = "";
+                        $.each(s.data, function (i, v1) {
+                            v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                        });
+                        $("#strTeamManager").html(v);
+                        $("#SelectedOpsManagers").html(v);
+                    }
+                    else {
+                        if (s.timeout == true) {
+                            $("#divLoader").hide();
+
+                            window.location.href = "/Account/Login";
+                        }
+                        else {
+                            $("#strTeamManager").empty();
+                            $("#SelectedOpsManagers").empty();
+                        }
+                    }
+
+                },
+                error: function (s) {
+                    if (s.timeout == true) {
+
+                        window.location.href = "/Account/Login";
+                    }
+                }
+            });
+
+
+    }
+
+    $("#strTeamManager").change(function () { LoadTeamLead(); });
+
+
+
+    function LoadTeamLead() {
+        debugger;
+        var MID = $("#strTeamManager").val();
+
+
+        var data = { "MID": MID};
+        $.ajax({
+            type: 'POST',
+            url: '/User/loadTeamLeadManager',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (s) {
+                //debugger;
+                if (s.data!=null && s.data.length > 0) {
+                    debugger;
+                    $("#strTeamLead").empty();
+                    var v = "";
+                    $.each(s.data, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#strTeamLead").html(v);
+                }
+                else {
+                    if (s.timeout == true) {
+                        $("#divLoader").hide();
+
+                        window.location.href = "/Account/Login";
+                    }
+                    else {
+                        $("#strTeamLead").empty();
+                    }
+                }
+
+            },
+            error: function (s) {
+                if (s.timeout == true) {
+
+                    window.location.href = "/Account/Login";
+                }
+            }
+        });
+
+
+    }
+</script>
