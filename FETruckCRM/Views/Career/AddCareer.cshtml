@@ -247,7 +247,7 @@
                                                     <div class="col-md-9">
                                                         <div class="form-group">
                                                             <label class="control-label mb-1">Notes</label>
-                                                            @Html.TextAreaFor(a => a.Notes, new { @class = "form-control el_textarea100", @Placeholder = "Notes", @Maxlength = "1000" })
+                                                            @Html.TextAreaFor(a => a.Notes, new { @class = "form-control textareaNotes1 el_textarea100", @Placeholder = "Notes", @Maxlength = "1000" })
                                                             @Html.ValidationMessageFor(m => m.Notes)
                                                         </div>
                                                     </div>
@@ -689,7 +689,7 @@
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label class="control-label mb-1">Notes</label>
-                                                            @Html.TextAreaFor(a => a.Notes, new { @class = "form-control", @Placeholder = "", @Maxlength = "4000", @rows = "10" })
+                                                            @Html.TextAreaFor(a => a.Notes, new { @class = "form-control textareaNotes2", @Placeholder = "", @Maxlength = "4000", @rows = "10" })
                                                             @Html.ValidationMessageFor(m => m.Notes)
                                                         </div>
                                                     </div>
@@ -733,6 +733,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
 <script>
+
+    $(".textareaNotes1").keyup(function () {
+        $('.textareaNotes2').val(this.value);
+    });
+
+    $(".textareaNotes2").keyup(function () {
+        $('.textareaNotes1').val(this.value);
+    });
 
 
     var err = '@ViewBag.Error';
