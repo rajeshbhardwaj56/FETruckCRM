@@ -687,7 +687,7 @@ namespace FETruckCRM.Data
             }
             return isSuccess;
         }
-        public long ChangeShipperPaymentRecdStatus(Int64 LoadID, bool IsCheckedPaymentRecd, string ShipperPaymentReceivedDate)
+        public long ChangeShipperPaymentRecdStatus(Int64 LoadID, bool IsCheckedPaymentRecd, string ShipperPaymentReceivedDate,string loggedUserID)
         {
             long isSuccess = 0;
 
@@ -697,6 +697,9 @@ namespace FETruckCRM.Data
                 cmd.Parameters.AddWithValue("@LoadID", LoadID);
                 cmd.Parameters.AddWithValue("@IsShipperPaymentReceived", IsCheckedPaymentRecd);
                 cmd.Parameters.AddWithValue("@ShipperPaymentReceivedDate", ShipperPaymentReceivedDate);
+                cmd.Parameters.AddWithValue("@LoggedInUserId", loggedUserID);
+
+                
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 con.Open();

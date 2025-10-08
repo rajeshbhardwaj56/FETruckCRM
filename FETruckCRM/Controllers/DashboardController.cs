@@ -176,12 +176,13 @@ namespace FETruckCRM.Controllers
         [HttpPost]
         public ActionResult ChangePaymentRecdStatus(long LoadID, bool IsCheckedPaymentRecd,string ShipperPaymentReceivedDate)
         {
+            var loggedUserID = Convert.ToInt64(Session["UserID"]);
             long retval = -1;
             string msg = "";
             try
             {
                 _service = new LoadService();
-                retval = _service.ChangeShipperPaymentRecdStatus(LoadID, IsCheckedPaymentRecd, ShipperPaymentReceivedDate);
+                retval = _service.ChangeShipperPaymentRecdStatus(LoadID, IsCheckedPaymentRecd, ShipperPaymentReceivedDate, Convert.ToString(loggedUserID));
 
                 if (retval > 0)
                 {
