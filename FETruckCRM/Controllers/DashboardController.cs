@@ -14,6 +14,8 @@ using System.Data;
 using Microsoft.Office.Interop.Excel;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Formatting = Newtonsoft.Json.Formatting;
+using System.IO;
+using System.Web.Services.Description;
 
 namespace FETruckCRM.Controllers
 {
@@ -23,6 +25,8 @@ namespace FETruckCRM.Controllers
     public class DashboardController : Controller
     {
         LoadService _service;
+
+
         // GET: Admin/Home
         public ActionResult Index()
         {
@@ -105,10 +109,10 @@ namespace FETruckCRM.Controllers
             {
                 _service = new LoadService();
 
-                if (Convert.ToInt32(Session["RoleID"].ToString()) > 2 && (LoadstatusID == 9 || LoadstatusID == 10) )
+                if (Convert.ToInt32(Session["RoleID"].ToString()) > 2 && (LoadstatusID == 9 || LoadstatusID == 10))
                 {
                     retval = -11;
-                    
+
                 }
                 else
                 {
@@ -142,7 +146,7 @@ namespace FETruckCRM.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeShipperInvoiceSentStatus(long LoadID, bool IsShipperInvoiceSent,string ShipperInvoiceSentDate)
+        public ActionResult ChangeShipperInvoiceSentStatus(long LoadID, bool IsShipperInvoiceSent, string ShipperInvoiceSentDate)
         {
             long retval = -1;
             string msg = "";
@@ -174,16 +178,52 @@ namespace FETruckCRM.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangePaymentRecdStatus(long LoadID, bool IsCheckedPaymentRecd,string ShipperPaymentReceivedDate)
+        public ActionResult ChangePaymentRecdStatus(long LoadID, HttpPostedFileBase[] files, bool IsCheckedPaymentRecd, string ShipperPaymentReceivedDate, string LoggedInUserId, string ShipperReferenceNo)
         {
-            var loggedUserID = Convert.ToInt64(Session["UserID"]);
             long retval = -1;
             string msg = "";
+            LoadModel Model = new LoadModel();
             try
             {
                 _service = new LoadService();
-                retval = _service.ChangeShipperPaymentRecdStatus(LoadID, IsCheckedPaymentRecd, ShipperPaymentReceivedDate, Convert.ToString(loggedUserID));
+                if (files.Count() > 0)
+                {
+                    foreach (HttpPostedFileBase file in files)
+                    {
+                        if (file != null)
+                        {
+                            LoadModelkDocModel objDocModel = new LoadModelkDocModel();
+                            var InputFileName = Path.GetFileName(file.FileName);
+                            FileInfo fi = new FileInfo(InputFileName);
+                            var FilePath = "~/assets/images/" + Path.GetFileNameWithoutExtension(fi.Name).Replace(" ", "_") + DateTime.Now.Ticks.ToString() + fi.Extension;
+                            var ServerSavePath = Path.Combine(Server.MapPath(FilePath));
+                            if (System.IO.File.Exists(ServerSavePath))
+                            {
+                                System.IO.File.Delete(ServerSavePath);
+                            }
+                            //var fileName = DateTime.Now.Ticks.ToString() + HtmlHelperExtension.RemoveSpecialCharacters(fi.Name);
+                            //using (var inputStream = file.InputStream)
+                            //{
+                            //    _s3Service.UploadFile(inputStream, fileName);  // Synchronous call
+                            //    Model.ShipperPaymentUrl = fileName;
+                            //    //long fileSize = file.ContentLength;
+                            //    //objModel.FileSize = fileSize.ToString() + " KB";
+                            //}
 
+
+                            Model.ShipperPaymentUrl = FilePath;
+                            Model.shipperReferenceNo = ShipperReferenceNo;
+                            file.SaveAs(ServerSavePath);
+                            ViewBag.UploadStatus = files.Count().ToString() + " files uploaded successfully.";
+                        }
+                        else
+                        {
+                            Model.ShipperPaymentUrl = "";
+                            Model.shipperReferenceNo = ShipperReferenceNo;
+                        }
+                    }
+                }
+                retval = _service.ChangeShipperPaymentRecdStatus(LoadID, Model, IsCheckedPaymentRecd, ShipperPaymentReceivedDate, LoggedInUserId);
                 if (retval > 0)
                 {
                     msg = "Shipper Payment Received Status updated successfully.";
@@ -207,14 +247,44 @@ namespace FETruckCRM.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeCarrierInvoiceRecdStatus(long LoadID, bool IsCheckedPaymentRecd,string CarrierInvoiceReceivedDate)
+
+        public ActionResult ChangeCarrierInvoiceRecdStatus(long LoadID, string IsCheckedInvoiceRecd, string CarrierInvoiceReceivedDate, HttpPostedFileBase[] files, string LoggedinUserId)
         {
+
+            LoadModel mcCheckModel = new LoadModel();
             long retval = -1;
             string msg = "";
             try
             {
                 _service = new LoadService();
-                retval = _service.ChangeCarrierInvoiceRecdStatus(LoadID, IsCheckedPaymentRecd, CarrierInvoiceReceivedDate);
+                foreach (HttpPostedFileBase file in files)
+                {
+                    //Checking file is available to save.
+                    if (file != null)
+                    {
+                        LoadModelkDocModel objDocModel = new LoadModelkDocModel();
+                        var InputFileName = Path.GetFileName(file.FileName);
+                        FileInfo fi = new FileInfo(InputFileName);
+                        var FilePath = "~/assets/images/" + Path.GetFileNameWithoutExtension(fi.Name).Replace(" ", "_") + DateTime.Now.Ticks.ToString() + fi.Extension;
+                        var ServerSavePath = Path.Combine(Server.MapPath(FilePath));
+                        mcCheckModel.CreatedByID = Convert.ToInt64(Session["UserID"]);
+                        mcCheckModel.Carrierinvoiceuploadedby = Convert.ToInt64(Session["UserID"]);
+                        mcCheckModel.CreatedDate = DateTime.Now;
+                        mcCheckModel.CarrierInvoiceUrl = FilePath;
+                        file.SaveAs(ServerSavePath);
+
+                        //var fileName = DateTime.Now.Ticks.ToString() + HtmlHelperExtension.RemoveSpecialCharacters(fi.Name);
+                        //using (var inputStream = file.InputStream)
+                        //{
+                        //    _s3Service.UploadFile(inputStream, fileName);  // Synchronous call
+                        //    mcCheckModel.CarrierInvoiceUrl = fileName;
+                        //    //long fileSize = file.ContentLength;
+                        //    //objModel.FileSize = fileSize.ToString() + " KB";
+                        //}
+                        ViewBag.UploadStatus = files.Count().ToString() + " files uploaded successfully.";
+                    }
+                }
+                retval = _service.ChangeCarrierInvoiceRecdStatus(LoadID, mcCheckModel, IsCheckedInvoiceRecd, CarrierInvoiceReceivedDate, LoggedinUserId);
 
                 if (retval > 0)
                 {
@@ -239,15 +309,14 @@ namespace FETruckCRM.Controllers
         }
 
         [HttpPost]
-        public ActionResult IsCarrierPaymentMade(long LoadID, bool IsCheckedPaymentRecd,string CarrierInvoiceReceivedDate)
+        public ActionResult IsCarrierPaymentMade(long LoadID, bool IsCheckedCPM, string CarrierPaymentMadeDate, string LoggedinUserId, string ReferenceNo)
         {
             long retval = -1;
             string msg = "";
             try
             {
                 _service = new LoadService();
-                retval = _service.IsCarrierPaymentMade(LoadID, IsCheckedPaymentRecd, CarrierInvoiceReceivedDate);
-
+                retval = _service.IsCarrierPaymentMade(LoadID, IsCheckedCPM, CarrierPaymentMadeDate, LoggedinUserId, ReferenceNo);
                 if (retval > 0)
                 {
                     msg = "Carrier Payment Made Status updated successfully.";
@@ -264,7 +333,7 @@ namespace FETruckCRM.Controllers
             }
             catch (Exception ce)
             {
-                msg = ce.Message; ;
+                msg = ce.Message;
                 retval = -1;
             }
             return Json(new { data = retval, msg = msg }, JsonRequestBehavior.AllowGet);
@@ -292,17 +361,17 @@ namespace FETruckCRM.Controllers
             ViewBag.Rolename = us.RoleName;
             return View(objmodel);
         }
-        
+
         [HttpPost]
-        public JsonResult loadMyDashboarddata( string FilterTypeID, string FromDate, string ToDate)
+        public JsonResult loadMyDashboarddata(string FilterTypeID, string FromDate, string ToDate)
         {
             _service = new LoadService();
             var loggedUserID = Convert.ToInt64(Session["UserID"]);
-            var data = LoadService.getDashboardReport(loggedUserID,  FilterTypeID, FromDate, ToDate);
+            var data = LoadService.getDashboardReport(loggedUserID, FilterTypeID, FromDate, ToDate);
             string json = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented);
             return Json(json);
         }
-       
+
         #endregion
 
 
@@ -337,7 +406,7 @@ namespace FETruckCRM.Controllers
         //    return Json(new { data = data }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public string loadCarrierdata(string CarrierID, string FilterTypeID, string FromDate, string ToDate, string sEcho, int iDisplayStart=0, int iDisplayLength=0, string sSearch="")
+        public string loadCarrierdata(string CarrierID, string FilterTypeID, string FromDate, string ToDate, string sEcho, int iDisplayStart = 0, int iDisplayLength = 0, string sSearch = "")
         {
             _service = new LoadService();
             var loggedUserID = Convert.ToInt64(Session["UserID"]);
@@ -363,8 +432,8 @@ namespace FETruckCRM.Controllers
                 sorCol = "Miles";
             }
 
-            var data = _service.getAllLoadsByCarriersPaging(loggedUserID,CarrierID,FilterTypeID,FromDate,ToDate, iDisplayStart, iDisplayLength, sSearch, sorCol, sortDirection);
-          
+            var data = _service.getAllLoadsByCarriersPaging(loggedUserID, CarrierID, FilterTypeID, FromDate, ToDate, iDisplayStart, iDisplayLength, sSearch, sorCol, sortDirection);
+
             long totalRecord = data.Count > 0 ? data.FirstOrDefault().TotalRecords : 0;
             var result = data;
             StringBuilder sb = new StringBuilder();
@@ -390,7 +459,7 @@ namespace FETruckCRM.Controllers
             _service = new LoadService();
             var loggedUserID = Convert.ToInt64(Session["UserID"]);
             var sorCol = "CareerName";
-           
+
             var dataList = _service.getAllLoadsByCarriersPaging(loggedUserID, CarrierID, FilterTypeID, FromDate, ToDate, 0, int.MaxValue, "", sorCol, "desc");
             int index = 1;
             var objlist = from data in dataList
@@ -470,7 +539,7 @@ namespace FETruckCRM.Controllers
             {
                 sorCol = "NetProfit";
             }
-           
+
 
             IList<FETruckCRM.Models.CustomerDashboardModel> data = _service.getAllLoadsByCustomerPaging(loggedUserID, CustomerID, FilterTypeID, FromDate, ToDate, iDisplayStart, iDisplayLength, sSearch, sorCol, sortDirection);
             long totalRecord = data.Count > 0 ? data.FirstOrDefault().TotalRecords : 0;
@@ -652,7 +721,7 @@ namespace FETruckCRM.Controllers
             ViewBag.Rolename = us.RoleName;
             return View(objmodel);
         }
-        
+
 
         [HttpPost]
         public string loadSalesRepdata(string SalesRepID, string FilterTypeID, string FromDate, string ToDate, string sEcho, int iDisplayStart = 0, int iDisplayLength = 0, string sSearch = "")
@@ -676,7 +745,7 @@ namespace FETruckCRM.Controllers
             {
                 sorCol = "NetProfit";
             }
-            IList<FETruckCRM.Models.SalesRepDashboardModel> data = _service.getAllLoadsBySaleRepPaging(loggedUserID, SalesRepID, FilterTypeID, FromDate, ToDate,iDisplayStart, iDisplayLength, sSearch, sorCol, sortDirection);
+            IList<FETruckCRM.Models.SalesRepDashboardModel> data = _service.getAllLoadsBySaleRepPaging(loggedUserID, SalesRepID, FilterTypeID, FromDate, ToDate, iDisplayStart, iDisplayLength, sSearch, sorCol, sortDirection);
             long totalRecord = data.Count > 0 ? data.FirstOrDefault().TotalRecords : 0;
             var result = data;
             StringBuilder sb = new StringBuilder();
@@ -706,8 +775,8 @@ namespace FETruckCRM.Controllers
             var dataList = _service.getAllLoadsBySaleRepPaging(loggedUserID, SalesRepID, FilterTypeID, FromDate, ToDate, 0, int.MaxValue, "", sorCol, "desc");
             int index = 1;
             var objlist = from data in dataList
-            select new
-            {
+                          select new
+                          {
                               SrNo = index++,
                               SalesReportName = data.SaleRepName,
                               TotalLoads = data.TotalLoads,
@@ -750,7 +819,7 @@ namespace FETruckCRM.Controllers
             ViewBag.Rolename = us.RoleName;
             return View(objmodel);
         }
-       
+
         [HttpPost]
         public string loadStatusdata(string LoadStatusID, string FilterTypeID, string FromDate, string ToDate, string sEcho, int iDisplayStart = 0, int iDisplayLength = 0, string sSearch = "")
         {
@@ -805,7 +874,7 @@ namespace FETruckCRM.Controllers
             var objlist = from data in dataList
                           select new
                           {
-                              SrNo=index++,
+                              SrNo = index++,
                               LoadNo = data.LoadNo,
                               Status = data.LoadStatus,
                               Carrier = data.CarrierName,

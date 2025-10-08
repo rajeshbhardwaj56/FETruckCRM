@@ -687,7 +687,7 @@ namespace FETruckCRM.Data
             }
             return isSuccess;
         }
-        public long ChangeShipperPaymentRecdStatus(Int64 LoadID, bool IsCheckedPaymentRecd, string ShipperPaymentReceivedDate,string loggedUserID)
+        public long ChangeShipperPaymentRecdStatus(Int64 LoadID, LoadModel model, bool IsCheckedPaymentRecd, string ShipperPaymentReceivedDate, string LoggedInUserId)
         {
             long isSuccess = 0;
 
@@ -697,11 +697,13 @@ namespace FETruckCRM.Data
                 cmd.Parameters.AddWithValue("@LoadID", LoadID);
                 cmd.Parameters.AddWithValue("@IsShipperPaymentReceived", IsCheckedPaymentRecd);
                 cmd.Parameters.AddWithValue("@ShipperPaymentReceivedDate", ShipperPaymentReceivedDate);
-                cmd.Parameters.AddWithValue("@LoggedInUserId", loggedUserID);
+                cmd.Parameters.AddWithValue("@LoggedInUserId", LoggedInUserId);
+                cmd.Parameters.AddWithValue("@ShipperReferenceNo", model.shipperReferenceNo);
+                cmd.Parameters.AddWithValue("@ShipperPaymentUrl", model.ShipperPaymentUrl);
 
-                
+
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
+                System.Data.DataTable dt = new System.Data.DataTable();
                 con.Open();
                 sda.Fill(dt);
                 con.Close();
@@ -713,7 +715,8 @@ namespace FETruckCRM.Data
             }
             return isSuccess;
         }
-        public long ChangeCarrierInvoiceRecdStatus(Int64 LoadID, bool IsCheckedPaymentRecd, string CarrierInvoiceReceivedDate)
+        public long ChangeCarrierInvoiceRecdStatus(long LoadID, LoadModel mcCheckModel, string IsCheckedInvoiceRecd, string CarrierInvoiceReceivedDate, string LoggedinUserId)
+
         {
             long isSuccess = 0;
 
@@ -721,10 +724,14 @@ namespace FETruckCRM.Data
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@LoadID", LoadID);
-                cmd.Parameters.AddWithValue("@IsCarrierInvoiceReceived", IsCheckedPaymentRecd);
+                cmd.Parameters.AddWithValue("@IsCarrierInvoiceReceived", IsCheckedInvoiceRecd);
                 cmd.Parameters.AddWithValue("@CarrierInvoiceReceivedDate", CarrierInvoiceReceivedDate);
+                cmd.Parameters.AddWithValue("@carrierinvoiceurl", mcCheckModel.CarrierInvoiceUrl);
+                cmd.Parameters.AddWithValue("@Carrierinvoiceuploadedby", mcCheckModel.Carrierinvoiceuploadedby);
+                cmd.Parameters.AddWithValue("@LoggedinUserId", LoggedinUserId);
+
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
+                System.Data.DataTable dt = new System.Data.DataTable();
                 con.Open();
                 sda.Fill(dt);
                 con.Close();
@@ -736,7 +743,7 @@ namespace FETruckCRM.Data
             }
             return isSuccess;
         }
-        public long IsCarrierPaymentMade(Int64 LoadID, bool IsCheckedPaymentRecd, string CarrierInvoiceReceivedDate)
+        public long IsCarrierPaymentMade(Int64 LoadID, bool IsCheckedCPM, string CarrierPaymentMadeDate, string LoggedinUserId, string ReferenceNo)
         {
             long isSuccess = 0;
 
@@ -744,21 +751,23 @@ namespace FETruckCRM.Data
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@LoadID", LoadID);
-                cmd.Parameters.AddWithValue("@IsCarrierPaymentMade", IsCheckedPaymentRecd);
-                cmd.Parameters.AddWithValue("@CarrierInvoiceReceivedDate", CarrierInvoiceReceivedDate);
+                cmd.Parameters.AddWithValue("@IsCarrierPaymentMade", IsCheckedCPM);
+                cmd.Parameters.AddWithValue("@CarrierInvoiceReceivedDate", CarrierPaymentMadeDate);
+                cmd.Parameters.AddWithValue("@LoggedinUserId", LoggedinUserId);
+                cmd.Parameters.AddWithValue("@CarrierReferenceNo", ReferenceNo);
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
+                System.Data.DataTable dt = new System.Data.DataTable();
                 con.Open();
                 sda.Fill(dt);
                 con.Close();
                 if (dt.Rows.Count > 0)
                 {
-
                     isSuccess = Convert.ToInt64(dt.Rows[0][0]);
                 }
             }
             return isSuccess;
         }
+
         public static long CheckCreditLimit(Int64 CustomerID, decimal rate)
         {
             long isSuccess = 0;
@@ -2075,6 +2084,11 @@ namespace FETruckCRM.Data
                         //objModel.strMarginPercent = Convert.ToDecimal(dr["MarginPercent"]).ToString();
                         //      objModel.LoadTypeName = Convert.ToString(dr["LoadtypeName"]);
                         objModel.InvoiceDate = Convert.ToString(dr["InvoiceDate"]);
+                        objModel.inGateEntryDate = Convert.ToString(dr["inGateEntryDate"]);
+                        objModel.ReceipetUrl = Convert.ToString(dr["ReceipetUrl"]);
+                        objModel.ShipperPaymentUrl = Convert.ToString(dr["ShipperPaymentUrl"]);
+                        objModel.CarrierInvoiceUrl = Convert.ToString(dr["CarrierInvoiceUrl"]);
+                        objModel.MCRefNo = dr["MCRefNo"] == DBNull.Value ? "" : Convert.ToString(dr["MCRefNo"]);
                         objModel.ShipperInvoiceSentDate = Convert.ToString(dr["ShipperInvoiceSentDate"]);
                         objModel.ShipperPaymentReceivedDate = Convert.ToString(dr["ShipperPaymentReceivedDate"]);
                         objModel.CarrierInvoiceReceivedDate = Convert.ToString(dr["CarrierInvoiceReceivedDate"]);
@@ -2083,6 +2097,9 @@ namespace FETruckCRM.Data
                         objModel.IsCarrierInvoiceReceived = Convert.ToBoolean(dr["IsCarrierInvoiceReceived"]);
                         objModel.IsCarrierPaymentMade = Convert.ToBoolean(dr["IsCarrierPaymentMade"]);
                         objModel.IsShipperInvoiceSent = Convert.ToBoolean(dr["IsShipperInvoiceSent"]);
+                        objModel.CarrierReferenceNo = Convert.ToString(dr["CarrierReferenceNo"]);
+                        objModel.ShipperReferenceNo = Convert.ToString(dr["ShipperReferenceNo"]);
+
                         objModel.TotalRecords = Convert.ToInt64(ds.Tables[1].Rows[0][0]);
                         int paymentType = Convert.ToInt32(dr["PaymentType"]);
                         objModel.PaymentType = paymentType == 0 ? "Not Set" : Enum.GetName(typeof(PaymentTypeEnum), paymentType);

@@ -10,14 +10,35 @@ namespace FETruckCRM.Models
 {
     public class LoadModel
     {
+        public long MCNumber { get; set; }
         public Int64 LoadID { get; set; }
+        public string LoadGUID { get; set; }
+        public string ToDate { get; set; }
+        public bool IsRateConEmailSent { get; set; }
+        public bool IsInvoiceEmailSent { get; set; }
+        public string FromDate { get; set; }
+        public string strUserID { get; set; }
         public Int32 LoadType { get; set; }
         public int BillingTypeID { get; set; }
         public string BillingTypeName { get; set; }
         public string CustomerName { get; set; }
+        [Display(Name = "Browse File")]
+        public HttpPostedFileBase[] files { get; set; }
+        public List<LoadModelkDocModel> LoadModelkDocModel { get; set; }
+        public string LStatus { get; set; }
+        public long TotalRecords { get; set; }
+        public List<SelectListItem> UserList { get; set; }
+        public string ContainerNo { get; set; }
         public Int64 LoadNo { get; set; }
         public Int64 BillTo { get; set; }
+        public string txtSealNo { get; set; }
+
         public string Dispatcher { get; set; }
+
+        //Today Add
+        [Required(ErrorMessage = "Comment is required")]
+        [StringLength(100)]
+        public string Comment { get; set; }
         public Int64 SaleRep1 { get; set; }
         public Int64 SaleRep2 { get; set; }
         public int Status { get; set; }
@@ -32,11 +53,14 @@ namespace FETruckCRM.Models
         public decimal FSC { get; set; }
         public bool IsRatePercentage { get; set; }
         public string OtherCharges { get; set; }
+        public string ShipperEmail { get; set; }
         public decimal RatePercent { get; set; }
         public Int64 CareerID { get; set; }
         public Int64 DriverID { get; set; }
         public Int64 EquipmenttypeID { get; set; }
         public decimal CareerFee { get; set; }
+        public string CareerEmailID { get; set; }
+        public string DispatcherEmailID { get; set; }
         public string strCareerFee { get; set; }
         public decimal Margin { get; set; }
         public string strMargin { get; set; }
@@ -45,12 +69,14 @@ namespace FETruckCRM.Models
         public string LoadTypeName { get; set; }
 
         public string Currency { get; set; }
+
         public Int64 CreatedByID { get; set; }
+        public Int64 Carrierinvoiceuploadedby { get; set; }
         public DateTime CreatedDate { get; set; }
         public Int64 LastModifiedByID { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public bool IsDeletedInd { get; set; }
-
+        public string inGateEntryDate { get; set; }
         public string Alias { get; set; }
         public string CareerName { get; set; }
         public string CareerTelephone { get; set; }
@@ -76,7 +102,7 @@ namespace FETruckCRM.Models
         public string BillingTelephone { get; set; }
         public string PrimaryContact { get; set; }
         public string BillingFax { get; set; }
-        
+
         public string Dispatcher1 { get; set; }
         public string LoadStatus { get; set; }
 
@@ -86,10 +112,43 @@ namespace FETruckCRM.Models
         public string PaymentTerm { get; set; }
         public string BillAddress { get; set; }
         public int LType { get; set; }
-
         public decimal AdvancePayment { get; set; }
+        public decimal PrePayment { get; set; }
+
         public List<SelectListItem> RecoveredLoadList { get; set; }
         public string strLoadID { get; set; }
+
+        public string IsCheckedPaymentRecd { get; set; }
+        public string ReceipetUrl { get; set; }
+
+        public string CarrierInvoiceUrl { get; set; }
+        public string ShipperPaymentUrl { get; set; }
+        //public string CarrierPaymentUrl { get; set; }
+
+        public string shipperReferenceNo { get; set; }
+        public string ReferenceNo { get; set; }
+
+
+        public bool isLocked { get; set; }
+        public long lockedBy { get; set; }
+
+
+        public List<SelectListItem> TeamMember { get; set; }
+        public string strMemberId { get; set; }
+        public List<SelectListItem> MCRefListing { get; set; }
+        public Guid TimeStampGuid { get; set; }
+        public List<SelectListItem> PaymentStatusType { get; set; }
+
+        public string strPaymentStatus { get; set; }
+        public string CarrierPaymentHoldReason { get; set; }
+
+        public string FollowUpDate { get; set; }
+        public List<SelectListItem> ManagerList { get; set; }
+        public List<SelectListItem> TeamLeadList { get; set; }
+        public List<SelectListItem> TeamMemberList { get; set; }
+        public string strManagerID { get; set; }
+        public string strTeamLeadID { get; set; }
+        public string strTeamMemberID { get; set; }
 
 
     }
@@ -293,15 +352,21 @@ namespace FETruckCRM.Models
     {
 
         public string LoadID { get; set; }
+        public string LoadGUID { get; set; }
         public string LoadType { get; set; }
         public string Role { get; set; }
         public string LoadNo { get; set; }
         public string InvoiceNo { get; set; }
-        
+        public string ARDays { get; set; }
+
         public string BillTo { get; set; }
+
         public string WO { get; set; }
+        public string Alias { get; set; }
+        public string ContainerNo { get; set; }
         public string CareerName { get; set; }
         public string CreatedDate { get; set; }
+        public string LoadActivationDate { get; set; }
         public string strShipperDate { get; set; }
         public string strLoadDate { get; set; }
         public string strDeliveredDate { get; set; }
@@ -309,10 +374,16 @@ namespace FETruckCRM.Models
         public string Location { get; set; }
         public string ConsigneeLocation { get; set; }
         public string Status { get; set; }
+        public string MacroStatus { get; set; }
+        public string LoadStatus { get; set; }
+        public int CarrierPaymentStatus { get; set; }
+        public string Ltype { get; set; }
+        public string strStatus { get; set; }
         public string AddedByUser { get; set; }
         public string TeamLead { get; set; }
         public string TeamManager { get; set; }
         public string strRate { get; set; }
+        public string strCarrierRate { get; set; }
         public string strCareerFee { get; set; }
         public string strMargin { get; set; }
         public string strMarginPercent { get; set; }
@@ -321,17 +392,45 @@ namespace FETruckCRM.Models
         public bool IsShipperPaymentReceived { get; set; }
         public bool IsCarrierInvoiceReceived { get; set; }
         public bool IsCarrierPaymentMade { get; set; }
+
         public bool IsShipperInvoiceSent { get; set; }
+        public string ShipperReferenceNo { get; set; }
+        public string CarrierReferenceNo { get; set; }
+
+        public string ReceipetUrl { get; set; }
+        public string CarrierInvoiceUrl { get; set; }
+
+        public string ShipperPaymentUrl { get; set; }
+        //public string CarrierPaymentUrl { get; set; }
+
+        public bool IsInGateEnrty { get; set; }
         public string ShipperInvoiceSentDate { get; set; }
+
         public string ShipperPaymentReceivedDate { get; set; }
+        public string inGateEntryDate { get; set; }
         public string CarrierInvoiceReceivedDate { get; set; }
+
         public string CarrierPaymentMadeDate { get; set; }
         public long TotalRecords { get; set; }
 
         public string PaymentType { get; set; }
-
-
+        public string Comments { get; set; }
+        public string MCRefNo { get; set; }
+        public string MCNumber { get; set; }
+        public bool isLocked { get; set; }
+        public string lockedBy { get; set; }
+        public long lockedByID { get; set; }
+        public string Factoring { get; set; }
+        public string BankName { get; set; }
+        public string AccountNumber { get; set; }
+        public string RoutingNumber { get; set; }
+        public string RemittanceEmail { get; set; }
+        public string Aging { get; set; }
+        public string CarrierPaymentHoldReason { get; set; }
+        public string FollowUpDate { get; set; }
     }
+
+
 
 
     public class RateConModel
@@ -397,5 +496,17 @@ namespace FETruckCRM.Models
         public string strTeamLeadID { get; set; }
         public string strEmployeeTypeID { get; set; }
         public string strSiteID { get; set; }
+    }
+
+    public class LoadModelkDocModel
+    {
+
+        public long MCCheckDocID { get; set; }
+        public long MCCheckID { get; set; }
+        public string MCCheckDocName { get; set; }
+        public string MCCheckDocURL { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public long CreatedByID { get; set; }
+
     }
 }

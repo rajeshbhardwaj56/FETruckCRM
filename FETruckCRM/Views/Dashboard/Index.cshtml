@@ -28,12 +28,12 @@
                         }
                         else
                         {
-                            <b class="p_title" style="cursor:pointer;padding-right:10px;">Select Load: </b> @Html.DropDownListFor(a => a.strLoadID, new SelectList(Model.RecoveredLoadList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue",@style="padding:10px 10px; height:40px;", width = "100px" })
+                            <b class="p_title" style="cursor:pointer;padding-right:10px;">Select Load: </b> @Html.DropDownListFor(a => a.strLoadID, new SelectList(Model.RecoveredLoadList, "Value", "Text"), new { @class = "form-control-sm form-control width-140 bg-dark-blue", @style = "padding:10px 10px; height:40px;", width = "100px" })
                             <a style="cursor:pointer;margin-left:10px;" onclick="RecoveredLoad();" class="btn btn-primary bg-orange">Recover Load</a>
                         }
                     }
                     @*<button class="btn btn-primary bg-orange" type="button">New Active Load</button>
-        <button class="btn btn-primary bg-orange" type="button">New Pending Load</button>*@
+                        <button class="btn btn-primary bg-orange" type="button">New Pending Load</button>*@
                 </div>
                 <div class="right_filter" style="display:none;">
                     <input type="text" class="form-control m-l-10 m-r-10 width-140 bg-dark-blue" value="" placeholder="Keyword.." />
@@ -168,13 +168,38 @@
                                                 <label class="control-label mb-1">Please Select Shipper Payment Received Date</label><span style="color:red;">*</span>
                                                 @if (ViewBag.RoleName == "SuperAdmin")
                                                 {
-                                                    <input type="text" name="txtShipperPRD" id="txtShipperPRD" maxlength="93" class="form-control datepicker required" autocomplete="off" />
+                                                    <input type="text" name="txtShipperPRD" id="txtShipperPRD" maxlength="93" class="form-control datepicker required" data-date-end-date="0d" autocomplete="off" />
                                                 }
                                                 else
                                                 {
                                                     <input type="text" name="txtShipperPRD" id="txtShipperPRD" maxlength="93" class="form-control required" autocomplete="off" />
 
                                                 }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container" style="width:800px;">
+                                        <div class="modal-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Shipper Payment Upload File</label>
+                                                    <div>
+                                                        <form id="uploadForm" enctype="multipart/form-data">
+                                                            <div class="left__buttons">
+                                                                <input type="file" name="file" id="filessss" onchange="Filesvalidation();" class="form-control" />
+                                                                @Html.HiddenFor(m => m.LoadID)
+                                                                <span class="field-validation-error" data-valmsg-for="file" data-valmsg-replace="true"><span id="file-error" class=""></span></span>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="col-md-12">
+                                                <label class="control-label mb-1">Reference No.</label><span style="color:red;">*</span>
+                                                <input type="text" name="RefNoPRD" id="RefNoPRD" maxlength="100" class="form-control required" autocomplete="off" />
+                                                <span class="field-validation-error" data-valmsg-replace="true"><span id="file-error" class=""></span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -197,20 +222,35 @@
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="control-label mb-1">Please Select Carrier Invoice Received Date</label><span style="color:red;">*</span>
                                                 @if (ViewBag.RoleName == "SuperAdmin")
                                                 {
-                                                    <input type="text" name="txtShipperCIRD" id="txtShipperCIRD" maxlength="93" class="form-control datepicker required" autocomplete="off" />
+                                                    <input type="text" name="txtShipperCIRD" id="txtShipperCIRD" maxlength="93" class="form-control datepicker required" data-date-end-date="0d" autocomplete="off" />
                                                 }
                                                 else
                                                 {
-
                                                     <input type="text" name="txtShipperCIRD" id="txtShipperCIRD" maxlength="93" class="form-control required" autocomplete="off" />
-
                                                 }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container" style="width:800px;">
+                                        <div class="modal-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-1">Upload Carrier Invoice</label><span style="color:red;">*</span>
+                                                    <div>
+                                                        <form id="uploadForm" enctype="multipart/form-data">
+                                                            <div class="left__buttons">
+                                                                <input type="file" name="file" id="CarrierInvoicefiless" onchange="FileCarrierInvoicevalidation();" class="form-control" />
+                                                                @Html.HiddenFor(m => m.LoadID)
+                                                                <span class="field-validation-error" data-valmsg-for="file" data-valmsg-replace="true"><span id="file-error" class=""></span></span>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -225,7 +265,7 @@
                         </div>
 
                         <!-- Modal HTML -->
-                        <div id="myModalCPM" class="modal fade" tabindex="-1">
+                        <div id="myModalCPMUpload" class="modal fade" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -233,27 +273,35 @@
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label class="control-label mb-1">Please Select Carrier Payment Made</label><span style="color:red;">*</span>
+                                                <label class="control-label mb-1">Please Select Carrier Payment Date</label><span style="color:red;">*</span>
                                                 @if (ViewBag.RoleName == "SuperAdmin")
                                                 {
-                                                    <input type="text" name="txtShipperCPM" id="txtShipperCPM" maxlength="93" class="form-control datepicker required" autocomplete="off" />
+                                                    <input type="text" name="inGatetxtShipperCPM" id="inGatetxtShipperCPM" maxlength="93" class="form-control datepicker required" data-date-end-date="0d" autocomplete="off" />
                                                 }
                                                 else
                                                 {
-                                                    <input type="text" name="txtShipperCPM" id="txtShipperCPM" maxlength="93" class="form-control required" autocomplete="off" />
-
+                                                    <input type="text" name="inGatetxtShipperCPM" id="inGatetxtShipperCPM" maxlength="93" class="form-control required" autocomplete="off" />
                                                 }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container" style="width:800px;">
+
+                                        <div class="modal-body">
+                                            <div class="col-md-12">
+                                                <label class="control-label mb-1">Reference No.</label><span style="color:red;">*</span>
+                                                <input type="text" name="RefNoCPM" id="RefNoCPM" maxlength="100" class="form-control required" autocomplete="off" />
+                                                <span class="field-validation-error" data-valmsg-replace="true"><span id="file-error" class=""></span></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <input type="hidden" id="hdnLoadIDCPM" />
-                                        <input type="hidden" id="hdnIsShipperCPM" />
+                                        <input type="hidden" id="shdnIsShipperCPM" />
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-primary" id="btnSaveCPM">Save</button>
+                                        <button type="button" class="btn btn-primary" id="sbtnSaveCPM">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -268,6 +316,58 @@
 </div>
 <script src="@Url.Content("~/assets/js/datatables.js")"></script>
 <script type="text/javascript">
+
+    function FileCarrierInvoicevalidation() {
+
+        var isValid = false;
+        const fi = document.getElementById('CarrierInvoicefiless');
+        var filePath = fi.value;
+        var allowedExtensions =
+            /(\.pdf|)$/i;
+        var upld = filePath.split('.').pop();
+        if (upld == 'pdf') {
+
+            $("#file-error").text('');
+            isValid = true;
+        } else {
+
+            $("#file-error").text('Invalid file type');
+            fi.value = '';
+            isValid = false;
+        }
+
+        var regex = new RegExp("^[a-zA-Z0-9]+$");
+        var sd = filePath.split('\\');
+        var sd1 = sd[sd.length - 1];
+        var key = sd1.split('.')[0];
+
+        if (!regex.test(key)) {
+            isValid = false;
+        }
+
+        if (isValid == true) {
+
+            // Check if any file is selected.
+            if (fi.files.length > 0) {
+                for (var i = 0; i <= fi.files.length - 1; i++) {
+                    const fsize = fi.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 1048576) {
+                        isValid = false;
+                        $("#file-error").text('File too Big, please select a file less than 10mb');
+                    }
+                    else {
+                        isValid = true;
+                        $("#file-error").text('');
+                    }
+                }
+            }
+        }
+        return isValid;
+    }
+
+
     // this is just used to make sure values pushed into the array are not already there
     Array.prototype.contains = function (v) {
         for (var i = 0; i < this.length; i++) {
@@ -328,7 +428,7 @@
 
     $(document).ready(function () {
         loadddl();
-       
+
         $('#tblLoad').DataTable({
             "bServerSide": true,
             "bProcessing": true,
@@ -401,91 +501,93 @@
                     },
 
                     {
-                        // this is Actions Column
-                        mRender: function (data, type, row) {
-                            debugger;
-                            var lt = row.LoadID;
-                            var isdel = row.IsShipperInvoiceSent;
-                            var linkEdit1 = '<div class="table-data-feature"><input type="checkbox" onchange="IsShipperInvSent(this,' + lt + ');"/></div>';
+     //this is Actions Column
+     mRender: function (data, type, row) {
 
-                            if (row.IsShipperInvoiceSent == true) {
-                                if ('@ViewBag.RoleName' == "SuperAdmin") {
-                                    var linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperInvoiceSentDate + '</span><input type="checkbox" onchange="IsShipperInvSent(this,' + lt + ');"/></div>';
+         var lt = row.LoadID;
+         var isdel = row.IsShipperInvoiceSent;
+         var linkEdit1 = '<div class="table-data-feature"><input type="checkbox" onchange="IsShipperInvSent(this,' + lt + ');"/></div>';
+         if (row.IsShipperInvoiceSent == true) {
+             if ('@ViewBag.RoleName' == "SuperAdmin") {
+                 var linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperInvoiceSentDate + '</span><input type="checkbox" onchange="IsShipperInvSent(this,' + lt + ');"/></div>';
 
-                                }
-                                else {
-                                    linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperInvoiceSentDate + '</span></div>';
+             }
+             else {
+                 linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperInvoiceSentDate + '</span></div>';
+             }
+         }
+         return linkEdit1;
+     }
+ },
+ {
+     // this is Actions Column
+     mRender: function (data, type, row) {
 
-                                }
+         var lt = row.LoadID;
+         var isdel = row.IsShipperPaymentReceived;
+         var linkEdit1 = '<div class="table-data-feature"><input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo.trim() + '\');"/></div>';
+         if (row.IsShipperPaymentReceived == true) {
+             if ('@ViewBag.RoleName' == "SuperAdmin") {
+
+                 if (row.ShipperPaymentUrl != "") {
+                     var linkEdit1 = '<div class="table-data-feature"><a style="width:25px;" href=/s3/DownloadFile?key=' + row.ShipperPaymentUrl.replace("~", "") + ' target = "_blank" title="View Slip" ><img src="../assets/images/slip.png" /></a><span> ' + row.ShipperPaymentReceivedDate + '</span><input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo + '\');" /></div > ';
+                 }
+                 else {
+                     var linkEdit1 = '<div class="table-data-feature"><span> ' + row.ShipperPaymentReceivedDate + '</span> <input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo + '\');" /></div > ';
+             }
+             }
+             else {
+                 linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperPaymentReceivedDate + '</span></div>';
+             }
+         }
+         return linkEdit1;
+     }
+ },
+ {
+     // this is Actions Column
+     mRender: function (data, type, row) {
+
+         var lt = row.LoadID;
+         var isdel = row.IsCarrierInvoiceReceived;
+         var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span></div>';
+
+         if (row.IsCarrierInvoiceReceived == true) {
+             if ('@ViewBag.RoleName' == "SuperAdmin") {
+                 if (row.CarrierInvoiceUrl != "") {
+                     var linkEdit2 = '<div class="table-data-feature"><a style="width:25px;" href=/s3/DownloadFile?key=' + row.CarrierInvoiceUrl.replace("~", "") + ' target = "_blank" title="View Slip"><img src="../assets/images/slip.png" /></a> <span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';
+                 }
+                 else {
+                     var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';
+                 }
+             }
+             else if ("@ViewBag.RoleName" == "Sale Representative") {
+                 linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span></div>';
+             }
+         }
+         return linkEdit2;
+     }
+ },
+                {
+                    // this is Actions Column
+                    mRender: function (data, type, row) {
+
+
+                        var lt = row.LoadID;
+                        var isdel = row.IsCarrierPaymentMade;
+                        var linkEdit3 = '<div class="table-data-feature"><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt + ',\'' + row.CarrierReferenceNo.trim() + '\');"/></div>';
+                        if (row.IsCarrierPaymentMade == true) {
+                            if ('@ViewBag.RoleName' == "SuperAdmin") {
+
+                                var linkEdit3 = '<div class="table-data-feature"><span>' + row.CarrierPaymentMadeDate + '</span><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt + ',\'' + row.CarrierReferenceNo + '\');" /></div > ';
+
                             }
-                            return linkEdit1 ;
+                            else {
+                                linkEdit3 = '<div class="table-data-feature"><span>' + row.CarrierPaymentMadeDate + '</span></div>';
+                            }
                         }
-                    },
-
-                      {
-                        // this is Actions Column
-                        mRender: function (data, type, row) {
-                            debugger;
-                            var lt = row.LoadID;
-                              var isdel = row.IsShipperPaymentReceived;
-                              var linkEdit1 = '<div class="table-data-feature"><input type="checkbox" onchange="IsPaymentRecd(this,' + lt +');"/></div>';
-                              if (row.IsShipperPaymentReceived == true) {
-                                  if ('@ViewBag.RoleName' == "SuperAdmin") {
-                                      var linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperPaymentReceivedDate + '</span><input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ');"/></div>';
-
-                                }
-                                else {
-                                      linkEdit1 = '<div class="table-data-feature"><span>' + row.ShipperPaymentReceivedDate + '</span></div>';
-
-
-                                }
-                            }
-                           return linkEdit1;
-                            }
-                    },
-                    {
-                        // this is Actions Column
-                        mRender: function (data, type, row) {
-                            debugger;
-                            var lt = row.LoadID;
-                            var isdel = row.IsCarrierInvoiceReceived;
-                            var linkEdit2 = '<div class="table-data-feature"><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt +');"/></div>';
-                            if (row.IsCarrierInvoiceReceived == true) {
-                                if ('@ViewBag.RoleName' == "SuperAdmin") {
-                                    var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div>';
-
-                                }
-                                else {
-                                    linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span></div>';
-
-
-                                }
-                            }
-                            return linkEdit2;
-                        }
-                    },
-                    {
-                        // this is Actions Column
-                        mRender: function (data, type, row) {
-                            debugger;
-                            var lt = row.LoadID;
-                            var isdel = row.IsCarrierPaymentMade;
-                            var linkEdit3 = '<div class="table-data-feature"><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt +');"/></div>';
-                            if (row.IsCarrierPaymentMade == true) {
-                                if ('@ViewBag.RoleName' == "SuperAdmin") {
-                                    var linkEdit3 = '<div class="table-data-feature"><span>' + row.CarrierPaymentMadeDate + '</span><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt + ');"/></div>';
-
-                                }
-                                else {
-                                    linkEdit3 = '<div class="table-data-feature"><span>' + row.CarrierPaymentMadeDate + '</span></div>';
-
-
-                                }
-                            }
-                            return linkEdit3;
-                        }
+                        return linkEdit3;
                     }
-
+                }
                 ],
                 "columnDefs": [
                     {
@@ -772,144 +874,174 @@
 
 
     $("#btnSaveSPRD").click(function () {
+     $("#divLoader").show();
+     if ($("#txtShipperPRD").val() == "") {
+         alert("Please select date.");
+         $("#divLoader").hide();
+         return false;
+     }
+     if ($("#RefNoPRD").val() == "" || $("#RefNoPRD").val() == null) {
+         ShowError("Please Enter Reference");
+         $("#divLoader").hide();
+         return false;
+     }
+      var formData = new FormData()
+     {
+         formData.append('LoadID', $("#hdnLoadIDPRD").val());
+         if ($('#filessss')[0].files.length > 0) {
 
+             formData.append('files', $('#filessss')[0].files[0]);
+         }
+         else {
+             formData.append('files', '');
 
-        $("#divLoader").show();
-        if ($("#txtShipperPRD").val() == "") {
-            alert("Please select date.");
-            $("#divLoader").hide();
-            return false;
-        }
-        var data = { "LoadID": $("#hdnLoadIDPRD").val(), "IsCheckedPaymentRecd": $("#hdnIsShipperPRD").val() == "1" ? true : false, "ShipperPaymentReceivedDate": $("#txtShipperPRD").val() };
-        $.ajax({
-            type: 'POST',
-            url: 'ChangePaymentRecdStatus',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            success: function (s) {
-                //debugger;
-                if (s.data > 0) {
-                    $('#tblCustomBroker').DataTable().ajax.reload();
-                    $("#hdnLoadIDPRD").val('');
-                    $("#hdnIsShipperPRD").val('');
-                    $("#txtShipperPRD").val('');
-                    $("#divLoader").hide();
-                    $("#myModalSPRD .close").click();
-                    $("#divLoader").hide();
-                    ShowSucess(s.msg);
-                }
-                else {
-                    if (s.timeout == true) {
-                        $("#divLoader").hide();
+         }
+         formData.append("IsCheckedPaymentRecd", $("#hdnIsShipperPRD").val() == "1" ? true : false);
+         formData.append("ShipperPaymentReceivedDate", $("#txtShipperPRD").val());
+         formData.append('LoggedinUserId', @loggedUserID);
+         formData.append('ShipperReferenceNo', $("#RefNoPRD").val());
+     };
 
-                        window.location.href = "/Account/Login";
-                    }
-                    else {
-                        ShowError(s.msg); $("#divLoader").hide();
-                    }
-                }
+     $.ajax({
+         type: 'POST',
+         url: 'ChangePaymentRecdStatus',
+         data: formData,
+         processData: false,
+         contentType: false,
+         dataType: 'json',
+         success: function (s) {
+             if (s.data > 0) {
+                 $('#tblLoad').DataTable().ajax.reload();
+                 $("#hdnLoadIDPRD").val('');
+                 $("#hdnIsShipperPRD").val('');
+                 $("#txtShipperPRD").val('');
+                 $("#divLoader").hide();
+                 $("#myModalSPRD .close").click();
+                 $("#divLoader").hide();
+                 ShowSucess(s.msg);
+             }
+             else {
+                 if (s.timeout == true) {
+                     $("#divLoader").hide();
 
-            },
-            error: function (s) {
-                if (s.timeout == true) {
+                     window.location.href = "/Account/Login";
+                 }
+                 else {
+                     ShowError(s.msg); $("#divLoader").hide();
+                 }
+             }
+         },
+         error: function (s) {
+             if (s.timeout == true) {
 
-                    window.location.href = "/Account/Login";
-                }
-            }
-        });
-        return true;
+                 window.location.href = "/Account/Login";
+             }
+         }
+     });
+     return true;
     });
-    function IsPaymentRecd(e, loadID) {
-        debugger;
-        $("#hdnLoadIDPRD").val(loadID);
-        $("#hdnIsShipperPRD").val(e.checked ? 1 : 0);
-        if (e.checked == true) {
-            var now = new Date();
-            var day = ("0" + now.getDate()).slice(-2);
-            var month = ("0" + (now.getMonth() + 1)).slice(-2);
-            var today = (month) + "/" + (day) + "/" + now.getFullYear();
-            $('#txtShipperPRD').val(today);
-            if ('@ViewBag.RoleName' == "Accounting") {
-                 $('#txtShipperPRD').attr("readonly",true);
-                $('#txtShipperPRD').removeClass("datepicker");
-                    }
-            $("#myModalSPRD").modal('show');
-        }
-
-        $("#divLoader").show();
 
 
+   function IsPaymentRecd(e, loadID,shipperPaymentRef) {
+    $("#filessss").val('');
+
+    $("#hdnLoadIDPRD").val(loadID);
+    $("#hdnIsShipperPRD").val(e.checked ? 1 : 0);
+    if (e.checked == true) {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = (month) + "/" + (day) + "/" + now.getFullYear();
+        $('#txtShipperPRD').val(today);
+        $('#RefNoPRD').val(shipperPaymentRef);
+        if ('@ViewBag.RoleName' == "Accounting") {
+             $('#txtShipperPRD').attr("readonly",true);
+            $('#txtShipperPRD').removeClass("datepicker");
+                }
+        $("#myModalSPRD").modal('show');
     }
+    $("#divLoader").show();
+}
 
     $("#btnSaveCIRD").click(function () {
+     $("#divLoader").show();
+     if ($("#txtShipperCIRD").val() == "") {
+         alert("Please select date.");
+         $("#divLoader").hide();
+         return false;
+     }
+     if ($("#CarrierInvoicefiless").val() == "") {
+         isValid = false;
+         ShowError("Please select a file");
+         $("#divLoader").hide();
+         return false;
+     }
+     var formData = new FormData()
+    {
+         formData.append('files', $('#CarrierInvoicefiless')[0].files[0]);
+         formData.append('LoadID', $("#hdnLoadIDCIRD").val());
+         formData.append("IsCheckedInvoiceRecd", $("#hdnIsShipperCIRD").val() == "1" ? true : false);
+         formData.append("CarrierInvoiceReceivedDate", $("#txtShipperCIRD").val());
+         formData.append('LoggedinUserId', @loggedUserID);
+    };
+     $.ajax({
+         type: 'POST',
+         url: 'ChangeCarrierInvoiceRecdStatus',
+         data: formData,
+         processData: false,
+         contentType: false,
+         success: function (s) {
 
+             if (s.data > 0) {
+                 $('#tblLoad').DataTable().ajax.reload();
+                 $("#hdnLoadIDCIRD").val('');
+                 $("#hdnIsShipperCIRD").val('');
+                 $("#txtShipperCIRD").val('');
+                 $("#divLoader").hide();
+                 $("#myModalCIRD .close").click();
+                 $("#divLoader").hide();
+                 ShowSucess(s.msg);
+             }
+             else {
+                 if (s.timeout == true) {
+                     $("#divLoader").hide();
+                     window.location.href = "/Account/Login";
+                 }
+                 else {
+                     ShowError(s.msg); $("#divLoader").hide();
+                 }
+             }
+         },
+         error: function (s) {
+             if (s.timeout == true) {
+                 window.location.href = "/Account/Login";
+             }
+         }
+     });
+     return true;
+ });
 
-        $("#divLoader").show();
-        if ($("#txtShipperCIRD").val() == "") {
-            alert("Please select date.");
-            $("#divLoader").hide();
-            return false;
-        }
-        var data = { "LoadID": $("#hdnLoadIDCIRD").val(), "IsCheckedPaymentRecd": $("#hdnIsShipperCIRD").val() == "1" ? true : false, "CarrierInvoiceReceivedDate": $("#txtShipperCIRD").val() };
-        $.ajax({
-            type: 'POST',
-            url: 'ChangeCarrierInvoiceRecdStatus',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            success: function (s) {
-                //debugger;
-                if (s.data > 0) {
-                    $('#tblCustomBroker').DataTable().ajax.reload();
-                    $("#hdnLoadIDCIRD").val('');
-                    $("#hdnIsShipperCIRD").val('');
-                    $("#txtShipperCIRD").val('');
-                    $("#divLoader").hide();
-                    $("#myModalCIRD .close").click();
-                    $("#divLoader").hide();
-                    ShowSucess(s.msg);
-                }
-                else {
-                    if (s.timeout == true) {
-                        $("#divLoader").hide();
-
-                        window.location.href = "/Account/Login";
-                    }
-                    else {
-                        ShowError(s.msg); $("#divLoader").hide();
-                    }
-                }
-
-            },
-            error: function (s) {
-                if (s.timeout == true) {
-
-                    window.location.href = "/Account/Login";
-                }
-            }
-        });
-        return true;
-    });
-    function IsCarrierInvoiceRecd(e, loadID) {
-        $("#hdnLoadIDCIRD").val(loadID);
-        $("#hdnIsShipperCIRD").val(e.checked ? 1 : 0);
-
-        if (e.checked == true) {
-            var now = new Date();
-            var day = ("0" + now.getDate()).slice(-2);
-            var month = ("0" + (now.getMonth() + 1)).slice(-2);
-            var today = (month) + "/" + (day) + "/" + now.getFullYear();
-            $('#txtShipperCIRD').val(today);
-              if ('@ViewBag.RoleName' == "Accounting") {
-                 $('#txtShipperCIRD').attr("readonly",true);
-                  $('#txtShipperCIRD').removeClass("datepicker");
-                    }
-            $("#myModalCIRD").modal('show');
-        }
-        $("#divLoader").show();
-
+    function IsCarrierPaymentMade(e, loadID,carrierPayRef) {
+        //$('#filess').val('');
+      $('#RefNoCPM').val();
+      $("#hdnLoadIDCPM").val(loadID);
+      $("#shdnIsShipperCPM").val(e.checked ? 1 : 0);
+      if (e.checked == true) {
+          var now = new Date();
+          var day = ("0" + now.getDate()).slice(-2);
+          var month = ("0" + (now.getMonth() + 1)).slice(-2);
+          var today =  (month) + "/" + (day) + "/"+now.getFullYear();
+          $('#inGatetxtShipperCPM').val(today);
+          $('#RefNoCPM').val(carrierPayRef);
+           if ('@ViewBag.RoleName' == "Accounting") {
+               $('#inGatetxtShipperCPM').attr("readonly",true);
+               $('#inGatetxtShipperCPM').removeClass("datepicker");
+                  }
+          $("#myModalCPMUpload").modal('show');
+      }
+      $("#divLoader").show();
     }
+
 
     $("#btnSaveCPM").click(function () {
 
@@ -967,28 +1099,86 @@
         let LoadID = $("#strLoadID").val();
         if (LoadID > 0) {
             window.location.href = "/Load/Index?loadid=" + LoadID +"&LoadType=2&isrecoveredload=true";
-           
+
         }
     }
 
-    function IsCarrierPaymentMade(e, loadID) {
-        $("#hdnLoadIDCPM").val(loadID);
-        $("#hdnIsShipperCPM").val(e.checked ? 1 : 0);
-        if (e.checked == true) {
-            var now = new Date();
-            var day = ("0" + now.getDate()).slice(-2);
-            var month = ("0" + (now.getMonth() + 1)).slice(-2);
-            var today =  (month) + "/" + (day) + "/"+now.getFullYear();
-            $('#txtShipperCPM').val(today);
-             if ('@ViewBag.RoleName' == "Accounting") {
-                 $('#txtShipperCPM').attr("readonly",true);
-                 $('#txtShipperCPM').removeClass("datepicker");
-                    }
-            $("#myModalCPM").modal('show');
-        }
 
-        $("#divLoader").show();
+     function IsCarrierInvoiceRecd(e, loadID) {
+     $('#CarrierInvoicefiless').val('');
+     $("#hdnLoadIDCIRD").val(loadID);
+     $("#hdnIsShipperCIRD").val(e.checked ? 1 : 0);
+     if (e.checked == true) {
+         var now = new Date();
+         var day = ("0" + now.getDate()).slice(-2);
+         var month = ("0" + (now.getMonth() + 1)).slice(-2);
+         var today = (month) + "/" + (day) + "/" + now.getFullYear();
+         $('#txtShipperCIRD').val(today);
+           if ('@ViewBag.RoleName' == "Accounting") {
+              $('#txtShipperCIRD').attr("readonly",true);
+               $('#txtShipperCIRD').removeClass("datepicker");
+                 }
+         $("#myModalCIRD").modal('show');
+     }
+     $("#divLoader").show();
+ }
 
+
+    $("#sbtnSaveCPM").click(function (e) {
+    e.preventDefault();
+    $("#divLoader").show();
+    if ($("#inGatetxtShipperCPM").val() == "") {
+        alert("Please select date.");
+        $("#divLoader").hide();
+        return false;
     }
-
+    if ($("#RefNoCPM").val() == "" || $("#RefNoCPM").val() == null) {
+        ShowError("Please Enter Reference");
+        $("#divLoader").hide();
+        return false;
+    }
+    var formData = new FormData()
+    {
+       // formData.append('files', $('#filess')[0].files[0]);
+        formData.append('LoadID', $("#hdnLoadIDCPM").val());
+        formData.append("IsCheckedCPM", $("#shdnIsShipperCPM").val() == "1" ? true : false);
+        formData.append("CarrierPaymentMadeDate", $("#inGatetxtShipperCPM").val());
+        formData.append('LoggedinUserId', @loggedUserID);
+        formData.append('ReferenceNo', $("#RefNoCPM").val());
+    };
+    $.ajax({
+        type: 'POST',
+        url: 'IsCarrierPaymentMade',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (s) {
+            if (s.data > 0) {
+                $('#tblLoad').DataTable().ajax.reload();
+                $("#hdnLoadIDCPM").val('');
+                $("#shdnIsShipperCPM").val('');
+                $("#inGatetxtShipperCPM").val('');
+                $("#divLoader").hide();
+                $("#myModalCPMUpload .close").click();
+                $("#divLoader").hide();
+                ShowSucess(s.msg);
+            }
+            else {
+                if (s.timeout == true) {
+                    $("#divLoader").hide();
+                    window.location.href = "/Account/Login";
+                }
+                else {
+                    ShowError(s.msg); $("#divLoader").hide();
+                }
+            }
+        },
+        error: function (s) {
+            if (s.timeout == true) {
+                window.location.href = "/Account/Login";
+            }
+        }
+    });
+    return true;
+});
 </script>
