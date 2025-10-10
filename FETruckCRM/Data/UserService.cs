@@ -452,7 +452,8 @@ namespace FETruckCRM.Data
             string constring = ConfigurationManager.ConnectionStrings["conn"].ToString();
             SqlConnection con = new SqlConnection(constring);
             var selectList = new List<SelectListItem>();
-            string query = "getAllManagersBySiteAndEmployeeType";
+            string query = "getAllManagersBySiteAndEmployeeType"; 
+
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Connection = con;
