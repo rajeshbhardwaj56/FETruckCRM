@@ -207,8 +207,10 @@ namespace FETruckCRM.Data
                         objModel.Address2 = Convert.ToString(dr["Address2"]);
                         objModel.Address3 = Convert.ToString(dr["Address3"]);
                         //objModel.CountryID = Convert.ToInt32(dr["CountryID"]);
-                        objModel.strCountryID = Convert.ToString(dr["CountryID"]);
-                        objModel.StateID = Convert.ToInt32(dr["StateID"]);
+                        objModel.CountryID = dr["CountryID"] != DBNull.Value ? Convert.ToInt32(dr["CountryID"]) : 0;
+                        objModel.CountryID = dr["StateID"] != DBNull.Value ? Convert.ToInt32(dr["StateID"]) : 0;
+
+
                         //objModel.strStateID = Convert.ToString(dr["StateID"]);
                         objModel.StateName = Convert.ToString(dr["StateName"]);
                         objModel.City = Convert.ToString(dr["City"]);
@@ -457,9 +459,9 @@ namespace FETruckCRM.Data
                         objModel.Address = Convert.ToString(dr["Address"]);
                         objModel.Address2 = Convert.ToString(dr["Address2"]);
                         objModel.Address3 = Convert.ToString(dr["Address3"]);
-                        objModel.CountryID = Convert.ToInt32(dr["CountryID"]);
+                        objModel.CountryID = dr["CountryID"] != DBNull.Value ? Convert.ToInt32(dr["CountryID"]) : 0;
                         objModel.strCountryID = Convert.ToString(dr["CountryID"]);
-                        objModel.StateID = Convert.ToInt32(dr["StateID"]);
+                        objModel.CountryID = dr["StateID"] != DBNull.Value ? Convert.ToInt32(dr["StateID"]) : 0;
                         objModel.strStateID = Convert.ToString(dr["StateID"]);
                         objModel.StateName = Convert.ToString(dr["StateName"]);
                         objModel.City = Convert.ToString(dr["City"]);
@@ -468,9 +470,11 @@ namespace FETruckCRM.Data
                         objModel.BillAddress = Convert.ToString(dr["BillAddress"]);
                         objModel.Billingaddress2 = Convert.ToString(dr["Billingaddress2"]);
                         objModel.BillingAddress3 = Convert.ToString(dr["BillingAddress3"]);
-                        objModel.BillingCountryID = Convert.ToInt64(dr["BillingCountryID"]);
+                        objModel.CountryID = dr["BillingCountryID"] != DBNull.Value ? Convert.ToInt32(dr["BillingCountryID"]) : 0;
+
                         objModel.strBillingCountryID = Convert.ToString(dr["BillingCountryID"]);
-                        objModel.BillingStateID = Convert.ToInt64(dr["BillingStateID"]);
+                        objModel.CountryID = dr["BillingStateID"] != DBNull.Value ? Convert.ToInt32(dr["BillingStateID"]) : 0;
+
                         objModel.strBillingStateID = Convert.ToString(dr["BillingStateID"]);
                         objModel.BillingCity = Convert.ToString(dr["BillingCity"]);
                         objModel.BillingZip = Convert.ToString(dr["BillingZip"]);
