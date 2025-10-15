@@ -1280,7 +1280,7 @@
                                             </div>
                                         </div>
                                         <div class="form_bbtns" id="divcancelbtn" style="display:none;">
-                                            <a href="@Url.Action("index", "dashboard")" class="btn btn-danger  text-white commonBtn rounded submit px-3">Cancel</a>
+                                            <a href="@Url.Action("PendingLoads", "Load")" class="btn btn-danger  text-white commonBtn rounded submit px-3">Cancel</a>
                                         </div>
                                         <div class="form_bbtns" id="divallbtn">
 
@@ -1298,7 +1298,7 @@
                                             {
                                                 <a id="shipperrateloadconf" href="" onclick="openNewWindow2(@LoadId)" class="btn btn-info commonBtn">Shipper Rate & Load Confirmation</a>
                                             }
-                                            <a href="@Url.Action("index", "dashboard")" class="btn btn-danger  text-white commonBtn rounded submit px-3">Cancel</a>
+                                            <a href="@Url.Action("PendingLoads", "Load")" class="btn btn-danger  text-white commonBtn rounded submit px-3">Cancel</a>
 
                                             @if (Convert.ToInt64(LoadId) > 0)
                                             {
