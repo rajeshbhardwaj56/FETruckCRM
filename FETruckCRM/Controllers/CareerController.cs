@@ -1102,24 +1102,27 @@ namespace FETruckCRM.Controllers
                             var objUser = _userServioce.getUserByUserID(Convert.ToInt64(Session["UserID"]));
                             EmailService emailService = new EmailService();
                             var emailmodel = emailService.getEmailByEmailTypeID(6);
-                            var emailto = emailmodel.EmailAddress.Split(',');
-                            foreach (var item in emailto)
+                            if (emailmodel != null && emailmodel.EmailAddress !=null)
                             {
-                                MailMessage message = new MailMessage();
-                                using (var smtp = new SmtpClient())
+                                var emailto = emailmodel.EmailAddress.Split(',');
+                                foreach (var item in emailto)
                                 {
-                                    message.From = new MailAddress(ConfigurationManager.AppSettings["fromemail"]);
-                                    message.To.Add(new MailAddress(item));
-                                    message.Subject = emailmodel.Subject;
-                                    message.IsBodyHtml = true; //to make message body as html  
-                                    message.Body = emailmodel.Body.Replace("##CARRIERNAME##", mcCheckModel.CarrierName).Replace("##MCFFNO##", mcCheckModel.MCNumber.ToString()).Replace("##USERNAME##", objUser.Alias);
-                                    smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-                                    smtp.Host = ConfigurationManager.AppSettings["host"]; //for gmail host  
-                                    smtp.UseDefaultCredentials = Convert.ToInt32(ConfigurationManager.AppSettings["defaultcredential"]) == 1 ? true : false;
-                                    smtp.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["username"], ConfigurationManager.AppSettings["password"]);
-                                    smtp.EnableSsl = Convert.ToInt32(ConfigurationManager.AppSettings["enablessl"]) == 1 ? true : false;
-                                    //smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                                    smtp.Send(message);
+                                    MailMessage message = new MailMessage();
+                                    using (var smtp = new SmtpClient())
+                                    {
+                                        message.From = new MailAddress(ConfigurationManager.AppSettings["fromemail"]);
+                                        message.To.Add(new MailAddress(item));
+                                        message.Subject = emailmodel.Subject;
+                                        message.IsBodyHtml = true; //to make message body as html  
+                                        message.Body = emailmodel.Body.Replace("##CARRIERNAME##", mcCheckModel.CarrierName).Replace("##MCFFNO##", mcCheckModel.MCNumber.ToString()).Replace("##USERNAME##", objUser.Alias);
+                                        smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+                                        smtp.Host = ConfigurationManager.AppSettings["host"]; //for gmail host  
+                                        smtp.UseDefaultCredentials = Convert.ToInt32(ConfigurationManager.AppSettings["defaultcredential"]) == 1 ? true : false;
+                                        smtp.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["username"], ConfigurationManager.AppSettings["password"]);
+                                        smtp.EnableSsl = Convert.ToInt32(ConfigurationManager.AppSettings["enablessl"]) == 1 ? true : false;
+                                        //smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                        smtp.Send(message);
+                                    }
                                 }
                             }
                         }

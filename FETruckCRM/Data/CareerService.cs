@@ -1346,16 +1346,18 @@ namespace FETruckCRM.Data
 
                     #region Save Mc Check Docs
                     #region Delete Existing Docs
-                   
-                    SqlCommand cmd2 = new SqlCommand("deleteMCCheckDocs", con);
-                    cmd2.Connection = con;
-                    cmd2.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd2.Parameters.AddWithValue("@MCCheckID", retVal);
-                    SqlDataAdapter sda2 = new SqlDataAdapter(cmd2);
-                    System.Data.DataTable dt2 = new System.Data.DataTable();
-                    con.Open();
-                    sda2.Fill(dt2);
-                    con.Close();
+                    if (objModel.MCCheckDocsList != null && objModel.MCCheckDocsList.Count > 0)
+                    {
+                        SqlCommand cmd2 = new SqlCommand("deleteMCCheckDocs", con);
+                        cmd2.Connection = con;
+                        cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("@MCCheckID", retVal);
+                        SqlDataAdapter sda2 = new SqlDataAdapter(cmd2);
+                        System.Data.DataTable dt2 = new System.Data.DataTable();
+                        con.Open();
+                        sda2.Fill(dt2);
+                        con.Close();
+              
                     #endregion
                     foreach (var items in objModel.MCCheckDocsList)
                     {
@@ -1373,7 +1375,7 @@ namespace FETruckCRM.Data
                         sda1.Fill(dt1);
                         con.Close();
                     }
-
+                    }
                     #endregion
                     #region Log
                     var newData = getMCCheckByMCCheckIDdt(retVal);
