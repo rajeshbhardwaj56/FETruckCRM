@@ -12,7 +12,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="p_title">@ViewBag.Title</div>
+            <div class="p_title"> @ViewBag.Title </div>
         </div>
     </div>
 </div>
@@ -170,46 +170,7 @@
            $.notifyBar({ cssClass: "error", html: msg });
     }
 
-    //$("#strCountryID").change(function () {
-    //    debugger;
-    //    var CountryID = $("#strCountryID").val();
-    //    var data = { "CountryID": CountryID };
-    //    $.ajax({
-    //        type: 'POST',
-    //        url: '/Shipper/loadStates',
-    //        contentType: 'application/json; charset=utf-8',
-    //        data: JSON.stringify(data),
-    //        dataType: 'json',
-    //        success: function (s) {
-    //            //debugger;
-    //            if (s.data.length > 0) {
-    //                debugger;
-    //                $("#strStateID").empty();
-    //                var v = "";
-    //                $.each(s.data, function (i, v1) {
-    //                    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
-    //                });
-    //                $("#strStateID").html(v);
-    //            }
-    //            else {
-    //                if (s.timeout == true) {
-    //                    $("#divLoader").hide();
-
-    //                    window.location.href = "/Account/Login";
-    //                }
-
-
-    //            }
-
-    //        },
-    //        error: function (s) {
-    //            if (s.timeout == true) {
-
-    //                window.location.href = "/Account/Login";
-    //            } }
-    //    });
-
-    //});
+   
 
 </script>
 

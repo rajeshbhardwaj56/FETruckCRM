@@ -17,15 +17,15 @@ namespace FETruckCRM.Models
         public string ApprovedBy { get; set; }
         public DateTime ApprovalDate { get; set; }
         public bool Isdeleted { get; set; }
-        [Required(ErrorMessage = "MC Number is required")]
+        //[Required(ErrorMessage = "MC Number is required")]
         public long MCNumber { get; set; }
-        [Required(ErrorMessage = "Carrier name is required")]
+        //[Required(ErrorMessage = "Carrier name is required")]
         public string CarrierName { get; set; }
 
-        [Required(ErrorMessage = "Commodity value is required")]
+        //[Required(ErrorMessage = "Commodity value is required")]
         public long? CommodityValue { get; set; }
 
-        [Required(ErrorMessage = "Commodity type is required")]
+        //[Required(ErrorMessage = "Commodity type is required")]
         public string CommodityType { get; set; }
 
         [Required(ErrorMessage = "Equipment type is required")]
@@ -47,7 +47,6 @@ namespace FETruckCRM.Models
         public DateTime LastModifiedDate { get; set; }
         public bool IsDeletedInd { get; set; }
 
-        //[Required(ErrorMessage = "Please select file.")]
         [Display(Name = "Browse File")]
         public HttpPostedFileBase[] files { get; set; }
 

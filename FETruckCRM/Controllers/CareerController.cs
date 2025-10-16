@@ -887,7 +887,8 @@ namespace FETruckCRM.Controllers
                         }
                         catch (Exception ex)
                         {
-                            throw ex;
+                           // throw ex;
+                            return RedirectToAction("MCCheckIndex");
                         }
                         #endregion
                         TempData["Success"] = "MC Check " + (mcCheckModel.MCCheckID > 0 ? "updated" : "saved") + " successfully";
@@ -913,7 +914,7 @@ namespace FETruckCRM.Controllers
                     //    IsSuccess = false;
                     //}
                 }
-                else
+               else
                 {
                     ModelState.AddModelError("", "Data is not correct");
                     ViewBag.Error = "Data is not correct";
@@ -924,14 +925,14 @@ namespace FETruckCRM.Controllers
             }
             catch (Exception e)
             {
+                // throw (e);
                 ModelState.AddModelError("", e.Message);
                 ViewBag.Error = e.Message;
                 msg = e.Message;
                 IsSuccess = false;
             }
-            return RedirectToAction("MCCheckIndex");
-            //return Json(new { data = mcCheckModel, msg = msg, IsSuccess = IsSuccess }, JsonRequestBehavior.AllowGet);
-        }
+            return View(mcCheckModel);
+             }
         #endregion
 
         #region MC Check Approval
