@@ -40,6 +40,8 @@ namespace FETruckCRM.Data
                 cmd.Parameters.AddWithValue("@Address3", objModel.Address3);
                 cmd.Parameters.AddWithValue("@CountryID", objModel.strCountryID);
                 cmd.Parameters.AddWithValue("@StateID", objModel.strStateID);
+                cmd.Parameters.AddWithValue("@StateName", objModel.StateName);
+                cmd.Parameters.AddWithValue("@CountryName", objModel.CountryName);
                 cmd.Parameters.AddWithValue("@City", objModel.City);
                 cmd.Parameters.AddWithValue("@Zip", objModel.Zip);
                 cmd.Parameters.AddWithValue("@ISBillingAddSameAsMailing", objModel.ISBillingAddSameAsMailing);
@@ -47,7 +49,9 @@ namespace FETruckCRM.Data
                 cmd.Parameters.AddWithValue("@Billingaddress2", objModel.Billingaddress2);
                 cmd.Parameters.AddWithValue("@BillingAddress3", objModel.BillingAddress3);
                 cmd.Parameters.AddWithValue("@BillingCountryID", objModel.strBillingCountryID);
+                cmd.Parameters.AddWithValue("@BillingCountryName", objModel.BillingCountryName);
                 cmd.Parameters.AddWithValue("@BillingStateID", objModel.strBillingStateID);
+                cmd.Parameters.AddWithValue("@BillingStateName", objModel.BillingStateName);
                 cmd.Parameters.AddWithValue("@BillingCity", objModel.BillingCity);
                 cmd.Parameters.AddWithValue("@BillingZip", objModel.BillingZip);
                 cmd.Parameters.AddWithValue("@PrimaryContact", objModel.PrimaryContact);

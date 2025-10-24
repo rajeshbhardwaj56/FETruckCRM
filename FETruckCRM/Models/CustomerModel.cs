@@ -17,7 +17,10 @@ namespace FETruckCRM.Models
         [StringLength(100)]
         public string CustomerName { get; set; }
         public string StateName { get; set; }
+        public string CountryName { get; set; }
         public string AddedByUser { get; set; }
+        public string BillingCountryName { get; set; }
+        public string BillingStateName { get; set; }
         public string TeamLead { get; set; }
         public string TeamManager { get; set; }
         public string ApprovedBy { get; set; }
