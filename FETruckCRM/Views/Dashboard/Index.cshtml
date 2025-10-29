@@ -530,7 +530,7 @@
              if ('@ViewBag.RoleName' == "SuperAdmin") {
 
                  if (row.ShipperPaymentUrl != "") {
-                     var linkEdit1 = '<div class="table-data-feature"><a style="width:25px;" href=/s3/DownloadFile?key=' + row.ShipperPaymentUrl.replace("~", "") + ' target = "_blank" title="View Slip" ><img src="../assets/images/slip.png" /></a><span> ' + row.ShipperPaymentReceivedDate + '</span><input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo + '\');" /></div > ';
+                     var linkEdit1 = '<div class="table-data-feature"><a style="width:25px;" href=' + row.ShipperPaymentUrl.replace("~", "") + ' target = "_blank" title="View Slip" ><img src="../assets/images/slip.png" /></a><span> ' + row.ShipperPaymentReceivedDate + '</span><input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo + '\');" /></div > ';
                  }
                  else {
                      var linkEdit1 = '<div class="table-data-feature"><span> ' + row.ShipperPaymentReceivedDate + '</span> <input type="checkbox" onchange="IsPaymentRecd(this,' + lt + ',\'' + row.ShipperReferenceNo + '\');" /></div > ';
@@ -554,7 +554,7 @@
          if (row.IsCarrierInvoiceReceived == true) {
              if ('@ViewBag.RoleName' == "SuperAdmin") {
                  if (row.CarrierInvoiceUrl != "") {
-                     var linkEdit2 = '<div class="table-data-feature"><a style="width:25px;" href=/s3/DownloadFile?key=' + row.CarrierInvoiceUrl.replace("~", "") + ' target = "_blank" title="View Slip"><img src="../assets/images/slip.png" /></a> <span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';
+                     var linkEdit2 = '<div class="table-data-feature"><a style="width:25px;" href=' + row.CarrierInvoiceUrl.replace("~", "") + ' target = "_blank" title="View Slip"><img src="../assets/images/slip.png" /></a> <span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';
                  }
                  else {
                      var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';

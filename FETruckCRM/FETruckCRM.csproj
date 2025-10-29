@@ -484,6 +484,7 @@
     <Content Include="assets\images\logo-white.png" />
     <Content Include="assets\images\pdf.png" />
     <Content Include="assets\images\right_part.png" />
+    <Content Include="assets\images\slip.png" />
     <Content Include="assets\images\TCRMLogo.png" />
     <Content Include="assets\images\View.png" />
     <Content Include="assets\images\xlsx.ico" />
