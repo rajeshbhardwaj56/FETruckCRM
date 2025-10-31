@@ -549,10 +549,10 @@
 
          var lt = row.LoadID;
          var isdel = row.IsCarrierInvoiceReceived;
-         var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span></div>';
+         var linkEdit2 = '<div class="table-data-feature"><span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div>';
 
          if (row.IsCarrierInvoiceReceived == true) {
-             if ('@ViewBag.RoleName' == "SuperAdmin") {
+             if ('@ViewBag.RoleName' == "SuperAdmin"  || @loggedUserID==3) {
                  if (row.CarrierInvoiceUrl != "") {
                      var linkEdit2 = '<div class="table-data-feature"><a style="width:25px;" href=' + row.CarrierInvoiceUrl.replace("~", "") + ' target = "_blank" title="View Slip"><img src="../assets/images/slip.png" /></a> <span>' + row.CarrierInvoiceReceivedDate + '</span><input type="checkbox" onchange="IsCarrierInvoiceRecd(this,' + lt + ');"/></div > ';
                  }
@@ -576,7 +576,7 @@
                         var isdel = row.IsCarrierPaymentMade;
                         var linkEdit3 = '<div class="table-data-feature"><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt + ',\'' + row.CarrierReferenceNo.trim() + '\');"/></div>';
                         if (row.IsCarrierPaymentMade == true) {
-                            if ('@ViewBag.RoleName' == "SuperAdmin") {
+                            if ('@ViewBag.RoleName' == "SuperAdmin" || @loggedUserID==3) {
 
                                 var linkEdit3 = '<div class="table-data-feature"><span>' + row.CarrierPaymentMadeDate + '</span><input type="checkbox" onchange="IsCarrierPaymentMade(this,' + lt + ',\'' + row.CarrierReferenceNo + '\');" /></div > ';
 
