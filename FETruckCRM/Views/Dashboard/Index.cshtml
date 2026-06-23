@@ -604,10 +604,19 @@
                             function (data, type, row) { debugger; return createSelect(data, row["LoadID"], row["IsShipperInvoiceSent"], row["Status"]); }
                     },
                     {
-                        "targets": [17,18,19,20], //first and last not sortable
+                        "targets": [17,18], //first and last not sortable
                         "orderable": false,
                         "defaultContent": " ",
                         "visible": '@ViewBag.RoleName' == "Accounting" || '@ViewBag.RoleName' == "SuperAdmin"
+                        //"visible": function (data, type, row) {
+                        //    return row.Role == "Accounting" ? true : false;
+                        //}
+                    },
+                    {
+                        "targets": [19,20], //first and last not sortable
+                        "orderable": false,
+                        "defaultContent": " ",
+                        "visible": '@ViewBag.RoleName' == "Accounting" || '@ViewBag.RoleName' == "SuperAdmin" || @loggedUserID == 47
                         //"visible": function (data, type, row) {
                         //    return row.Role == "Accounting" ? true : false;
                         //}
